@@ -3,6 +3,7 @@ export interface LinkedIdentity { provider: 'github' | 'microsoft' | 'google'; e
 export interface PolicyStatus { kind: string; version: string; effectiveAt: string; contentHash: string; acceptedAt: string | null }
 export interface DeletionRequest { id: string; state: 'pending' | 'cancelled' | 'finalized'; requestedAt: string; executeAfter?: number; cancelledAt?: string; finalizedAt?: string }
 export interface PrivacyRequest { id: string; type: string; state: string; createdAt: string; updatedAt: string }
+export interface Entitlements { cloudPlus: boolean; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
 export interface StoreItem { id: string; name: string; summary: string; category: string; version: string; publisher: string; description: string }
 export interface Ticket { id: string; subject: string; body: string; status: string; created_at: string; version: number }
 export class ApiError extends Error { constructor(message: string, public status: number) { super(message); } }
@@ -94,6 +95,11 @@ export const platform = {
   exportData: () => authJson<Record<string, unknown>>(authFetch('/auth/v1/account/export'), '数据导出失败，请重试。'),
   privacyRequests: () => authJson<{ requests: PrivacyRequest[] }>(authFetch('/auth/v1/privacy-requests'), '暂时无法读取隐私请求。'),
   createPrivacyRequest: (type: string) => authJson<{ request: PrivacyRequest }>(authFetch('/auth/v1/privacy-requests', { method: 'POST', body: JSON.stringify({ type }) }), '隐私请求提交失败，请重试。'),
+  entitlements: () => request<Entitlements>('/billing/entitlements'),
+  billingPortal: async () => {
+    const result = await request<{ url: string }>('/billing/portal', { method: 'POST' });
+    window.location.assign(result.url);
+  },
   logout: async () => {
     try { await authFetch('/auth/v1/sessions/current?scope=console', { method: 'DELETE' }); } catch { /* 网络失败也要清除本地凭证 */ }
     accessToken = ''; currentUser = undefined;

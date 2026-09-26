@@ -50,7 +50,7 @@
       </template>
 
       <template v-else-if="section === 'wallet'">
-        <section class="work-panel"><h2>钱包与订阅</h2><div class="empty-state"><h3>套餐与订阅入口已开放</h3><p>Cloud+ 提供按月/按年订阅，价格按地区实时本地化。历史余额与第三方付费功能尚未上线，平台暂不接受预购或充值。</p></div><div class="actions"><router-link class="primary-button" to="/pricing">查看套餐与价格</router-link></div></section>
+        <section class="work-panel"><h2>钱包与订阅</h2><div class="profile-row"><span>Cloud+</span><strong>{{ entitlements ? (entitlements.cloudPlus ? '已激活' : '未激活') : '正在读取…' }}</strong></div><p v-if="entitlements && !entitlements.cloudPlus" class="hint">订阅权益由 Paddle 事件实时同步；完成订阅后几秒内生效。</p><p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">注意：当前订阅存在待生效的变更（如已排期取消），在变更生效前权益仍可用。</p><div class="actions"><router-link class="primary-button" to="/pricing">查看套餐与价格</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">管理订阅</button></div><p v-if="portalError" class="form-error" role="alert">{{ portalError }}</p><p class="login-fine">支付方式更新、取消与发票在 Paddle 客户门户完成；取消与退款适用 <router-link to="/legal/refunds">退款政策</router-link>。</p></section>
       </template>
 
       <template v-else-if="section === 'developer'">
@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { platform, ApiError, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest } from '@/api/platform';
+import { platform, ApiError, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements } from '@/api/platform';
 const route = useRoute();
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
 const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
@@ -111,6 +111,7 @@ watch(section, value => {
   if (value === 'tickets' && !ticketsLoaded.value) void loadTickets();
   if (value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
   if (value === 'delete') void loadDeletion();
+  if (value === 'wallet') void loadEntitlements();
 });
 
 const providers = [
@@ -135,6 +136,9 @@ async function submitPrivacy(){ busy.value = true; error.value = ''; try { await
 async function exportData(){ busy.value = true; try { const data = await platform.exportData(); const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })); const a = document.createElement('a'); a.href = url; a.download = `nexa-account-export-${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(url); } catch (e) { error.value = e instanceof ApiError ? e.message : '导出失败，请重试。'; } finally { busy.value = false; } }
 
 const deletion = ref<DeletionRequest | null>(), deleteConfirm = ref(''), deleteError = ref('');
+const entitlements = ref<Entitlements | null>(), portalError = ref('');
+async function loadEntitlements(){ try { entitlements.value = await platform.entitlements(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法读取订阅状态。'; } }
+async function openPortal(){ busy.value = true; portalError.value = ''; try { await platform.billingPortal(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法打开订阅管理，请稍后重试。'; busy.value = false; } }
 async function loadDeletion(){ try { deletion.value = (await platform.deletionStatus()).request; } catch { /* 忽略 */ } }
 async function requestDeletion(){ busy.value = true; deleteError.value = ''; try { deletion.value = (await platform.requestDeletion()).request; deleteConfirm.value = ''; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '申请失败，请重试。'; } finally { busy.value = false; } }
 async function cancelDeletion(){ busy.value = true; deleteError.value = ''; try { await platform.cancelDeletion(); deletion.value = null; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '撤销失败，请重试。'; } finally { busy.value = false; } }
@@ -153,6 +157,7 @@ onMounted(async () => {
     if (section.value === 'tickets') void loadTickets();
     if (section.value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
     if (section.value === 'delete') void loadDeletion();
+    if (section.value === 'wallet') void loadEntitlements();
   }
 });
 </script>

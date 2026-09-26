@@ -104,6 +104,8 @@ async function subscribe(tier: Tier) {
     await paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       ...(session?.email ? { customer: { email: session.email } } : {}),
+      // 服务端履约层据此将 Paddle 客户关联到当前账户（webhook 回传 custom_data）。
+      ...(session?.id ? { customData: { userId: session.id } } : {}),
       settings: { displayMode: 'overlay', variant: 'one-page', successUrl: `${window.location.origin}/welcome` }
     });
   } catch (e) { error.value = e instanceof Error ? e.message : '无法打开结账，请稍后重试。'; }
