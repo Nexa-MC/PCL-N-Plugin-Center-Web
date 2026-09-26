@@ -65,8 +65,11 @@ async function detectCountry(): Promise<string | null> {
   } catch { return null; }
 }
 
+// 请求序号守卫：快速切换月/年时丢弃过期响应，避免旧结果覆盖新价格。
+let generation = 0;
 async function loadPrices() {
   if (envError.value) return;
+  const current = ++generation;
   loading.value = true; error.value = '';
   try {
     const paddle = await getPaddle();
@@ -75,11 +78,16 @@ async function loadPrices() {
     if (!items.length) throw new Error('定价配置中尚未填写价格 ID，请在 src/config/pricing.ts 中填入 Paddle 价格。');
     const country = await detectCountry();
     const preview = await paddle.PricePreview(country ? { items, address: { countryCode: country } } : { items });
+    if (current !== generation) return;
     const next: Record<string, string> = {};
     for (const line of preview.data.details.lineItems) next[line.price.id] = line.formattedTotals.total;
     totals.value = next;
-  } catch (e) { error.value = e instanceof Error ? e.message : '暂时无法读取价格，请稍后重试。'; }
-  finally { loading.value = false; }
+  } catch (e) {
+    if (current !== generation) return;
+    error.value = e instanceof Error ? e.message : '暂时无法读取价格，请稍后重试。';
+  } finally {
+    if (current === generation) loading.value = false;
+  }
 }
 watch(cycle, () => { if (!envError.value) void loadPrices(); });
 onMounted(() => { void loadPrices(); platform.session().then(result => { session.value = result; }).finally(() => { sessionReady.value = true; }); });
