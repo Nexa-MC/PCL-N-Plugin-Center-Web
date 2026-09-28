@@ -59,11 +59,35 @@
       </template>
 
       <template v-else-if="section === 'website'">
-        <section v-if="session.staff" class="work-panel">
-          <div class="section-heading"><div><span class="status-pill">已具备资格</span><h2>网站后台管理</h2></div>
-            <div class="actions"><router-link class="primary-button" to="/operations/telemetry">打开遥测控制台</router-link><a class="secondary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">进入后台 ↗</a></div></div>
-          <p>遥测、诊断与灰度控制台为独立全宽页面，随管理员会话读取线上数据；前端测试账户（test_login）下显示本地模拟数据。独立后台 <strong>manage.pcln.top</strong> 接线中，完成后「进入后台」直接跳转。</p>
-        </section>
+        <template v-if="session.staff">
+          <section class="work-panel">
+            <div class="section-heading"><div><span class="status-pill">已具备资格</span><h2>网站后台管理</h2></div>
+              <div class="actions"><a class="primary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">进入后台 ↗</a><button class="secondary-button" :disabled="summaryLoading" @click="loadSummary">刷新摘要</button></div></div>
+            <p>完整的遥测、诊断与灰度控制台由独立后台 <strong>manage.pcln.top</strong> 提供（接线中，完成后「进入后台」直接跳转）。此处仅保留最近 7 天的关键指标摘要{{ testMode ? '；当前为前端测试账户，显示本地模拟数据' : '' }}。</p>
+          </section>
+          <section class="work-panel">
+            <div class="section-heading"><div><h2>遥测摘要</h2></div><span class="status-pill">最近 7 天</span></div>
+            <p v-if="summaryLoading && !summary" class="summary-note" role="status">正在读取摘要…</p>
+            <p v-else-if="summaryError" class="form-error" role="alert">{{ summaryError }}</p>
+            <template v-else-if="summary">
+              <div class="summary-grid">
+                <div class="summary-cell"><b>{{ summary.starts.toLocaleString() }}</b><span>启动器启动</span></div>
+                <div class="summary-cell"><b>{{ summary.gameStarts.toLocaleString() }}</b><span>游戏启动</span></div>
+                <div class="summary-cell"><b>{{ summary.sessions.toLocaleString() }}</b><span>诊断会话</span></div>
+                <div class="summary-cell"><b>{{ summary.errors.toLocaleString() }}</b><span>错误样本</span></div>
+              </div>
+              <div class="summary-cols">
+                <div class="summary-block"><h3>活跃版本</h3>
+                  <div v-for="v in summary.versions" :key="v.version" class="summary-line"><span>{{ v.version }}</span><div class="track"><i :style="{ width: barWidth(v.count, summary.versionMax) }" /></div><b>{{ v.count.toLocaleString() }}</b></div>
+                </div>
+                <div class="summary-block"><h3>平台分布</h3>
+                  <div v-for="p in summary.platforms" :key="p.os" class="summary-line"><span>{{ platformLabel(p.os) }}</span><div class="track"><i :style="{ width: barWidth(p.count, summary.platformTotal) }" /></div><b>{{ Math.round(p.count / summary.platformTotal * 100) }}%</b></div>
+                </div>
+              </div>
+              <p class="summary-note">数据生成于 {{ summary.generatedAt }}。指标口径与完整控制台一致，明细请等待 manage.pcln.top 接线。</p>
+            </template>
+          </section>
+        </template>
         <section v-else class="work-panel"><h2>申请网站管理员</h2><p>网站管理员负责处理支持工单、运营待办与平台诊断。申请通道即将开放，届时可直接在此提交申请。</p><button class="primary-button" disabled>申请入口即将开放</button></section>
       </template>
     </div>
@@ -87,7 +111,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { platform, ApiError, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements } from '@/api/platform';
+import { platform, ApiError, isTestSession, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements } from '@/api/platform';
+import { pluginCenterApi } from '@/api/pluginCenter';
 const route = useRoute();
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
 const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
@@ -116,7 +141,35 @@ watch(section, value => {
   if (value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
   if (value === 'delete') void loadDeletion();
   if (value === 'wallet') void loadEntitlements();
+  if (value === 'website' && session.value?.staff && !summary.value && !summaryLoading.value) void loadSummary();
 });
+
+// 网站管理：仅保留 7 天遥测摘要；完整控制台属于 manage.pcln.top 独立后台。
+interface TelemetrySummary { starts: number; gameStarts: number; sessions: number; errors: number; versions: { version: string; count: number }[]; versionMax: number; platforms: { os: string; count: number }[]; platformTotal: number; generatedAt: string }
+const summary = ref<TelemetrySummary | null>(null), summaryLoading = ref(false), summaryError = ref('');
+const testMode = computed(() => isTestSession());
+const platformLabel = (os: string) => ({ windows: 'Windows', macos: 'macOS', linux: 'Linux' }[os] ?? os);
+const barWidth = (count: number, max: number) => max > 0 ? `${Math.max(2, Math.round(count / max * 100))}%` : '0%';
+async function loadSummary() {
+  summaryLoading.value = true; summaryError.value = '';
+  try {
+    const [tele, diag] = await Promise.all([pluginCenterApi.launcherTelemetry(7), pluginCenterApi.launcherDiagnostics(7)]);
+    const total = (event: string) => tele.daily.filter(row => row.event === event).reduce((n, row) => n + row.count, 0);
+    const platformTotals = new Map<string, number>();
+    for (const row of tele.platforms) platformTotals.set(row.os, (platformTotals.get(row.os) ?? 0) + row.count);
+    const versions = tele.versions.slice(0, 4);
+    summary.value = {
+      starts: total('app.started'), gameStarts: total('game.started'),
+      sessions: diag.sessions,
+      errors: diag.errors.reduce((n, row) => n + row.count, 0),
+      versions, versionMax: Math.max(1, ...versions.map(v => v.count)),
+      platforms: [...platformTotals].map(([os, count]) => ({ os, count })).sort((a, b) => b.count - a.count),
+      platformTotal: Math.max(1, [...platformTotals.values()].reduce((n, c) => n + c, 0)),
+      generatedAt: new Date(tele.generatedAt).toLocaleString()
+    };
+  } catch { summaryError.value = '暂时无法读取遥测摘要，请稍后重试。'; }
+  finally { summaryLoading.value = false; }
+}
 
 const providers = [
   { id: 'github', name: 'GitHub', icon: '' },
@@ -162,6 +215,22 @@ onMounted(async () => {
     if (section.value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
     if (section.value === 'delete') void loadDeletion();
     if (section.value === 'wallet') void loadEntitlements();
+    if (section.value === 'website' && session.value.staff) void loadSummary();
   }
 });
 </script>
+<style scoped>
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 6px}
+.summary-cell{background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:12px;padding:16px 18px}
+.summary-cell b{display:block;font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--nc-accent);line-height:1.15}
+.summary-cell span{display:block;font-size:11.5px;color:var(--market-muted);margin-top:5px}
+.summary-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:20px}
+.summary-block h3{font-size:13px;font-weight:650;margin-bottom:10px}
+.summary-line{display:grid;grid-template-columns:110px minmax(0,1fr) 56px;align-items:center;gap:12px;padding:7px 0;font-size:12px;color:var(--market-muted)}
+.summary-line>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.summary-line>b{text-align:right;font-weight:600;color:var(--market-text);font-variant-numeric:tabular-nums}
+.summary-line .track{height:7px;background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:999px;overflow:hidden}
+.summary-line .track i{display:block;height:100%;background:var(--nc-accent);border-radius:999px;transition:width .4s ease}
+.summary-note{font-size:11.5px;color:var(--market-muted);margin-top:16px;line-height:1.7}
+@media(max-width:800px){.summary-grid{grid-template-columns:repeat(2,1fr)}.summary-cols{grid-template-columns:1fr;gap:14px}.summary-line{grid-template-columns:92px minmax(0,1fr) 48px}}
+</style>

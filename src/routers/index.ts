@@ -17,7 +17,7 @@ const router = createRouter({
       { path: 'legal/:doc', component: () => import('@/views/cloud/LegalDocs.vue') },
       { path: 'console', redirect: '/account' },
       { path: 'operations', redirect: '/account' },
-      { path: 'operations/telemetry', component: () => import('@/views/cloud/TelemetryPage.vue') },
+      { path: 'operations/telemetry', redirect: '/account?section=website' },
       { path: 'about', redirect: '/' }
     ] },
     { path: '/launcher', redirect: '/' },
@@ -25,7 +25,7 @@ const router = createRouter({
     { path: '/download/legacy', redirect: '/download?product=legacy' },
     { path: '/market', redirect: '/store' },
     { path: '/market/plugins/:id', redirect: to => `/store/${encodeURIComponent(String(to.params.id))}` },
-    { path: '/admin/telemetry', redirect: '/operations/telemetry' },
+    { path: '/admin/telemetry', redirect: '/account?section=website' },
     { path: '/developer', redirect: '/account?section=developer' },
     { path: '/website-management', redirect: '/account?section=website' },
     { path: '/home', redirect: '/' },
