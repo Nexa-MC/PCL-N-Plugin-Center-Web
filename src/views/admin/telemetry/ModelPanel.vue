@@ -31,6 +31,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { isTestSession } from '@/api/platform';
 type Cohort = { os: string; loader: string; samples: number; validationSamples: number; coverage: number; validationLossMiB: number; baselineLossMiB: number; featureMin: number[]; featureMax: number[] };
 type Model = { generatedAt: string; expiresAt: string; models: Cohort[] };
 const model = ref<Model>();
@@ -68,6 +69,8 @@ function validate(value: any): Model {
   return value;
 }
 async function load() {
+  // 前端测试账户没有真实模型接口；与线上一致，展示“模型已停用”的空状态而非报错。
+  if (isTestSession()) { model.value = undefined; error.value = ''; loading.value = false; return; }
   request?.abort();
   const controller = new AbortController(); request = controller;
   const timeout = setTimeout(() => controller.abort(), 10000);

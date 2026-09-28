@@ -73,24 +73,53 @@ const testState = {
 };
 const testNow = () => new Date().toISOString();
 const isTest = () => testSession !== undefined;
+// 供 pluginCenter 等 API 层判断“测试账户 → 走本地桩数据”。
+export const isTestSession = isTest;
+const TEST_STORAGE_KEY = 'nexa.cloud.test-session.v1';
 
-export function testLogin(overrides: Partial<Session> = {}): Session {
-  testSession = { id: 'local-test', name: 'Test', email: 'test@local.dev', staff: 0, developer: 0, termsAccepted: 1, scope: 'console', ...overrides };
-  testState.identities = [{ provider: 'github', email: testSession.email, created_at: testNow() }];
-  testState.tickets = [{ id: 'ticket-local-1', subject: '示例支持请求', body: '这是仅前端的测试数据，可用来预览工单闭环。', status: 'open', created_at: testNow(), version: 1 }];
+function seedTestState(session: Session): void {
+  testState.identities = [
+    { provider: 'github', email: session.email, created_at: testNow() },
+    { provider: 'microsoft', email: session.email, created_at: testNow() }
+  ];
+  testState.tickets = [
+    { id: 'ticket-local-1', subject: '示例支持请求', body: '这是仅前端的测试数据，可用来预览工单闭环。', status: 'open', created_at: testNow(), version: 1 },
+    { id: 'ticket-local-2', subject: '已解决的示例请求', body: '用来预览“已解决”列表与状态徽章。', status: 'resolved', created_at: testNow(), version: 2 }
+  ];
   testState.privacy = [];
   testState.deletion = null;
+}
+
+export function testLogin(overrides: Partial<Session> = {}): Session {
+  // 默认即最高权限测试账户：staff + developer，解锁全部页面与入口；数据为本地桩，不触达真实 API。
+  testSession = { id: 'local-test', name: 'Test', email: 'test@local.dev', staff: 1, developer: 1, termsAccepted: 1, scope: 'console', ...overrides };
+  seedTestState(testSession);
   accessToken = ''; currentUser = testSession; restoring = undefined;
-  console.info('%c Nexa Cloud %c 已进入前端测试账户「Test」。仅本地 UI 状态，无后端权限，刷新即失效。test_logout() 退出；test_login({ staff: 1 }) 可模拟工作人员。', 'background:#1673e6;color:#fff;border-radius:4px 0 0 4px;padding:1px 6px', 'background:#e8f0fe;color:#0f5ecb;border-radius:0 4px 4px 0;padding:1px 6px');
+  try { localStorage.setItem(TEST_STORAGE_KEY, JSON.stringify(testSession)); } catch { /* 存储不可用时退化为非持久会话 */ }
+  console.info('%c Nexa Cloud %c 已进入前端测试账户「Test」：staff + developer 全 UI 权限；数据为本地模拟，不触达真实 API。已持久化，刷新不失效；test_logout() 退出。', 'background:#1673e6;color:#fff;border-radius:4px 0 0 4px;padding:1px 6px', 'background:#e8f0fe;color:#0f5ecb;border-radius:0 4px 4px 0;padding:1px 6px');
   window.dispatchEvent(new Event('focus')); // 让 CloudShell 立即刷新登录态
   return testSession;
 }
 
 export function testLogout(): void {
   testSession = undefined; currentUser = undefined; accessToken = ''; restoring = undefined;
+  try { localStorage.removeItem(TEST_STORAGE_KEY); } catch { /* ignore */ }
   console.info('已退出前端测试账户。');
   window.dispatchEvent(new Event('focus'));
 }
+
+// 页面加载即恢复持久化的测试会话：刷新后登录态与访问、跳转逻辑保持完整。
+try {
+  const stored = localStorage.getItem(TEST_STORAGE_KEY);
+  if (stored) {
+    const parsed = JSON.parse(stored) as Session;
+    if (parsed && typeof parsed.name === 'string' && parsed.id === 'local-test') {
+      testSession = parsed; currentUser = parsed; seedTestState(parsed);
+    } else {
+      localStorage.removeItem(TEST_STORAGE_KEY);
+    }
+  }
+} catch { try { localStorage.removeItem(TEST_STORAGE_KEY); } catch { /* ignore */ } }
 
 const testPolicyFixtures = (): PolicyStatus[] => {
   const acceptedAt = testSession?.termsAccepted ? '2026-09-26T08:00:00.000Z' : null;
