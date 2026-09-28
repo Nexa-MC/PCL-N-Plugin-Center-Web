@@ -13,3 +13,8 @@
 .account-divider{margin:5px 4px}
 @keyframes nc-drop-in{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
 @media(max-width:800px){.cloud-header nav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}.cloud-header nav::-webkit-scrollbar{display:none}.cloud-header nav a{white-space:nowrap;flex-shrink:0}.account-status{padding:8px 12px;background:rgba(255,255,255,.14);border-radius:8px}}
+
+/* Embedded telemetry observatory inside the account website-management section. */
+.telemetry-embed{margin-top:22px;min-width:0}
+.telemetry-embed .observatory h1{margin-bottom:10px}
+@media(max-width:800px){.telemetry-embed{margin-top:16px}}

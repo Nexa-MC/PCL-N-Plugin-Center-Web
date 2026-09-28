@@ -59,7 +59,13 @@
       </template>
 
       <template v-else-if="section === 'website'">
-        <section v-if="session.staff" class="work-panel"><span class="status-pill">已具备资格</span><h2>网站后台管理</h2><p>统一待办、遥测与诊断等运营功能正在回归，后台入口将在此开放。</p></section>
+        <template v-if="session.staff">
+          <section class="work-panel">
+            <div class="section-heading"><div><span class="status-pill">已具备资格</span><h2>网站后台管理</h2></div><a class="primary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">进入后台 ↗</a></div>
+            <p>独立后台 <strong>manage.pcln.top</strong> 接线中，完成后此入口直接跳转。过渡期间，遥测与诊断面板已内嵌在下方：真实会话走线上接口，前端测试账户（test_login）显示本地模拟数据。</p>
+          </section>
+          <div class="telemetry-embed"><Telemetry /></div>
+        </template>
         <section v-else class="work-panel"><h2>申请网站管理员</h2><p>网站管理员负责处理支持工单、运营待办与平台诊断。申请通道即将开放，届时可直接在此提交申请。</p><button class="primary-button" disabled>申请入口即将开放</button></section>
       </template>
     </div>
@@ -84,6 +90,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { platform, ApiError, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements } from '@/api/platform';
+import Telemetry from '@/views/admin/telemetry/index.vue';
 const route = useRoute();
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
 const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
