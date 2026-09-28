@@ -25,7 +25,13 @@ async function loadSession() { session.value = await platform.session(); if (ses
 function openAccount() { if (!session.value) { menuOpen.value = false; void router.push('/account'); return; } menuOpen.value = !menuOpen.value; }
 async function logout() { menuOpen.value = false; if (!session.value) return router.push('/account'); await platform.logout(); session.value = undefined; await router.push('/account'); }
 const onFocus = () => void loadSession();
+// Close the account dropdown when clicking anywhere outside of it.
+function onDocumentClick(event: MouseEvent) {
+  if (!menuOpen.value) return;
+  const target = event.target instanceof Element ? event.target : null;
+  if (!target?.closest('.account-menu')) menuOpen.value = false;
+}
 router.afterEach(() => { menuOpen.value = false; });
-onMounted(() => { void loadSession(); window.addEventListener('focus', onFocus); });
-onUnmounted(() => window.removeEventListener('focus', onFocus));
+onMounted(() => { void loadSession(); window.addEventListener('focus', onFocus); document.addEventListener('click', onDocumentClick); });
+onUnmounted(() => { window.removeEventListener('focus', onFocus); document.removeEventListener('click', onDocumentClick); });
 </script>

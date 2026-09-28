@@ -5,3 +5,11 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 .pagination{display:flex;align-items:center;justify-content:flex-end;gap:15px;font-size:11px;color:#8198a4;margin-top:22px}
+
+/* Account dropdown layout fix: full-width stacked items, on-brand hover, entrance motion, mobile bounds. */
+.account-dropdown{display:flex;flex-direction:column;gap:2px;min-width:252px;max-width:min(340px,calc(100vw - 24px));transform-origin:top right;animation:nc-drop-in .16s cubic-bezier(.22,.8,.32,1)}
+.account-dropdown a,.account-dropdown button{display:block;width:100%;border-radius:7px;line-height:1.55;overflow-wrap:anywhere;transition:background .12s ease,color .12s ease}
+.account-dropdown a:hover,.account-dropdown button:hover{background:var(--market-accent-soft);color:var(--nc-accent-strong)}
+.account-divider{margin:5px 4px}
+@keyframes nc-drop-in{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+@media(max-width:800px){.cloud-header nav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}.cloud-header nav::-webkit-scrollbar{display:none}.cloud-header nav a{white-space:nowrap;flex-shrink:0}.account-status{padding:8px 12px;background:rgba(255,255,255,.14);border-radius:8px}}
