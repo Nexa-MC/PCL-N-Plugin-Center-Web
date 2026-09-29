@@ -29,7 +29,7 @@ const router = createRouter({
     { path: '/developer', redirect: '/account?section=developer' },
     { path: '/website-management', redirect: '/account?section=website' },
     { path: '/home', redirect: '/' },
-    { path: '/login', redirect: '/account' },
+    { path: '/login', component: () => import('@/views/cloud/Login.vue') },
     { path: '/:pathMatch(.*)*', component: () => import('@/views/cloud/NotFound.vue') }
   ]
 });

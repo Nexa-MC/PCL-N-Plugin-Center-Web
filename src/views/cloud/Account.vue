@@ -23,7 +23,7 @@
       </template>
 
       <template v-else-if="section === 'linked'">
-        <section class="work-panel"><h2>关联的账号</h2><p>同一个账户可以同时关联 GitHub、Google 和 Microsoft，即使邮箱不同也可以互绑。至少需要保留一个登录方式。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true">{{ p.icon }}</span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联</small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
+        <section class="work-panel"><h2>关联的账号</h2><p>同一个账户可以同时关联 GitHub、Google 和 Microsoft，即使邮箱不同也可以互绑。至少需要保留一个登录方式。</p><p class="login-fine">绑定 Microsoft 时会请求 Xbox 权限，用于查询 Minecraft 拥有状况与游戏档案（UUID）；启动器登录后可据此自动添加游戏档案。解绑 Microsoft 将同时清除已存的档案信息。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true">{{ p.icon }}</span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联<template v-if="p.id === 'microsoft' && minecraftText"> · {{ minecraftText }}</template></small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
       </template>
 
       <template v-else-if="section === 'security'">
@@ -163,69 +163,25 @@
       <div class="actions"><button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button><button class="secondary-button" type="button" @click="printCodes">打印</button></div>
     </FormDialog>
   </div>
-  <div v-else class="login-hero">
-    <div class="login-card">
-      <span class="login-mark" aria-hidden="true">N</span>
-      <h2>登录 Nexa Cloud</h2>
-      <p class="login-sub">使用 GitHub、Google 或 Microsoft 账户继续，平台不提供邮箱注册。</p>
-      <label class="accept-check"><input type="checkbox" v-model="tosRead" /><span>我已阅读并接受《<router-link to="/legal/terms">服务条款 v1.0</router-link>》与《<router-link to="/legal/privacy">隐私政策 v1.0</router-link>》</span></label>
-      <div class="login-providers">
-        <button class="provider-button github" :disabled="busy || !tosRead" @click="oauth('github')"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span>使用 GitHub 继续</span></button>
-        <button class="provider-button google" :disabled="busy || !tosRead" @click="oauth('google')"><svg viewBox="0 0 48 48" width="16" height="16" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>使用 Google 继续</span></button>
-        <button class="provider-button microsoft" :disabled="busy || !tosRead" @click="oauth('microsoft')"><svg viewBox="0 0 23 23" width="16" height="16" aria-hidden="true"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="12" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/></svg><span>使用 Microsoft 继续</span></button>
-      </div>
-      <div class="login-divider" aria-hidden="true"><span>或使用用户 ID</span></div>
-      <form v-if="loginStep === 'creds'" class="credential-form" @submit.prevent="submitLogin">
-        <label>用户 ID<input v-model.trim="loginHandle" autocomplete="username" minlength="6" maxlength="20" required placeholder="6–20 位，字母开头" /></label>
-        <label>密码<input v-model="loginPassword" type="password" autocomplete="current-password" required placeholder="你设置的登录密码" /></label>
-        <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
-        <button class="primary-button" type="submit" :disabled="loginBusy">{{ loginBusy ? '正在验证…' : '下一步' }}</button>
-        <p class="login-fine">首次使用？先用上方第三方方式登录，再到「个人信息」设置用户 ID、在「安全性与登录」设置密码与两步验证。</p>
-      </form>
-      <form v-else class="credential-form" @submit.prevent="submitMfaCode">
-        <p class="mfa-title">两步验证 · {{ loginUserName }}</p>
-        <p class="login-fine">验证方式优先级：{{ factorLabels }}</p>
-        <template v-if="loginFactors.includes('passkey')">
-          <button class="primary-button passkey-primary" type="button" :disabled="loginBusy" @click="passkeyLogin">🔑 {{ loginBusy ? '正在验证…' : '使用 passkey 验证' }}</button>
-          <div v-if="hasCodeFactor" class="login-divider" aria-hidden="true"><span>或使用验证码</span></div>
-        </template>
-        <template v-if="mfaMode === 'app' && loginFactors.includes('totp')">
-          <span class="seg-label">验证器应用 · 6 位动态码</span>
-          <SegmentedCode v-model="appCode" :length="6" charset="digits" label="验证器动态码" :disabled="loginBusy" @complete="onCodeComplete" />
-        </template>
-        <template v-else-if="mfaMode === 'recovery' && loginFactors.includes('recovery')">
-          <span class="seg-label">恢复码 · 一次性使用</span>
-          <SegmentedCode v-model="recoveryInput" :length="10" charset="alnum" :group-size="5" label="恢复码" :disabled="loginBusy" @complete="onCodeComplete" />
-        </template>
-        <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
-        <button class="primary-button" type="submit" :disabled="loginBusy || !currentCode">{{ loginBusy ? '正在验证…' : '验证并登录' }}</button>
-        <div class="mfa-switch">
-          <button v-if="mfaMode === 'app' && loginFactors.includes('recovery')" class="back-link" type="button" @click="switchMfaMode('recovery')">拿不到动态码？改用恢复码</button>
-          <button v-if="mfaMode === 'recovery' && loginFactors.includes('totp')" class="back-link" type="button" @click="switchMfaMode('app')">‹ 返回验证器动态码</button>
-        </div>
-        <button class="back-link" type="button" @click="backToCreds">‹ 返回重输密码</button>
-      </form>
-      <p v-if="error || oauthError" class="form-error" role="alert">{{ oauthError || error }}</p>
-      <p class="login-fine">账户与会话由 auth.pcln.top 提供，一个账户可同时绑定 GitHub、Google 与 Microsoft。</p>
-    </div>
-  </div>
+  <p v-else class="empty-state" role="status">正在前往登录页…</p>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors } from '@/api/platform';
+import { useRoute, useRouter } from 'vue-router';
+import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors, type MinecraftProfile } from '@/api/platform';
 import { pluginCenterApi } from '@/api/pluginCenter';
-import { createPasskey, assertPasskey } from '@/utils/webauthnClient';
+import { createPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';
 import FormDialog from '@/components/FormDialog.vue';
 import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
 const route = useRoute();
+const router = useRouter();
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
-const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
-const tosRead = ref(false), acceptChecked = ref(false);
-function oauth(provider:'github'|'microsoft'|'google'){ busy.value=true; platform.oauthStart(provider, '/account', 'login'); }
+const acceptChecked = ref(false);
 async function accept(){ busy.value = true; error.value = ''; try { await platform.acceptPolicies(); session.value = { ...session.value!, termsAccepted: 1 }; } catch (e) { error.value = e instanceof ApiError ? e.message : '接受条款失败，请重试。'; } finally { busy.value = false; } }
 async function logout(){ busy.value=true; error.value=''; await platform.logout(); session.value=undefined; busy.value=false; }
+// 登录表单已独立为 /login 页（也为启动器设备流确认页做准备）。
+function gotoLogin() { void router.replace({ path: '/login', query: { return: route.fullPath } }); }
 
 const navItems = [
   { key: 'overview', label: '概览', icon: '⌂', color: '#1a73e8' },
@@ -247,6 +203,7 @@ watch(section, value => {
   if (value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
   if (value === 'delete') void loadDeletion();
   if (value === 'wallet') void loadEntitlements();
+  if (value === 'linked') void loadMinecraft();
   if (value === 'website' && session.value?.staff && !summary.value && !summaryLoading.value) void loadSummary();
   if (value === 'security' && session.value && !testMode.value && !factors.value) void refreshFactors();
 });
@@ -287,6 +244,16 @@ const identities = ref<LinkedIdentity[]>();
 const bound = (id: LinkedIdentity['provider']) => Boolean(identities.value?.some(i => i.provider === id));
 const identityMail = (id: LinkedIdentity['provider']) => identities.value?.find(i => i.provider === id)?.email || '已关联';
 async function loadIdentities(){ try { identities.value = (await platform.identities()).identities; } catch (e) { error.value = e instanceof Error ? e.message : '暂时无法读取已关联的账号。'; } }
+// Microsoft 绑定附带的 Minecraft 拥有状况与档案（供启动器自动添加档案）。
+const minecraft = ref<MinecraftProfile | null>(null);
+const minecraftText = computed(() => {
+  const m = minecraft.value;
+  if (!m || !m.microsoftLinked) return '';
+  if (m.owned === 1) return `Minecraft 已拥有${m.profileName ? ` · ${m.profileName}` : ''}${m.profileId ? ` · ${m.profileId.slice(0, 8)}…` : ''}`;
+  if (m.owned === 0) return 'Minecraft 未拥有';
+  return m.error ? `Minecraft 核查未完成（${m.error}）` : 'Minecraft 尚未核查';
+});
+async function loadMinecraft(){ try { minecraft.value = await platform.minecraftProfile(); } catch { minecraft.value = null; } }
 async function bind(id: LinkedIdentity['provider']){ busy.value = true; platform.oauthStart(id, '/account?section=linked', 'link'); }
 async function unbind(id: LinkedIdentity['provider']){ busy.value = true; error.value = ''; try { await platform.unbind(id); await loadIdentities(); } catch (e) { error.value = e instanceof ApiError ? e.message : '解绑失败，请重试。'; } finally { busy.value = false; } }
 
@@ -312,60 +279,6 @@ const offset = ref(0), total = ref(0);
 const visibleTickets = computed(() => tickets.value.filter(t => showResolved.value ? t.status === 'resolved' : t.status === 'open'));
 async function loadTickets(){ busy.value = true; error.value = ''; try { const result = await platform.tickets('console', offset.value); tickets.value = result.data; total.value = result.pagination.total; ticketsLoaded.value = true; } catch (e) { error.value = e instanceof Error ? e.message : '操作失败，请重试。'; } finally { busy.value = false; } }
 async function submit(){ busy.value = true; error.value = ''; message.value = ''; try { await platform.createTicket(subject.value, body.value); subject.value = ''; body.value = ''; message.value = '请求已提交。'; showResolved.value = false; await loadTickets(); } catch (e) { error.value = e instanceof Error ? e.message : '操作失败，请重试。'; } finally { busy.value = false; } }
-
-// ---- 用户 ID + 密码登录（两段式：密码 → 2FA，优先级 Passkey › 验证器 › 恢复码） ----
-const loginStep = ref<'creds' | 'mfa'>('creds');
-const loginHandle = ref(''), loginPassword = ref(''), loginError = ref(''), loginBusy = ref(false);
-const loginChallenge = ref(''), loginFactors = ref<string[]>([]), loginUserName = ref('');
-const mfaMode = ref<'app' | 'recovery'>('app');
-const appCode = ref(''), recoveryInput = ref('');
-const currentCode = computed(() => mfaMode.value === 'app' ? appCode.value : recoveryInput.value);
-const hasCodeFactor = computed(() => loginFactors.value.includes('totp') || loginFactors.value.includes('recovery'));
-const FACTOR_NAMES: Record<string, string> = { passkey: 'Passkey', totp: '验证器动态码', recovery: '恢复码' };
-const FACTOR_ORDER = ['passkey', 'totp', 'recovery'];
-const factorLabels = computed(() => [...loginFactors.value].sort((a, b) => FACTOR_ORDER.indexOf(a) - FACTOR_ORDER.indexOf(b)).map(f => FACTOR_NAMES[f] ?? f).join(' › ') || '—');
-async function submitLogin() {
-  loginBusy.value = true; loginError.value = '';
-  try {
-    const result = await platform.loginWithPassword(loginHandle.value, loginPassword.value);
-    loginChallenge.value = result.challenge; loginFactors.value = result.factors; loginUserName.value = result.user?.name || loginHandle.value;
-    mfaMode.value = result.factors.includes('totp') ? 'app' : 'recovery';
-    loginPassword.value = ''; appCode.value = ''; recoveryInput.value = ''; loginStep.value = 'mfa';
-  } catch (e) { loginError.value = e instanceof Error ? e.message : '登录失败，请稍后重试。'; }
-  finally { loginBusy.value = false; }
-}
-async function finishLogin() {
-  session.value = await platform.session();
-  loginStep.value = 'creds'; appCode.value = ''; recoveryInput.value = ''; loginChallenge.value = '';
-  if (session.value) {
-    nameInput.value = session.value.name ?? ''; handleInput.value = session.value.handle ?? '';
-    void loadIdentities();
-    if (!testMode.value) void refreshFactors();
-  }
-}
-async function submitMfaCode() {
-  if (!currentCode.value) return;
-  loginBusy.value = true; loginError.value = '';
-  try { await platform.loginWithCode(loginChallenge.value, currentCode.value); await finishLogin(); }
-  catch (e) {
-    loginError.value = e instanceof Error ? e.message : '验证失败，请重试。';
-    if (mfaMode.value === 'app') appCode.value = ''; else recoveryInput.value = '';
-  }
-  finally { loginBusy.value = false; }
-}
-function onCodeComplete() { if (!loginBusy.value) void submitMfaCode(); }
-function switchMfaMode(mode: 'app' | 'recovery') { mfaMode.value = mode; loginError.value = ''; appCode.value = ''; recoveryInput.value = ''; }
-async function passkeyLogin() {
-  loginBusy.value = true; loginError.value = '';
-  try {
-    const options = await platform.loginPasskeyOptions(loginChallenge.value);
-    const assertion = await assertPasskey(options);
-    await platform.loginPasskey({ challenge: loginChallenge.value, ...assertion });
-    await finishLogin();
-  } catch (e) { loginError.value = e instanceof Error ? e.message : 'passkey 校验失败'; }
-  finally { loginBusy.value = false; }
-}
-function backToCreds() { loginStep.value = 'creds'; loginError.value = ''; appCode.value = ''; recoveryInput.value = ''; }
 
 // ---- 统一密码验证框架：所有需要密码的操作都经由同一个对话框 ----
 const pwDialog = reactive({ visible: false, mode: 'reauth' as 'reauth' | 'set' | 'change', title: '', description: '', busy: false, error: '' });
@@ -515,32 +428,30 @@ function printCodes() {
 }
 async function copyText(text: string) { try { await navigator.clipboard.writeText(text); mfaMsg.value = '已复制到剪贴板。'; } catch { mfaMsg.value = '复制失败，请手动选择复制。'; } }
 
-// 会话全局同步：登出（含顶栏菜单发起的）或测试账户切换时，本页立即回到对应状态。
+// 会话全局同步：登出（含顶栏菜单发起的）或测试账户切换时立即响应；登出后前往独立登录页。
 async function syncSession() {
   const next = await platform.session();
   session.value = next;
-  if (!next) { factors.value = null; identities.value = undefined; summary.value = null; }
-  else {
-    nameInput.value = next.name ?? ''; handleInput.value = next.handle ?? '';
-    if (section.value === 'security' && !testMode.value && !factors.value) void refreshFactors();
-  }
+  if (!next) { factors.value = null; identities.value = undefined; summary.value = null; gotoLogin(); return; }
+  nameInput.value = next.name ?? ''; handleInput.value = next.handle ?? '';
+  if (section.value === 'security' && !testMode.value && !factors.value) void refreshFactors();
 }
 
 onMounted(async () => {
   window.addEventListener(SESSION_EVENT, syncSession);
   session.value = await platform.session();
   checking.value = false;
-  if (session.value) {
-    void loadIdentities();
-    nameInput.value = session.value.name ?? '';
-    handleInput.value = session.value.handle ?? '';
-    if (section.value === 'tickets') void loadTickets();
-    if (section.value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
-    if (section.value === 'delete') void loadDeletion();
-    if (section.value === 'wallet') void loadEntitlements();
-    if (section.value === 'website' && session.value.staff) void loadSummary();
-    if (section.value === 'security' && !testMode.value) void refreshFactors();
-  }
+  if (!session.value) { gotoLogin(); return; }
+  void loadIdentities();
+  nameInput.value = session.value.name ?? '';
+  handleInput.value = session.value.handle ?? '';
+  if (section.value === 'tickets') void loadTickets();
+  if (section.value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
+  if (section.value === 'delete') void loadDeletion();
+  if (section.value === 'wallet') void loadEntitlements();
+  if (section.value === 'linked') void loadMinecraft();
+  if (section.value === 'website' && session.value.staff) void loadSummary();
+  if (section.value === 'security' && !testMode.value) void refreshFactors();
 });
 onUnmounted(() => { window.removeEventListener(SESSION_EVENT, syncSession); });
 </script>
@@ -558,14 +469,8 @@ onUnmounted(() => { window.removeEventListener(SESSION_EVENT, syncSession); });
 .summary-line .track i{display:block;height:100%;background:var(--nc-accent);border-radius:999px;transition:width .4s ease}
 .summary-note{font-size:11.5px;color:var(--market-muted);margin-top:16px;line-height:1.7}
 @media(max-width:800px){.summary-grid{grid-template-columns:repeat(2,1fr)}.summary-cols{grid-template-columns:1fr;gap:14px}.summary-line{grid-template-columns:92px minmax(0,1fr) 48px}}
-.login-divider{display:flex;align-items:center;gap:12px;margin:22px 0 2px;color:#9aa6b8;font-size:11px}.login-divider:before,.login-divider:after{content:'';flex:1;height:1px;background:#e5ecef}
-.credential-form{display:grid;gap:12px;margin-top:14px;text-align:left}.credential-form label{display:grid;gap:8px;font-size:12px;color:#708693}.credential-form input{padding:10px 12px;border:1px solid #dce7ed;border-radius:6px;color:#355260;background:#fff;width:100%}.credential-form .primary-button{width:100%;margin-top:2px}.credential-form .login-fine{margin:2px 0 0}
-.mfa-title{font-size:14px;font-weight:650;color:var(--market-text);text-align:center}.back-link{background:transparent;border:0;color:var(--market-muted);font-size:12px;padding:6px;text-align:center;cursor:pointer}.back-link:hover{color:var(--nc-accent)}
 .test-mode-note{font-size:12px;color:var(--market-muted);background:var(--market-surface-soft);border:1px dashed var(--market-border);border-radius:10px;padding:12px 16px;margin:18px 0 0}
 .seg-label{display:block;text-align:center;font-size:12px;color:#708693;margin:6px 0 10px}
-.passkey-primary{width:100%;min-height:46px;font-size:14px;margin-top:6px}
-.credential-form .login-divider{margin:16px 0 4px}
-.mfa-switch{display:flex;justify-content:center;margin-top:-2px}
 .row-action{flex-shrink:0;margin-top:6px}
 .factor-title{font-size:13px;font-weight:650;margin:22px 0 6px;padding-top:16px;border-top:1px solid #e8edf3}.factor-empty{font-size:12px;color:var(--market-muted);margin-bottom:10px;line-height:1.7}
 .secret-box{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:10px;padding:12px 14px;margin:0}
