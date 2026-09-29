@@ -20,3 +20,16 @@
 .nexa-dialog .el-dialog__header{margin-right:0;padding-bottom:10px}
 .nexa-dialog .el-dialog__body{padding-top:4px}
 .nexa-dialog .el-dialog__footer{padding-top:10px}
+
+/* 工单页：分类标签按钮此前无任何样式（只有 a 版本），按云主题补齐胶囊分段样式。 */
+.category-tabs{margin:4px 0 0}
+.category-tabs button{border:1px solid var(--market-border);background:#fff;color:var(--market-muted);padding:7px 18px;border-radius:999px;font-size:12px;line-height:1.4;transition:color .15s ease,border-color .15s ease,background .15s ease}
+.category-tabs button:hover{color:var(--nc-accent);border-color:var(--nc-accent)}
+.category-tabs button.active{background:var(--market-accent-soft);border-color:var(--nc-accent);color:var(--nc-accent);font-weight:600}
+.category-tabs button:focus-visible{outline:2px solid #0899bb;outline-offset:2px}
+/* 提交成功提示：从遗留青色统一到品牌蓝。 */
+.form-success{color:var(--nc-accent)}
+/* 工单列表细节：首行分隔线与状态徽章对齐。 */
+.ticket-row:first-of-type{margin-top:18px}
+.ticket-row .status-pill{align-self:center}
+@media(max-width:800px){.ticket-row .status-pill{align-self:flex-start}}
