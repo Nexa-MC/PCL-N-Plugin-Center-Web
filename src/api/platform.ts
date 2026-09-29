@@ -1,14 +1,20 @@
-export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; termsAccepted?: number; scope: 'console' | 'operations' }
+import type { RegisterOptions, AssertOptions, CreatedPasskey, PasskeyAssertion } from '../utils/webauthnClient';
+
+export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; termsAccepted?: number; handle?: string | null; scope: 'console' | 'operations' }
 export interface LinkedIdentity { provider: 'github' | 'microsoft' | 'google'; email?: string | null; created_at: string }
 export interface PolicyStatus { kind: string; version: string; effectiveAt: string; contentHash: string; acceptedAt: string | null }
 export interface DeletionRequest { id: string; state: 'pending' | 'cancelled' | 'finalized'; requestedAt: string; executeAfter?: number; cancelledAt: string | null; finalizedAt: string | null }
 export interface PrivacyRequest { id: string; type: string; state: string; createdAt: string; updatedAt: string }
 export interface Entitlements { cloudPlus: boolean; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
+export interface LoginChallenge { challenge: string; factors: string[]; user: { name: string } }
+export interface MfaPasskey { credentialId: string; name: string | null; createdAt: string; lastUsedAt: string | null }
+export interface MfaFactors { passwordSet: boolean; passkeys: MfaPasskey[]; totp: { confirmed: boolean; createdAt: string; confirmedAt: string | null } | null; recovery: { count: number } }
 export interface StoreItem { id: string; name: string; summary: string; category: string; version: string; publisher: string; description: string }
 export interface Ticket { id: string; subject: string; body: string; status: string; created_at: string; version: number }
 export class ApiError extends Error { constructor(message: string, public status: number) { super(message); } }
 
-const AUTH_BASE = 'https://auth.pcln.top';
+// 开发环境走同源相对路径（vite 代理 → 本地 nexa-auth :5733）；生产仍直连认证域。
+const AUTH_BASE = import.meta.env.DEV ? '' : 'https://auth.pcln.top';
 const POLICY_VERSION = '1.0';
 let accessToken = '', currentUser: Session | undefined, restoring: Promise<Session | undefined> | undefined;
 
@@ -213,6 +219,38 @@ export const platform = {
     const result = await request<{ url: string }>('/billing/portal', { method: 'POST' });
     window.location.assign(result.url);
   },
+  // ---- 用户 ID + 密码登录与两步验证（nexa-auth 提供） ----
+  loginWithPassword: async (handle: string, password: string) => {
+    const response = await authFetch('/auth/v1/login', { method: 'POST', body: JSON.stringify({ handle, password }) });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}) as { detail?: string; code?: string });
+      throw new ApiError(body.code === 'mfa_enrollment_required' ? '该账户尚未注册两步验证：请先用第三方方式登录一次，并在「安全性与登录」中注册 passkey 或验证器应用。' : (body.detail || '用户 ID 或密码不正确'), response.status);
+    }
+    return await response.json() as LoginChallenge;
+  },
+  loginWithCode: async (challenge: string, code: string) => {
+    const result = await authJson<{ ok: boolean; method: string; recovery?: { remaining: number }; user: { id: string; name: string } }>(authFetch('/auth/v1/login/totp', { method: 'POST', body: JSON.stringify({ challenge, code }) }), '验证码不正确或挑战已过期');
+    accessToken = ''; currentUser = undefined; restoring = undefined;
+    return result;
+  },
+  loginPasskeyOptions: (challenge: string) => authJson<AssertOptions>(authFetch('/auth/v1/login/passkey/options', { method: 'POST', body: JSON.stringify({ challenge }) }), '获取 passkey 选项失败'),
+  loginPasskey: async (payload: { challenge: string } & PasskeyAssertion) => {
+    const result = await authJson<{ ok: boolean; user: { id: string; name: string } }>(authFetch('/auth/v1/login/passkey', { method: 'POST', body: JSON.stringify(payload) }), 'passkey 校验失败');
+    accessToken = ''; currentUser = undefined; restoring = undefined;
+    return result;
+  },
+  mfaFactors: () => authJson<MfaFactors>(authFetch('/auth/v1/mfa/factors'), '读取两步验证状态失败'),
+  updateDisplayName: (name: string) => authJson<{ ok: boolean; name: string }>(authFetch('/auth/v1/account/name', { method: 'PATCH', body: JSON.stringify({ name }) }), '修改用户名失败'),
+  handleAvailability: (handle: string) => authJson<{ available: boolean; reason?: string }>(authFetch('/auth/v1/account/handle/availability?handle=' + encodeURIComponent(handle)), '查询失败'),
+  updateHandle: (handle: string) => authJson<{ ok: boolean; handle: string; nextChangeAt: string }>(authFetch('/auth/v1/account/handle', { method: 'PUT', body: JSON.stringify({ handle }) }), '修改用户 ID 失败'),
+  setPassword: (password: string, currentPassword?: string) => authJson<{ ok: boolean; mfa: { required: boolean; factors: string[]; message: string } }>(authFetch('/auth/v1/account/password', { method: 'POST', body: JSON.stringify(currentPassword ? { password, currentPassword } : { password }) }), '保存密码失败'),
+  totpEnroll: () => authJson<{ secret: string; otpauthUrl: string; expiresAt: string }>(authFetch('/auth/v1/mfa/totp/enroll', { method: 'POST', body: '{}' }), '发起注册失败'),
+  totpConfirm: (code: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/totp/confirm', { method: 'POST', body: JSON.stringify({ code }) }), '验证码不正确'),
+  totpDisable: (password?: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/totp', { method: 'DELETE', body: JSON.stringify({ password }) }), '停用失败'),
+  passkeyRegisterOptions: () => authJson<RegisterOptions>(authFetch('/auth/v1/mfa/passkey/register/options', { method: 'POST', body: '{}' }), '获取注册选项失败'),
+  passkeyRegister: (challenge: string, name: string | null, credential: CreatedPasskey) => authJson<{ ok: boolean; credentialId: string; name: string | null }>(authFetch('/auth/v1/mfa/passkey/register', { method: 'POST', body: JSON.stringify({ challenge, name, credential }) }), 'passkey 注册失败'),
+  passkeyRemove: (credentialId: string, password?: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/passkey/' + encodeURIComponent(credentialId), { method: 'DELETE', body: JSON.stringify({ password }) }), '移除失败'),
+  recoveryGenerate: (password?: string) => authJson<{ codes: string[]; note: string }>(authFetch('/auth/v1/mfa/recovery/generate', { method: 'POST', body: JSON.stringify({ password }) }), '生成恢复码失败'),
   logout: async () => {
     if (isTest()) { testLogout(); return; }
     try { await authFetch('/auth/v1/sessions/current?scope=console', { method: 'DELETE' }); } catch { /* 网络失败也要清除本地凭证 */ }

@@ -27,7 +27,59 @@
       </template>
 
       <template v-else-if="section === 'security'">
-        <section class="work-panel"><h2>安全性与登录</h2><div class="profile-row"><span>登录方式</span><strong>仅第三方 OAuth（GitHub / Google / Microsoft）</strong></div><div class="profile-row"><span>会话有效期</span><strong>24 小时</strong></div><div class="profile-row"><span>凭证存储</span><strong>访问令牌仅保存在浏览器内存，刷新后自动换取</strong></div><p>“退出所有设备”会注销该账户当前范围内的全部会话，包括其他浏览器和已换取的访问令牌。</p><button class="danger-button" :disabled="busy" @click="logout">退出所有设备</button></section>
+        <section class="work-panel"><h2>安全性与登录</h2><div class="profile-row"><span>登录方式</span><strong>{{ factors?.passwordSet ? '第三方 OAuth + 用户 ID 密码（强制两步验证）' : '第三方 OAuth（GitHub / Google / Microsoft）' }}</strong></div><div class="profile-row"><span>会话有效期</span><strong>24 小时</strong></div><div class="profile-row"><span>凭证存储</span><strong>访问令牌仅保存在浏览器内存，刷新后自动换取</strong></div><p>“退出所有设备”会注销该账户当前范围内的全部会话，包括其他浏览器和已换取的访问令牌。</p><button class="danger-button" :disabled="busy" @click="logout">退出所有设备</button></section>
+        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；以下设置在真实登录后可用。</p>
+        <template v-else>
+          <section class="work-panel">
+            <h2>{{ factors?.passwordSet ? '修改登录密码' : '设置登录密码' }}</h2>
+            <p>密码长度 14–256 位。设置后即可使用「用户 ID + 密码」登录，且强制要求两步验证。</p>
+            <form class="stack-form" @submit.prevent="savePassword">
+              <label v-if="factors?.passwordSet">当前密码<input v-model="pwCurrent" type="password" autocomplete="current-password" required /></label>
+              <label>新密码<input v-model="pwNew" type="password" autocomplete="new-password" minlength="14" maxlength="256" required /></label>
+              <p v-if="pwError" class="form-error" role="alert">{{ pwError }}</p>
+              <div class="actions"><button class="primary-button" type="submit" :disabled="pwBusy || pwNew.length < 14">{{ pwBusy ? '正在保存…' : '保存密码' }}</button><span v-if="pwMsg" class="form-success" role="status">{{ pwMsg }}</span></div>
+            </form>
+          </section>
+          <section class="work-panel">
+            <div class="section-heading"><div><h2>两步验证（2FA）</h2></div><button class="secondary-button" :disabled="factorsLoading" @click="refreshFactors">刷新</button></div>
+            <p v-if="factorsLoading && !factors">正在读取…</p>
+            <template v-else-if="factors">
+              <label v-if="factors.passwordSet" class="stack-form reauth-field">当前密码（移除因子、生成恢复码等敏感操作需要）<input v-model="mfaPassword" type="password" autocomplete="current-password" /></label>
+              <h3 class="factor-title">Passkey（{{ factors.passkeys.length }}/10）</h3>
+              <p v-if="!factors.passkeys.length" class="factor-empty">尚未注册。推荐方式：无需记码，用指纹 / 面容 / 设备 PIN 验证。</p>
+              <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true">🔑</span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId)">移除</button></div>
+              <div class="actions"><button class="primary-button" :disabled="mfaBusy || factors.passkeys.length >= 10" @click="addPasskey">添加 passkey</button></div>
+              <h3 class="factor-title">验证器应用（TOTP）</h3>
+              <template v-if="!factors.totp">
+                <p class="factor-empty">用 Microsoft / Google Authenticator 等应用生成 6 位动态码。</p>
+                <button class="secondary-button" :disabled="mfaBusy" @click="startTotp">注册验证器应用</button>
+              </template>
+              <template v-else-if="!factors.totp.confirmed && totpEnroll">
+                <p>用验证器应用扫码，或手动输入密钥：</p>
+                <p class="secret-box"><code>{{ totpEnroll.secret }}</code><button class="secondary-button" type="button" @click="copyText(totpEnroll.secret)">复制</button></p>
+                <p class="login-fine break-all">{{ totpEnroll.otpauthUrl }}</p>
+                <form class="stack-form" @submit.prevent="confirmTotp">
+                  <label>输入应用显示的 6 位码完成确认<input v-model.trim="totpCode" inputmode="numeric" maxlength="6" required /></label>
+                  <div class="actions"><button class="primary-button" type="submit" :disabled="mfaBusy">确认并启用</button><button class="secondary-button" type="button" :disabled="mfaBusy" @click="cancelTotp">取消</button></div>
+                </form>
+              </template>
+              <template v-else-if="!factors.totp.confirmed">
+                <p class="factor-empty">存在未确认的注册。<button class="back-link" type="button" @click="startTotp">重新发起</button></p>
+              </template>
+              <div v-else class="identity-row"><span class="identity-icon" aria-hidden="true">⏱</span><div class="meta"><h3>验证器应用</h3><small>已启用{{ factors.totp.confirmedAt ? ` · ${new Date(factors.totp.confirmedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="disableTotp">停用</button></div>
+              <h3 class="factor-title">恢复码（剩余 {{ factors.recovery.count }}）</h3>
+              <p class="factor-empty">丢失手机或 passkey 时用于登录，一次性使用；重新生成会使旧码全部作废。</p>
+              <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!factors.totp?.confirmed && !factors.passkeys.length)" @click="generateRecovery">生成 10 个恢复码</button></div>
+              <div v-if="recoveryCodes.length" class="recovery-box">
+                <p class="form-success" role="status">仅此一次完整展示，请立即保存：</p>
+                <div class="recovery-grid"><code v-for="code in recoveryCodes" :key="code">{{ code }}</code></div>
+                <button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button>
+              </div>
+              <p v-if="mfaError" class="form-error" role="alert">{{ mfaError }}</p>
+              <p v-if="mfaMsg" class="form-success" role="status">{{ mfaMsg }}</p>
+            </template>
+          </section>
+        </template>
       </template>
 
       <template v-else-if="section === 'privacy'">
@@ -46,7 +98,27 @@
       </template>
 
       <template v-else-if="section === 'profile'">
-        <section class="work-panel"><h2>个人信息</h2><div class="profile-row"><span>账户名</span><strong>{{ session.name }}</strong></div><div class="profile-row"><span>邮箱</span><strong>{{ session.email || '未提供' }}</strong></div><div class="profile-row"><span>账户 ID</span><strong>{{ session.id }}</strong></div><p>基础信息来自第三方身份提供商，在此只读展示。修改账户名等功能将在后续版本开放。</p></section>
+        <section class="work-panel"><h2>个人信息</h2><div class="profile-row"><span>账户名</span><strong>{{ session.name }}</strong></div><div class="profile-row"><span>用户 ID</span><strong>{{ session.handle ? '@' + session.handle : '未设置' }}</strong></div><div class="profile-row"><span>邮箱</span><strong>{{ session.email || '未提供' }}</strong></div><div class="profile-row"><span>账户 ID</span><strong>{{ session.id }}</strong></div><p>邮箱来自第三方身份提供商，在此只读展示。</p></section>
+        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；以下设置在真实登录后可用。</p>
+        <template v-else>
+          <section class="work-panel">
+            <h2>修改用户名</h2>
+            <form class="stack-form" @submit.prevent="saveName">
+              <label>用户名（1–60 字符）<input v-model.trim="nameInput" minlength="1" maxlength="60" required /></label>
+              <p v-if="profileError" class="form-error" role="alert">{{ profileError }}</p>
+              <div class="actions"><button class="primary-button" type="submit" :disabled="profileBusy || !nameInput || nameInput === session.name">保存用户名</button><span v-if="profileMsg" class="form-success" role="status">{{ profileMsg }}</span></div>
+            </form>
+          </section>
+          <section class="work-panel">
+            <h2>{{ session.handle ? '修改用户 ID' : '设置用户 ID' }}</h2>
+            <p>用户 ID 类似微信号：6–20 位、字母开头，仅含字母 / 数字 / 下划线 / 连字符，全站唯一，用于「用户 ID + 密码」登录。{{ session.handle ? '每 30 天仅可修改一次。' : '设置后即可配置密码登录（需注册两步验证）。' }}</p>
+            <form class="stack-form" @submit.prevent="saveHandle">
+              <label>用户 ID<input v-model.trim="handleInput" minlength="6" maxlength="20" pattern="[A-Za-z][A-Za-z0-9_-]{5,19}" required placeholder="例如 player_one" @blur="checkHandle" /></label>
+              <p v-if="handleHint" class="login-fine" role="status">{{ handleHint }}</p>
+              <div class="actions"><button class="primary-button" type="submit" :disabled="profileBusy || !handleInput || handleInput.toLowerCase() === (session.handle ?? '')">{{ session.handle ? '修改用户 ID' : '设置用户 ID' }}</button></div>
+            </form>
+          </section>
+        </template>
       </template>
 
       <template v-else-if="section === 'wallet'">
@@ -103,6 +175,23 @@
         <button class="provider-button google" :disabled="busy || !tosRead" @click="oauth('google')"><svg viewBox="0 0 48 48" width="16" height="16" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>使用 Google 继续</span></button>
         <button class="provider-button microsoft" :disabled="busy || !tosRead" @click="oauth('microsoft')"><svg viewBox="0 0 23 23" width="16" height="16" aria-hidden="true"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="12" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/></svg><span>使用 Microsoft 继续</span></button>
       </div>
+      <div class="login-divider" aria-hidden="true"><span>或使用用户 ID</span></div>
+      <form v-if="loginStep === 'creds'" class="credential-form" @submit.prevent="submitLogin">
+        <label>用户 ID<input v-model.trim="loginHandle" autocomplete="username" minlength="6" maxlength="20" required placeholder="6–20 位，字母开头" /></label>
+        <label>密码<input v-model="loginPassword" type="password" autocomplete="current-password" required placeholder="你设置的登录密码" /></label>
+        <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
+        <button class="primary-button" type="submit" :disabled="loginBusy">{{ loginBusy ? '正在验证…' : '下一步' }}</button>
+        <p class="login-fine">首次使用？先用上方第三方方式登录，再到「个人信息」设置用户 ID、在「安全性与登录」设置密码与两步验证。</p>
+      </form>
+      <form v-else class="credential-form" @submit.prevent="submitMfaCode">
+        <p class="mfa-title">两步验证 · {{ loginUserName }}</p>
+        <p class="login-fine">可用方式：{{ factorLabels }}</p>
+        <label>验证器动态码或恢复码<input v-model.trim="mfaCode" autocomplete="one-time-code" required placeholder="6 位动态码，或 XXXXX-XXXXX" /></label>
+        <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
+        <button class="primary-button" type="submit" :disabled="loginBusy">{{ loginBusy ? '正在验证…' : '登录' }}</button>
+        <button v-if="loginFactors.includes('passkey')" class="provider-button microsoft" type="button" :disabled="loginBusy" @click="passkeyLogin">🔑 使用 passkey 登录</button>
+        <button class="back-link" type="button" @click="backToCreds">‹ 返回重输密码</button>
+      </form>
       <p v-if="error || oauthError" class="form-error" role="alert">{{ oauthError || error }}</p>
       <p class="login-fine">账户与会话由 auth.pcln.top 提供，一个账户可同时绑定 GitHub、Google 与 Microsoft。</p>
     </div>
@@ -111,8 +200,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { platform, ApiError, isTestSession, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements } from '@/api/platform';
+import { platform, ApiError, isTestSession, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors } from '@/api/platform';
 import { pluginCenterApi } from '@/api/pluginCenter';
+import { createPasskey, assertPasskey } from '@/utils/webauthnClient';
 const route = useRoute();
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
 const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
@@ -142,6 +232,7 @@ watch(section, value => {
   if (value === 'delete') void loadDeletion();
   if (value === 'wallet') void loadEntitlements();
   if (value === 'website' && session.value?.staff && !summary.value && !summaryLoading.value) void loadSummary();
+  if (value === 'security' && session.value && !testMode.value && !factors.value) void refreshFactors();
 });
 
 // 网站管理：仅保留 7 天遥测摘要；完整控制台属于 manage.pcln.top 独立后台。
@@ -206,16 +297,127 @@ const visibleTickets = computed(() => tickets.value.filter(t => showResolved.val
 async function loadTickets(){ busy.value = true; error.value = ''; try { const result = await platform.tickets('console', offset.value); tickets.value = result.data; total.value = result.pagination.total; ticketsLoaded.value = true; } catch (e) { error.value = e instanceof Error ? e.message : '操作失败，请重试。'; } finally { busy.value = false; } }
 async function submit(){ busy.value = true; error.value = ''; message.value = ''; try { await platform.createTicket(subject.value, body.value); subject.value = ''; body.value = ''; message.value = '请求已提交。'; showResolved.value = false; await loadTickets(); } catch (e) { error.value = e instanceof Error ? e.message : '操作失败，请重试。'; } finally { busy.value = false; } }
 
+// ---- 用户 ID + 密码登录（两段式：密码 → 2FA） ----
+const loginStep = ref<'creds' | 'mfa'>('creds');
+const loginHandle = ref(''), loginPassword = ref(''), loginError = ref(''), loginBusy = ref(false);
+const loginChallenge = ref(''), loginFactors = ref<string[]>([]), loginUserName = ref(''), mfaCode = ref('');
+const FACTOR_NAMES: Record<string, string> = { passkey: 'Passkey', totp: '验证器应用', recovery: '恢复码' };
+const factorLabels = computed(() => loginFactors.value.map(f => FACTOR_NAMES[f] ?? f).join(' / ') || '—');
+async function submitLogin() {
+  loginBusy.value = true; loginError.value = '';
+  try {
+    const result = await platform.loginWithPassword(loginHandle.value, loginPassword.value);
+    loginChallenge.value = result.challenge; loginFactors.value = result.factors; loginUserName.value = result.user?.name || loginHandle.value;
+    loginPassword.value = ''; mfaCode.value = ''; loginStep.value = 'mfa';
+  } catch (e) { loginError.value = e instanceof Error ? e.message : '登录失败，请稍后重试。'; }
+  finally { loginBusy.value = false; }
+}
+async function finishLogin() {
+  session.value = await platform.session();
+  loginStep.value = 'creds'; mfaCode.value = ''; loginChallenge.value = '';
+  if (session.value) {
+    nameInput.value = session.value.name ?? ''; handleInput.value = session.value.handle ?? '';
+    void loadIdentities();
+    if (!testMode.value) void refreshFactors();
+  }
+}
+async function submitMfaCode() {
+  loginBusy.value = true; loginError.value = '';
+  try { await platform.loginWithCode(loginChallenge.value, mfaCode.value); await finishLogin(); }
+  catch (e) { loginError.value = e instanceof Error ? e.message : '验证失败，请重试。'; }
+  finally { loginBusy.value = false; }
+}
+async function passkeyLogin() {
+  loginBusy.value = true; loginError.value = '';
+  try {
+    const options = await platform.loginPasskeyOptions(loginChallenge.value);
+    const assertion = await assertPasskey(options);
+    await platform.loginPasskey({ challenge: loginChallenge.value, ...assertion });
+    await finishLogin();
+  } catch (e) { loginError.value = e instanceof Error ? e.message : 'passkey 校验失败'; }
+  finally { loginBusy.value = false; }
+}
+function backToCreds() { loginStep.value = 'creds'; loginError.value = ''; mfaCode.value = ''; }
+
+// ---- 个人信息：用户名 / 用户 ID ----
+const nameInput = ref(''), handleInput = ref(''), handleHint = ref(''), profileBusy = ref(false), profileMsg = ref(''), profileError = ref('');
+async function saveName() {
+  profileBusy.value = true; profileMsg.value = ''; profileError.value = '';
+  try { await platform.updateDisplayName(nameInput.value); session.value = { ...session.value!, name: nameInput.value }; profileMsg.value = '用户名已更新。'; }
+  catch (e) { profileError.value = e instanceof Error ? e.message : '修改失败，请重试。'; }
+  finally { profileBusy.value = false; }
+}
+async function checkHandle() {
+  handleHint.value = '';
+  const value = handleInput.value.trim();
+  if (!value || value.toLowerCase() === (session.value?.handle ?? '')) return;
+  try {
+    const result = await platform.handleAvailability(value);
+    handleHint.value = result.available ? '✓ 可用' : result.reason === 'taken' ? '该用户 ID 已被占用' : result.reason === 'reserved' ? '该用户 ID 为系统保留' : '格式不正确：6–20 位，字母开头，仅字母 / 数字 / _ / -';
+  } catch { /* 查询失败不阻塞提交 */ }
+}
+async function saveHandle() {
+  profileBusy.value = true; profileMsg.value = ''; profileError.value = '';
+  try {
+    const result = await platform.updateHandle(handleInput.value);
+    session.value = { ...session.value!, handle: result.handle };
+    handleInput.value = result.handle; handleHint.value = '';
+    profileMsg.value = `用户 ID 已更新，下次可修改时间：${new Date(result.nextChangeAt).toLocaleDateString()}。`;
+  } catch (e) { profileError.value = e instanceof Error ? e.message : '修改失败，请重试。'; }
+  finally { profileBusy.value = false; }
+}
+
+// ---- 密码与两步验证 ----
+const factors = ref<MfaFactors | null>(null), factorsLoading = ref(false);
+const pwCurrent = ref(''), pwNew = ref(''), pwBusy = ref(false), pwMsg = ref(''), pwError = ref('');
+const mfaBusy = ref(false), mfaError = ref(''), mfaMsg = ref(''), mfaPassword = ref('');
+const totpEnroll = ref<{ secret: string; otpauthUrl: string } | null>(null), totpCode = ref('');
+const recoveryCodes = ref<string[]>([]);
+async function refreshFactors() { factorsLoading.value = true; try { factors.value = await platform.mfaFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '读取两步验证状态失败'; } finally { factorsLoading.value = false; } }
+async function savePassword() {
+  pwBusy.value = true; pwMsg.value = ''; pwError.value = '';
+  try {
+    const result = await platform.setPassword(pwNew.value, factors.value?.passwordSet ? pwCurrent.value : undefined);
+    pwCurrent.value = ''; pwNew.value = '';
+    pwMsg.value = result.mfa.factors.length ? '密码已保存。' : '密码已保存。请先在下方注册两步验证，否则密码登录暂不可用。';
+    await refreshFactors();
+  } catch (e) { pwError.value = e instanceof Error ? e.message : '保存失败，请重试。'; }
+  finally { pwBusy.value = false; }
+}
+async function startTotp() { mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { const result = await platform.totpEnroll(); totpEnroll.value = { secret: result.secret, otpauthUrl: result.otpauthUrl }; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '发起注册失败'; } finally { mfaBusy.value = false; } }
+async function confirmTotp() { mfaBusy.value = true; mfaError.value = ''; try { await platform.totpConfirm(totpCode.value); totpEnroll.value = null; totpCode.value = ''; mfaMsg.value = '验证器应用已启用。'; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '确认失败'; } finally { mfaBusy.value = false; } }
+async function cancelTotp() { totpEnroll.value = null; totpCode.value = ''; await refreshFactors(); }
+async function disableTotp() { if (!window.confirm('确定停用验证器应用？')) return; mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { await platform.totpDisable(mfaPassword.value || undefined); mfaMsg.value = '验证器应用已停用。'; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '停用失败'; } finally { mfaBusy.value = false; } }
+async function addPasskey() {
+  mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = '';
+  try {
+    const options = await platform.passkeyRegisterOptions();
+    const name = window.prompt('为这个 passkey 命名（可留空）', '');
+    if (name === null) return;
+    const credential = await createPasskey(options);
+    await platform.passkeyRegister(options.challenge, name.trim() || null, credential);
+    mfaMsg.value = 'passkey 已注册。';
+    await refreshFactors();
+  } catch (e) { mfaError.value = e instanceof Error ? e.message : '注册失败'; }
+  finally { mfaBusy.value = false; }
+}
+async function removePasskey(credentialId: string) { if (!window.confirm('确定移除该 passkey？')) return; mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { await platform.passkeyRemove(credentialId, mfaPassword.value || undefined); mfaMsg.value = '已移除。'; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '移除失败'; } finally { mfaBusy.value = false; } }
+async function generateRecovery() { mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { const result = await platform.recoveryGenerate(mfaPassword.value || undefined); recoveryCodes.value = result.codes; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '生成失败'; } finally { mfaBusy.value = false; } }
+async function copyText(text: string) { try { await navigator.clipboard.writeText(text); mfaMsg.value = '已复制到剪贴板。'; } catch { mfaMsg.value = '复制失败，请手动选择复制。'; } }
+
 onMounted(async () => {
   session.value = await platform.session();
   checking.value = false;
   if (session.value) {
     void loadIdentities();
+    nameInput.value = session.value.name ?? '';
+    handleInput.value = session.value.handle ?? '';
     if (section.value === 'tickets') void loadTickets();
     if (section.value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
     if (section.value === 'delete') void loadDeletion();
     if (section.value === 'wallet') void loadEntitlements();
     if (section.value === 'website' && session.value.staff) void loadSummary();
+    if (section.value === 'security' && !testMode.value) void refreshFactors();
   }
 });
 </script>
@@ -233,4 +435,16 @@ onMounted(async () => {
 .summary-line .track i{display:block;height:100%;background:var(--nc-accent);border-radius:999px;transition:width .4s ease}
 .summary-note{font-size:11.5px;color:var(--market-muted);margin-top:16px;line-height:1.7}
 @media(max-width:800px){.summary-grid{grid-template-columns:repeat(2,1fr)}.summary-cols{grid-template-columns:1fr;gap:14px}.summary-line{grid-template-columns:92px minmax(0,1fr) 48px}}
+.login-divider{display:flex;align-items:center;gap:12px;margin:22px 0 2px;color:#9aa6b8;font-size:11px}.login-divider:before,.login-divider:after{content:'';flex:1;height:1px;background:#e5ecef}
+.credential-form{display:grid;gap:12px;margin-top:14px;text-align:left}.credential-form label{display:grid;gap:8px;font-size:12px;color:#708693}.credential-form input{padding:10px 12px;border:1px solid #dce7ed;border-radius:6px;color:#355260;background:#fff;width:100%}.credential-form .primary-button{width:100%;margin-top:2px}.credential-form .login-fine{margin:2px 0 0}
+.mfa-title{font-size:14px;font-weight:650;color:var(--market-text);text-align:center}.back-link{background:transparent;border:0;color:var(--market-muted);font-size:12px;padding:6px;text-align:center;cursor:pointer}.back-link:hover{color:var(--nc-accent)}
+.test-mode-note{font-size:12px;color:var(--market-muted);background:var(--market-surface-soft);border:1px dashed var(--market-border);border-radius:10px;padding:12px 16px;margin:18px 0 0}
+.stack-form{display:grid;gap:12px;margin-top:14px}.stack-form label{display:grid;gap:8px;font-size:12px;color:#708693}.stack-form input{padding:10px 12px;border:1px solid #dce7ed;border-radius:6px;color:#355260;background:#fff;width:100%}.stack-form .actions{margin-top:2px}
+.reauth-field{margin:14px 0 4px;padding:12px 14px;background:var(--market-surface-soft);border-radius:10px}
+.factor-title{font-size:13px;font-weight:650;margin:22px 0 6px;padding-top:16px;border-top:1px solid #e8edf3}.factor-empty{font-size:12px;color:var(--market-muted);margin-bottom:10px;line-height:1.7}
+.secret-box{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:10px;padding:12px 14px;margin:10px 0}.secret-box code{font-size:14px;letter-spacing:.12em;font-weight:650;color:var(--nc-accent);overflow-wrap:anywhere}
+.break-all{overflow-wrap:anywhere;font-size:11px}
+.recovery-box{margin-top:14px;padding:16px;border:1px solid var(--market-border);border-radius:12px;background:var(--market-surface-soft)}
+.recovery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 14px}.recovery-grid code{background:#fff;border:1px solid var(--market-border);border-radius:8px;padding:8px 10px;font-size:13px;letter-spacing:.06em;text-align:center}
+@media(max-width:480px){.recovery-grid{grid-template-columns:1fr}.secret-box{flex-direction:column;align-items:flex-start}}
 </style>
