@@ -27,59 +27,39 @@
       </template>
 
       <template v-else-if="section === 'security'">
-        <section class="work-panel"><h2>安全性与登录</h2><div class="profile-row"><span>登录方式</span><strong>{{ factors?.passwordSet ? '第三方 OAuth + 用户 ID 密码（强制两步验证）' : '第三方 OAuth（GitHub / Google / Microsoft）' }}</strong></div><div class="profile-row"><span>会话有效期</span><strong>24 小时</strong></div><div class="profile-row"><span>凭证存储</span><strong>访问令牌仅保存在浏览器内存，刷新后自动换取</strong></div><p>“退出所有设备”会注销该账户当前范围内的全部会话，包括其他浏览器和已换取的访问令牌。</p><button class="danger-button" :disabled="busy" @click="logout">退出所有设备</button></section>
-        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；以下设置在真实登录后可用。</p>
-        <template v-else>
-          <section class="work-panel">
-            <h2>{{ factors?.passwordSet ? '修改登录密码' : '设置登录密码' }}</h2>
-            <p>密码长度 14–256 位。设置后即可使用「用户 ID + 密码」登录，且强制要求两步验证。</p>
-            <form class="stack-form" @submit.prevent="savePassword">
-              <label v-if="factors?.passwordSet">当前密码<input v-model="pwCurrent" type="password" autocomplete="current-password" required /></label>
-              <label>新密码<input v-model="pwNew" type="password" autocomplete="new-password" minlength="14" maxlength="256" required /></label>
-              <p v-if="pwError" class="form-error" role="alert">{{ pwError }}</p>
-              <div class="actions"><button class="primary-button" type="submit" :disabled="pwBusy || pwNew.length < 14">{{ pwBusy ? '正在保存…' : '保存密码' }}</button><span v-if="pwMsg" class="form-success" role="status">{{ pwMsg }}</span></div>
-            </form>
-          </section>
-          <section class="work-panel">
-            <div class="section-heading"><div><h2>两步验证（2FA）</h2></div><button class="secondary-button" :disabled="factorsLoading" @click="refreshFactors">刷新</button></div>
-            <p v-if="factorsLoading && !factors">正在读取…</p>
-            <template v-else-if="factors">
-              <label v-if="factors.passwordSet" class="stack-form reauth-field">当前密码（移除因子、生成恢复码等敏感操作需要）<input v-model="mfaPassword" type="password" autocomplete="current-password" /></label>
-              <h3 class="factor-title">Passkey（{{ factors.passkeys.length }}/10）</h3>
-              <p v-if="!factors.passkeys.length" class="factor-empty">尚未注册。推荐方式：无需记码，用指纹 / 面容 / 设备 PIN 验证。</p>
-              <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true">🔑</span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId)">移除</button></div>
-              <div class="actions"><button class="primary-button" :disabled="mfaBusy || factors.passkeys.length >= 10" @click="addPasskey">添加 passkey</button></div>
-              <h3 class="factor-title">验证器应用（TOTP）</h3>
-              <template v-if="!factors.totp">
-                <p class="factor-empty">用 Microsoft / Google Authenticator 等应用生成 6 位动态码。</p>
-                <button class="secondary-button" :disabled="mfaBusy" @click="startTotp">注册验证器应用</button>
-              </template>
-              <template v-else-if="!factors.totp.confirmed && totpEnroll">
-                <p>用验证器应用扫码，或手动输入密钥：</p>
-                <p class="secret-box"><code>{{ totpEnroll.secret }}</code><button class="secondary-button" type="button" @click="copyText(totpEnroll.secret)">复制</button></p>
-                <p class="login-fine break-all">{{ totpEnroll.otpauthUrl }}</p>
-                <form class="stack-form" @submit.prevent="confirmTotp">
-                  <label>输入应用显示的 6 位码完成确认<input v-model.trim="totpCode" inputmode="numeric" maxlength="6" required /></label>
-                  <div class="actions"><button class="primary-button" type="submit" :disabled="mfaBusy">确认并启用</button><button class="secondary-button" type="button" :disabled="mfaBusy" @click="cancelTotp">取消</button></div>
-                </form>
-              </template>
-              <template v-else-if="!factors.totp.confirmed">
-                <p class="factor-empty">存在未确认的注册。<button class="back-link" type="button" @click="startTotp">重新发起</button></p>
-              </template>
-              <div v-else class="identity-row"><span class="identity-icon" aria-hidden="true">⏱</span><div class="meta"><h3>验证器应用</h3><small>已启用{{ factors.totp.confirmedAt ? ` · ${new Date(factors.totp.confirmedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="disableTotp">停用</button></div>
-              <h3 class="factor-title">恢复码（剩余 {{ factors.recovery.count }}）</h3>
-              <p class="factor-empty">丢失手机或 passkey 时用于登录，一次性使用；重新生成会使旧码全部作废。</p>
-              <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!factors.totp?.confirmed && !factors.passkeys.length)" @click="generateRecovery">生成 10 个恢复码</button></div>
-              <div v-if="recoveryCodes.length" class="recovery-box">
-                <p class="form-success" role="status">仅此一次完整展示，请立即保存：</p>
-                <div class="recovery-grid"><code v-for="code in recoveryCodes" :key="code">{{ code }}</code></div>
-                <button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button>
-              </div>
-              <p v-if="mfaError" class="form-error" role="alert">{{ mfaError }}</p>
-              <p v-if="mfaMsg" class="form-success" role="status">{{ mfaMsg }}</p>
+        <section class="work-panel">
+          <h2>安全性与登录</h2>
+          <div class="profile-row"><span>登录方式</span><strong>{{ factors?.passwordSet ? '第三方 OAuth + 用户 ID 密码（强制两步验证）' : '第三方 OAuth（GitHub / Google / Microsoft）' }}</strong></div>
+          <div class="profile-row"><span>登录密码</span><strong>{{ factors ? (factors.passwordSet ? '已设置' : '未设置') : '正在读取…' }}</strong><button v-if="!testMode && factors" class="secondary-button row-action" :disabled="pwDialog.busy" @click="openPasswordDialog">{{ factors.passwordSet ? '修改密码' : '设置密码' }}</button></div>
+          <div class="profile-row"><span>会话有效期</span><strong>24 小时</strong></div>
+          <div class="profile-row"><span>凭证存储</span><strong>访问令牌仅保存在浏览器内存，刷新后自动换取</strong></div>
+          <p v-if="securityMsg" class="form-success" role="status">{{ securityMsg }}</p>
+          <p>“退出所有设备”会注销该账户当前范围内的全部会话，包括其他浏览器和已换取的访问令牌。</p>
+          <button class="danger-button" :disabled="busy" @click="logout">退出所有设备</button>
+        </section>
+        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；两步验证管理在真实登录后可用。</p>
+        <section v-else class="work-panel">
+          <div class="section-heading"><div><h2>两步验证（2FA）</h2></div><button class="secondary-button" :disabled="factorsLoading" @click="refreshFactors">刷新</button></div>
+          <p>验证方式优先级：<strong>Passkey › 验证器应用 › 恢复码</strong>。登录时的两步验证界面也按此顺序提供；恢复码仅应在其他方式都不可用时使用。</p>
+          <p v-if="factorsLoading && !factors">正在读取…</p>
+          <template v-else-if="factors">
+            <h3 class="factor-title">Passkey（{{ factors.passkeys.length }}/10）</h3>
+            <p v-if="!factors.passkeys.length" class="factor-empty">尚未注册。推荐方式：无需记码，用指纹 / 面容 / 设备 PIN 验证。</p>
+            <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true">🔑</span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId, pk.name)">移除</button></div>
+            <div class="actions"><button class="primary-button" :disabled="mfaBusy || passkeyDialog.busy || factors.passkeys.length >= 10" @click="openPasskeyDialog">添加 passkey</button></div>
+            <h3 class="factor-title">验证器应用（TOTP）</h3>
+            <div v-if="factors.totp?.confirmed" class="identity-row"><span class="identity-icon" aria-hidden="true">⏱</span><div class="meta"><h3>验证器应用</h3><small>已启用{{ factors.totp.confirmedAt ? ` · ${new Date(factors.totp.confirmedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="disableTotp">停用</button></div>
+            <template v-else>
+              <p class="factor-empty">用 Microsoft / Google Authenticator 等应用生成 6 位动态码。{{ factors.totp ? '存在未确认的注册，可重新发起。' : '' }}</p>
+              <button class="secondary-button" :disabled="mfaBusy || totpDialog.busy" @click="startTotp">{{ factors.totp ? '重新发起注册' : '注册验证器应用' }}</button>
             </template>
-          </section>
-        </template>
+            <h3 class="factor-title">恢复码（剩余 {{ factors.recovery.count }}）</h3>
+            <p class="factor-empty">仅在丢失 passkey 与验证器时使用；一次性，重新生成会使旧码全部作废。</p>
+            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!factors.totp?.confirmed && !factors.passkeys.length)" @click="generateRecovery">生成 10 个恢复码</button></div>
+            <p v-if="mfaError" class="form-error" role="alert">{{ mfaError }}</p>
+            <p v-if="mfaMsg" class="form-success" role="status">{{ mfaMsg }}</p>
+          </template>
+        </section>
       </template>
 
       <template v-else-if="section === 'privacy'">
@@ -98,27 +78,16 @@
       </template>
 
       <template v-else-if="section === 'profile'">
-        <section class="work-panel"><h2>个人信息</h2><div class="profile-row"><span>账户名</span><strong>{{ session.name }}</strong></div><div class="profile-row"><span>用户 ID</span><strong>{{ session.handle ? '@' + session.handle : '未设置' }}</strong></div><div class="profile-row"><span>邮箱</span><strong>{{ session.email || '未提供' }}</strong></div><div class="profile-row"><span>账户 ID</span><strong>{{ session.id }}</strong></div><p>邮箱来自第三方身份提供商，在此只读展示。</p></section>
-        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；以下设置在真实登录后可用。</p>
-        <template v-else>
-          <section class="work-panel">
-            <h2>修改用户名</h2>
-            <form class="stack-form" @submit.prevent="saveName">
-              <label>用户名（1–60 字符）<input v-model.trim="nameInput" minlength="1" maxlength="60" required /></label>
-              <p v-if="profileError" class="form-error" role="alert">{{ profileError }}</p>
-              <div class="actions"><button class="primary-button" type="submit" :disabled="profileBusy || !nameInput || nameInput === session.name">保存用户名</button><span v-if="profileMsg" class="form-success" role="status">{{ profileMsg }}</span></div>
-            </form>
-          </section>
-          <section class="work-panel">
-            <h2>{{ session.handle ? '修改用户 ID' : '设置用户 ID' }}</h2>
-            <p>用户 ID 类似微信号：6–20 位、字母开头，仅含字母 / 数字 / 下划线 / 连字符，全站唯一，用于「用户 ID + 密码」登录。{{ session.handle ? '每 30 天仅可修改一次。' : '设置后即可配置密码登录（需注册两步验证）。' }}</p>
-            <form class="stack-form" @submit.prevent="saveHandle">
-              <label>用户 ID<input v-model.trim="handleInput" minlength="6" maxlength="20" pattern="[A-Za-z][A-Za-z0-9_-]{5,19}" required placeholder="例如 player_one" @blur="checkHandle" /></label>
-              <p v-if="handleHint" class="login-fine" role="status">{{ handleHint }}</p>
-              <div class="actions"><button class="primary-button" type="submit" :disabled="profileBusy || !handleInput || handleInput.toLowerCase() === (session.handle ?? '')">{{ session.handle ? '修改用户 ID' : '设置用户 ID' }}</button></div>
-            </form>
-          </section>
-        </template>
+        <section class="work-panel">
+          <h2>个人信息</h2>
+          <div class="profile-row"><span>账户名</span><strong>{{ session.name }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="nameDialog.busy" @click="openNameDialog">修改</button></div>
+          <div class="profile-row"><span>用户 ID</span><strong>{{ session.handle ? '@' + session.handle : '未设置' }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="handleDialog.busy" @click="openHandleDialog">{{ session.handle ? '修改' : '设置' }}</button></div>
+          <div class="profile-row"><span>邮箱</span><strong>{{ session.email || '未提供' }}</strong></div>
+          <div class="profile-row"><span>账户 ID</span><strong>{{ session.id }}</strong></div>
+          <p>邮箱来自第三方身份提供商，在此只读展示。用户 ID 类似微信号，用于「用户 ID + 密码」登录，每 30 天仅可修改一次。</p>
+          <p v-if="profileMsg" class="form-success" role="status">{{ profileMsg }}</p>
+        </section>
+        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；修改功能在真实登录后可用。</p>
       </template>
 
       <template v-else-if="section === 'wallet'">
@@ -163,6 +132,35 @@
         <section v-else class="work-panel"><h2>申请网站管理员</h2><p>网站管理员负责处理支持工单、运营待办与平台诊断。申请通道即将开放，届时可直接在此提交申请。</p><button class="primary-button" disabled>申请入口即将开放</button></section>
       </template>
     </div>
+
+    <!-- ===== 二级模态框：所有修改类操作统一入口 ===== -->
+    <PasswordConfirmDialog v-model="pwDialog.visible" :mode="pwDialog.mode" :title="pwDialog.title" :description="pwDialog.description" :busy="pwDialog.busy" :error="pwDialog.error" @confirm="onPasswordConfirm" />
+
+    <FormDialog v-model="nameDialog.visible" title="修改用户名" description="用户名用于界面展示，1–60 个字符。" :busy="nameDialog.busy" :error="nameDialog.error" confirm-label="保存用户名" :can-confirm="Boolean(nameInput)" @confirm="saveName">
+      <label class="dialog-field">用户名<input v-model.trim="nameInput" minlength="1" maxlength="60" required /></label>
+    </FormDialog>
+
+    <FormDialog v-model="handleDialog.visible" :title="session.handle ? '修改用户 ID' : '设置用户 ID'" description="用户 ID 类似微信号：6–20 位、字母开头，仅含字母 / 数字 / 下划线 / 连字符，全站唯一。每 30 天仅可修改一次。" :busy="handleDialog.busy" :error="handleDialog.error" :hint="handleDialog.hint" :confirm-label="session.handle ? '修改用户 ID' : '设置用户 ID'" :can-confirm="handleValid" @confirm="saveHandle">
+      <label class="dialog-field">用户 ID<input v-model.trim="handleInput" minlength="6" maxlength="20" pattern="[A-Za-z][A-Za-z0-9_-]{5,19}" required placeholder="例如 player_one" @blur="checkHandle" /></label>
+    </FormDialog>
+
+    <FormDialog v-model="passkeyDialog.visible" title="添加 passkey" description="先为这个 passkey 命名，方便日后识别设备；点击继续后，浏览器会弹出系统验证（指纹 / 面容 / 设备 PIN）。" :busy="passkeyDialog.busy" :error="passkeyDialog.error" busy-label="等待系统验证…" confirm-label="继续并验证" @confirm="runAddPasskey">
+      <label class="dialog-field">名称（可留空）<input v-model.trim="passkeyName" maxlength="60" placeholder="例如 我的 Windows 电脑" /></label>
+    </FormDialog>
+
+    <FormDialog v-model="totpDialog.visible" title="注册验证器应用" :description="totpEnroll ? '用验证器应用打开下方链接或手动输入密钥，然后填写应用显示的 6 位动态码完成绑定。' : '正在生成密钥…'" :busy="totpDialog.busy" :error="totpDialog.error" confirm-label="确认并启用" :can-confirm="Boolean(totpEnroll) && totpCode.length === 6" @confirm="confirmTotp">
+      <template v-if="totpEnroll">
+        <p class="secret-box"><code>{{ totpEnroll.secret }}</code><button class="secondary-button" type="button" @click="copyText(totpEnroll.secret)">复制</button></p>
+        <p class="login-fine break-all">{{ totpEnroll.otpauthUrl }}</p>
+        <span class="seg-label">6 位动态码</span>
+        <SegmentedCode v-model="totpCode" :length="6" charset="digits" label="验证器动态码" :disabled="totpDialog.busy" />
+      </template>
+    </FormDialog>
+
+    <FormDialog v-model="recoveryDialog.visible" title="恢复码已生成" description="仅此一次完整展示，请立即复制到密码管理器保存。每个恢复码只能使用一次，重新生成会使这批码作废。" confirm-label="我已妥善保存" @confirm="recoveryDialog.visible = false">
+      <div class="recovery-grid"><code v-for="code in recoveryCodes" :key="code">{{ code }}</code></div>
+      <button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button>
+    </FormDialog>
   </div>
   <div v-else class="login-hero">
     <div class="login-card">
@@ -212,12 +210,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { platform, ApiError, isTestSession, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors } from '@/api/platform';
 import { pluginCenterApi } from '@/api/pluginCenter';
 import { createPasskey, assertPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';
+import FormDialog from '@/components/FormDialog.vue';
+import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
 const route = useRoute();
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
 const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
@@ -348,7 +348,6 @@ async function submitMfaCode() {
   try { await platform.loginWithCode(loginChallenge.value, currentCode.value); await finishLogin(); }
   catch (e) {
     loginError.value = e instanceof Error ? e.message : '验证失败，请重试。';
-    // 验证失败即清空当前输入，分段框会自动聚焦回第一格。
     if (mfaMode.value === 'app') appCode.value = ''; else recoveryInput.value = '';
   }
   finally { loginBusy.value = false; }
@@ -367,70 +366,127 @@ async function passkeyLogin() {
 }
 function backToCreds() { loginStep.value = 'creds'; loginError.value = ''; appCode.value = ''; recoveryInput.value = ''; }
 
-// ---- 个人信息：用户名 / 用户 ID ----
-const nameInput = ref(''), handleInput = ref(''), handleHint = ref(''), profileBusy = ref(false), profileMsg = ref(''), profileError = ref('');
-async function saveName() {
-  profileBusy.value = true; profileMsg.value = ''; profileError.value = '';
-  try { await platform.updateDisplayName(nameInput.value); session.value = { ...session.value!, name: nameInput.value }; profileMsg.value = '用户名已更新。'; }
-  catch (e) { profileError.value = e instanceof Error ? e.message : '修改失败，请重试。'; }
-  finally { profileBusy.value = false; }
+// ---- 统一密码验证框架：所有需要密码的操作都经由同一个对话框 ----
+const pwDialog = reactive({ visible: false, mode: 'reauth' as 'reauth' | 'set' | 'change', title: '', description: '', busy: false, error: '' });
+let pendingPasswordAction: ((payload: { password?: string; newPassword?: string }) => Promise<void>) | null = null;
+function openPwDialog(mode: 'reauth' | 'set' | 'change', action: (payload: { password?: string; newPassword?: string }) => Promise<void>, title = '', description = '') {
+  pwDialog.mode = mode; pwDialog.title = title; pwDialog.description = description; pwDialog.error = ''; pwDialog.busy = false;
+  pendingPasswordAction = action; pwDialog.visible = true;
 }
+async function onPasswordConfirm(payload: { password?: string; newPassword?: string }) {
+  if (!pendingPasswordAction || pwDialog.busy) return;
+  pwDialog.busy = true; pwDialog.error = '';
+  try { await pendingPasswordAction(payload); pwDialog.visible = false; pendingPasswordAction = null; }
+  catch (e) { pwDialog.error = e instanceof Error ? e.message : '操作失败，请重试。'; }
+  finally { pwDialog.busy = false; }
+}
+// 敏感操作：已设置密码 → 统一走密码复核对话框；未设置密码 → 直接执行（服务端同样不要求复核）。
+function sensitive(title: string, description: string, run: (password?: string) => Promise<void>) {
+  if (factors.value?.passwordSet) openPwDialog('reauth', ({ password }) => run(password), title, description);
+  else void run(undefined).then(() => { /* 成功提示由调用方写入 mfaMsg */ }).catch((e: unknown) => { mfaError.value = e instanceof Error ? e.message : '操作失败，请重试。'; });
+}
+
+// ---- 个人信息：用户名 / 用户 ID（模态框） ----
+const nameInput = ref(''), handleInput = ref(''), profileMsg = ref('');
+const nameDialog = reactive({ visible: false, busy: false, error: '' });
+const handleDialog = reactive({ visible: false, busy: false, error: '', hint: '' });
+const HANDLE_PATTERN = /^[A-Za-z][A-Za-z0-9_-]{5,19}$/;
+const handleValid = computed(() => HANDLE_PATTERN.test(handleInput.value) && handleInput.value.toLowerCase() !== (session.value?.handle ?? ''));
+function openNameDialog() { nameInput.value = session.value?.name ?? ''; nameDialog.error = ''; nameDialog.visible = true; }
+async function saveName() {
+  nameDialog.busy = true; nameDialog.error = ''; profileMsg.value = '';
+  try { await platform.updateDisplayName(nameInput.value); session.value = { ...session.value!, name: nameInput.value }; profileMsg.value = '用户名已更新。'; nameDialog.visible = false; }
+  catch (e) { nameDialog.error = e instanceof Error ? e.message : '修改失败，请重试。'; }
+  finally { nameDialog.busy = false; }
+}
+function openHandleDialog() { handleInput.value = session.value?.handle ?? ''; handleDialog.error = ''; handleDialog.hint = ''; handleDialog.visible = true; }
 async function checkHandle() {
-  handleHint.value = '';
+  handleDialog.hint = '';
   const value = handleInput.value.trim();
   if (!value || value.toLowerCase() === (session.value?.handle ?? '')) return;
   try {
     const result = await platform.handleAvailability(value);
-    handleHint.value = result.available ? '✓ 可用' : result.reason === 'taken' ? '该用户 ID 已被占用' : result.reason === 'reserved' ? '该用户 ID 为系统保留' : '格式不正确：6–20 位，字母开头，仅字母 / 数字 / _ / -';
+    handleDialog.hint = result.available ? '✓ 可用' : result.reason === 'taken' ? '该用户 ID 已被占用' : result.reason === 'reserved' ? '该用户 ID 为系统保留' : '格式不正确：6–20 位，字母开头，仅字母 / 数字 / _ / -';
   } catch { /* 查询失败不阻塞提交 */ }
 }
 async function saveHandle() {
-  profileBusy.value = true; profileMsg.value = ''; profileError.value = '';
+  handleDialog.busy = true; handleDialog.error = ''; profileMsg.value = '';
   try {
     const result = await platform.updateHandle(handleInput.value);
     session.value = { ...session.value!, handle: result.handle };
-    handleInput.value = result.handle; handleHint.value = '';
+    handleInput.value = result.handle;
     profileMsg.value = `用户 ID 已更新，下次可修改时间：${new Date(result.nextChangeAt).toLocaleDateString()}。`;
-  } catch (e) { profileError.value = e instanceof Error ? e.message : '修改失败，请重试。'; }
-  finally { profileBusy.value = false; }
+    handleDialog.visible = false;
+  } catch (e) { handleDialog.error = e instanceof Error ? e.message : '修改失败，请重试。'; }
+  finally { handleDialog.busy = false; }
 }
 
 // ---- 密码与两步验证 ----
 const factors = ref<MfaFactors | null>(null), factorsLoading = ref(false);
-const pwCurrent = ref(''), pwNew = ref(''), pwBusy = ref(false), pwMsg = ref(''), pwError = ref('');
-const mfaBusy = ref(false), mfaError = ref(''), mfaMsg = ref(''), mfaPassword = ref('');
+const securityMsg = ref('');
+const mfaBusy = ref(false), mfaError = ref(''), mfaMsg = ref('');
+const passkeyDialog = reactive({ visible: false, busy: false, error: '' }); const passkeyName = ref('');
+const totpDialog = reactive({ visible: false, busy: false, error: '' });
 const totpEnroll = ref<{ secret: string; otpauthUrl: string } | null>(null), totpCode = ref('');
-const recoveryCodes = ref<string[]>([]);
+const recoveryDialog = reactive({ visible: false }); const recoveryCodes = ref<string[]>([]);
 async function refreshFactors() { factorsLoading.value = true; try { factors.value = await platform.mfaFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '读取两步验证状态失败'; } finally { factorsLoading.value = false; } }
-async function savePassword() {
-  pwBusy.value = true; pwMsg.value = ''; pwError.value = '';
-  try {
-    const result = await platform.setPassword(pwNew.value, factors.value?.passwordSet ? pwCurrent.value : undefined);
-    pwCurrent.value = ''; pwNew.value = '';
-    pwMsg.value = result.mfa.factors.length ? '密码已保存。' : '密码已保存。请先在下方注册两步验证，否则密码登录暂不可用。';
+function openPasswordDialog() {
+  securityMsg.value = '';
+  openPwDialog(factors.value?.passwordSet ? 'change' : 'set', async ({ password, newPassword }) => {
+    const result = await platform.setPassword(newPassword!, password);
+    securityMsg.value = result.mfa.factors.length ? '密码已保存。' : '密码已保存。请先注册两步验证，否则密码登录暂不可用。';
     await refreshFactors();
-  } catch (e) { pwError.value = e instanceof Error ? e.message : '保存失败，请重试。'; }
-  finally { pwBusy.value = false; }
+  }, factors.value?.passwordSet ? '修改登录密码' : '设置登录密码', factors.value?.passwordSet ? '修改密码需要先验证当前密码。' : '密码长度 14–256 位。设置后即可使用「用户 ID + 密码」登录。');
 }
-async function startTotp() { mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { const result = await platform.totpEnroll(); totpEnroll.value = { secret: result.secret, otpauthUrl: result.otpauthUrl }; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '发起注册失败'; } finally { mfaBusy.value = false; } }
-async function confirmTotp() { mfaBusy.value = true; mfaError.value = ''; try { await platform.totpConfirm(totpCode.value); totpEnroll.value = null; totpCode.value = ''; mfaMsg.value = '验证器应用已启用。'; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '确认失败'; } finally { mfaBusy.value = false; } }
-async function cancelTotp() { totpEnroll.value = null; totpCode.value = ''; await refreshFactors(); }
-async function disableTotp() { if (!window.confirm('确定停用验证器应用？')) return; mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { await platform.totpDisable(mfaPassword.value || undefined); mfaMsg.value = '验证器应用已停用。'; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '停用失败'; } finally { mfaBusy.value = false; } }
-async function addPasskey() {
-  mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = '';
+function openPasskeyDialog() { passkeyName.value = ''; passkeyDialog.error = ''; passkeyDialog.visible = true; }
+async function runAddPasskey() {
+  passkeyDialog.busy = true; passkeyDialog.error = '';
   try {
     const options = await platform.passkeyRegisterOptions();
-    const name = window.prompt('为这个 passkey 命名（可留空）', '');
-    if (name === null) return;
     const credential = await createPasskey(options);
-    await platform.passkeyRegister(options.challenge, name.trim() || null, credential);
-    mfaMsg.value = 'passkey 已注册。';
+    await platform.passkeyRegister(options.challenge, passkeyName.value.trim() || null, credential);
+    passkeyDialog.visible = false; mfaMsg.value = 'passkey 已注册。';
     await refreshFactors();
-  } catch (e) { mfaError.value = e instanceof Error ? e.message : '注册失败'; }
-  finally { mfaBusy.value = false; }
+  } catch (e) { passkeyDialog.error = e instanceof Error ? e.message : '注册失败'; }
+  finally { passkeyDialog.busy = false; }
 }
-async function removePasskey(credentialId: string) { if (!window.confirm('确定移除该 passkey？')) return; mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { await platform.passkeyRemove(credentialId, mfaPassword.value || undefined); mfaMsg.value = '已移除。'; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '移除失败'; } finally { mfaBusy.value = false; } }
-async function generateRecovery() { mfaBusy.value = true; mfaError.value = ''; mfaMsg.value = ''; try { const result = await platform.recoveryGenerate(mfaPassword.value || undefined); recoveryCodes.value = result.codes; await refreshFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '生成失败'; } finally { mfaBusy.value = false; } }
+function removePasskey(credentialId: string, name: string | null) {
+  mfaMsg.value = '';
+  sensitive('移除 passkey', `即将移除「${name || '未命名 passkey'}」。移除后该设备无法再用它验证登录。`, async password => {
+    await platform.passkeyRemove(credentialId, password);
+    mfaMsg.value = 'passkey 已移除。';
+    await refreshFactors();
+  });
+}
+async function startTotp() {
+  mfaMsg.value = ''; totpDialog.visible = true; totpDialog.busy = true; totpDialog.error = ''; totpEnroll.value = null; totpCode.value = '';
+  try { const result = await platform.totpEnroll(); totpEnroll.value = { secret: result.secret, otpauthUrl: result.otpauthUrl }; await refreshFactors(); }
+  catch (e) { totpDialog.error = e instanceof Error ? e.message : '发起注册失败'; }
+  finally { totpDialog.busy = false; }
+}
+async function confirmTotp() {
+  totpDialog.busy = true; totpDialog.error = '';
+  try { await platform.totpConfirm(totpCode.value); totpDialog.visible = false; totpEnroll.value = null; totpCode.value = ''; mfaMsg.value = '验证器应用已启用。'; await refreshFactors(); }
+  catch (e) { totpDialog.error = e instanceof Error ? e.message : '确认失败，请检查动态码'; }
+  finally { totpDialog.busy = false; }
+}
+function disableTotp() {
+  mfaMsg.value = '';
+  sensitive('停用验证器应用', '停用后无法再使用动态码登录；若这是唯一的两步验证方式且已设密码，密码登录将不可用。', async password => {
+    await platform.totpDisable(password);
+    mfaMsg.value = '验证器应用已停用。';
+    await refreshFactors();
+  });
+}
+function generateRecovery() {
+  mfaMsg.value = '';
+  sensitive('生成恢复码', '生成新的恢复码会使旧码全部作废。该操作需要身份复核。', async password => {
+    const result = await platform.recoveryGenerate(password);
+    recoveryCodes.value = result.codes;
+    recoveryDialog.visible = true;
+    await refreshFactors();
+  });
+}
 async function copyText(text: string) { try { await navigator.clipboard.writeText(text); mfaMsg.value = '已复制到剪贴板。'; } catch { mfaMsg.value = '复制失败，请手动选择复制。'; } }
 
 onMounted(async () => {
@@ -467,16 +523,16 @@ onMounted(async () => {
 .credential-form{display:grid;gap:12px;margin-top:14px;text-align:left}.credential-form label{display:grid;gap:8px;font-size:12px;color:#708693}.credential-form input{padding:10px 12px;border:1px solid #dce7ed;border-radius:6px;color:#355260;background:#fff;width:100%}.credential-form .primary-button{width:100%;margin-top:2px}.credential-form .login-fine{margin:2px 0 0}
 .mfa-title{font-size:14px;font-weight:650;color:var(--market-text);text-align:center}.back-link{background:transparent;border:0;color:var(--market-muted);font-size:12px;padding:6px;text-align:center;cursor:pointer}.back-link:hover{color:var(--nc-accent)}
 .test-mode-note{font-size:12px;color:var(--market-muted);background:var(--market-surface-soft);border:1px dashed var(--market-border);border-radius:10px;padding:12px 16px;margin:18px 0 0}
-.stack-form{display:grid;gap:12px;margin-top:14px}.stack-form label{display:grid;gap:8px;font-size:12px;color:#708693}.stack-form input{padding:10px 12px;border:1px solid #dce7ed;border-radius:6px;color:#355260;background:#fff;width:100%}.stack-form .actions{margin-top:2px}
-.reauth-field{margin:14px 0 4px;padding:12px 14px;background:var(--market-surface-soft);border-radius:10px}
-.factor-title{font-size:13px;font-weight:650;margin:22px 0 6px;padding-top:16px;border-top:1px solid #e8edf3}.factor-empty{font-size:12px;color:var(--market-muted);margin-bottom:10px;line-height:1.7}
-.secret-box{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:10px;padding:12px 14px;margin:10px 0}.secret-box code{font-size:14px;letter-spacing:.12em;font-weight:650;color:var(--nc-accent);overflow-wrap:anywhere}
-.break-all{overflow-wrap:anywhere;font-size:11px}
-.recovery-box{margin-top:14px;padding:16px;border:1px solid var(--market-border);border-radius:12px;background:var(--market-surface-soft)}
-.recovery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 14px}.recovery-grid code{background:#fff;border:1px solid var(--market-border);border-radius:8px;padding:8px 10px;font-size:13px;letter-spacing:.06em;text-align:center}
-@media(max-width:480px){.recovery-grid{grid-template-columns:1fr}.secret-box{flex-direction:column;align-items:flex-start}}
 .seg-label{display:block;text-align:center;font-size:12px;color:#708693;margin:6px 0 10px}
 .passkey-primary{width:100%;min-height:46px;font-size:14px;margin-top:6px}
 .credential-form .login-divider{margin:16px 0 4px}
 .mfa-switch{display:flex;justify-content:center;margin-top:-2px}
+.row-action{flex-shrink:0;margin-top:6px}
+.factor-title{font-size:13px;font-weight:650;margin:22px 0 6px;padding-top:16px;border-top:1px solid #e8edf3}.factor-empty{font-size:12px;color:var(--market-muted);margin-bottom:10px;line-height:1.7}
+.secret-box{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:10px;padding:12px 14px;margin:0}
+.secret-box code{font-size:14px;letter-spacing:.12em;font-weight:650;color:var(--nc-accent);overflow-wrap:anywhere}
+.break-all{overflow-wrap:anywhere;font-size:11px;margin:0}
+.recovery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.recovery-grid code{background:#fff;border:1px solid var(--market-border);border-radius:8px;padding:8px 10px;font-size:13px;letter-spacing:.06em;text-align:center}
+.dialog-field{display:grid;gap:8px;font-size:12px;color:#708693}.dialog-field input{padding:10px 12px;border:1px solid #dce7ed;border-radius:6px;color:#355260;background:#fff;width:100%}
+@media(max-width:480px){.recovery-grid{grid-template-columns:1fr}.secret-box{flex-direction:column;align-items:flex-start}}
 </style>

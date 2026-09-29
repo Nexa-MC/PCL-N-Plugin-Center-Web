@@ -13,3 +13,10 @@
 .account-divider{margin:5px 4px}
 @keyframes nc-drop-in{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
 @media(max-width:800px){.cloud-header nav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}.cloud-header nav::-webkit-scrollbar{display:none}.cloud-header nav a{white-space:nowrap;flex-shrink:0}.account-status{padding:8px 12px;background:rgba(255,255,255,.14);border-radius:8px}}
+
+/* 账户页统一模态框外观（FormDialog / PasswordConfirmDialog 基于 el-dialog） */
+.nexa-dialog{border-radius:16px}
+.nexa-dialog .el-dialog__title{font-size:17px;font-weight:650;color:var(--market-text);letter-spacing:-.01em}
+.nexa-dialog .el-dialog__header{margin-right:0;padding-bottom:10px}
+.nexa-dialog .el-dialog__body{padding-top:4px}
+.nexa-dialog .el-dialog__footer{padding-top:10px}
