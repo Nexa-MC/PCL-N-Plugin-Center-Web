@@ -433,6 +433,7 @@ async function syncSession() {
   const next = await platform.session();
   session.value = next;
   if (!next) { factors.value = null; identities.value = undefined; summary.value = null; gotoLogin(); return; }
+  if (next.setupRequired) { void router.replace('/register?setup=1'); return; }
   nameInput.value = next.name ?? ''; handleInput.value = next.handle ?? '';
   if (section.value === 'security' && !testMode.value && !factors.value) void refreshFactors();
 }
@@ -442,6 +443,7 @@ onMounted(async () => {
   session.value = await platform.session();
   checking.value = false;
   if (!session.value) { gotoLogin(); return; }
+  if (session.value.setupRequired) { void router.replace('/register?setup=1'); return; }
   void loadIdentities();
   nameInput.value = session.value.name ?? '';
   handleInput.value = session.value.handle ?? '';

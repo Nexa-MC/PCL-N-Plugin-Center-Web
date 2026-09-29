@@ -1,6 +1,6 @@
 import type { RegisterOptions, AssertOptions, CreatedPasskey, PasskeyAssertion } from '../utils/webauthnClient';
 
-export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; termsAccepted?: number; handle?: string | null; scope: 'console' | 'operations' }
+export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; termsAccepted?: number; handle?: string | null; setupRequired?: 0 | 1; scope: 'console' | 'operations' }
 export interface LinkedIdentity { provider: 'github' | 'microsoft' | 'google'; email?: string | null; created_at: string }
 export interface PolicyStatus { kind: string; version: string; effectiveAt: string; contentHash: string; acceptedAt: string | null }
 export interface DeletionRequest { id: string; state: 'pending' | 'cancelled' | 'finalized'; requestedAt: string; executeAfter?: number; cancelledAt: string | null; finalizedAt: string | null }
@@ -18,7 +18,7 @@ export class ApiError extends Error { constructor(message: string, public status
 // 开发环境走同源相对路径（vite 代理 → 本地 nexa-auth :5733）；生产仍直连认证域。
 const AUTH_BASE = import.meta.env.DEV ? '' : 'https://auth.pcln.top';
 export const POLICY_VERSION = '1.0';
-export interface RegisterStartResult { challenge: string; handle: string; name: string; totp: { secret: string; otpauthUrl: string }; expiresIn: number }
+export interface RegisterCompletePayload { name: string; handle: string; password?: string; totpId?: string; totpCode?: string }
 
 let accessToken = '', currentUser: Session | undefined, restoring: Promise<Session | undefined> | undefined;
 
@@ -227,18 +227,10 @@ export const platform = {
     const result = await request<{ url: string }>('/billing/portal', { method: 'POST' });
     window.location.assign(result.url);
   },
-  // ---- 用户 ID + 密码登录与两步验证（nexa-auth 提供） ----
-  registerStart: async (payload: { name: string; handle: string; password: string; tos: string }) => {
-    const response = await authFetch('/auth/v1/register/start', { method: 'POST', body: JSON.stringify(payload) });
-    if (!response.ok) {
-      const body = await response.json().catch(() => ({}) as { detail?: string });
-      throw new ApiError(body.detail || '注册失败，请重试', response.status);
-    }
-    return await response.json() as RegisterStartResult;
-  },
-  registerConfirm: async (challenge: string, code: string) => {
-    const result = await authJson<{ ok: boolean; user: { id: string; name: string } }>(authFetch('/auth/v1/register/confirm', { method: 'POST', body: JSON.stringify({ challenge, code }) }), '验证码不正确');
-    accessToken = ''; currentUser = undefined; restoring = undefined;
+  // ---- 注册完善与登录（nexa-auth 提供）。注册必须先经第三方身份验证，此处仅完善资料。 ----
+  registerComplete: async (payload: RegisterCompletePayload) => {
+    const result = await authJson<{ ok: boolean; handle: string; name: string; passwordSet: boolean }>(authFetch('/auth/v1/register/complete', { method: 'POST', body: JSON.stringify(payload) }), '完成注册失败');
+    accessToken = ''; currentUser = undefined; restoring = undefined; // 强制刷新缓存的会话（setupRequired 已变化）
     notifySessionChange();
     return result;
   },

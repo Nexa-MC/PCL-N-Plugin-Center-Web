@@ -19,7 +19,7 @@
           <label>密码<input v-model="loginPassword" type="password" autocomplete="current-password" required /></label>
           <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
           <button class="primary-button" type="submit" :disabled="loginBusy">{{ loginBusy ? '正在验证…' : '登录' }}</button>
-          <p class="form-switch">没有账户？<router-link to="/register">注册一个</router-link></p>
+          <p class="form-switch">没有账户？<router-link to="/register">创建账户</router-link></p>
         </form>
 
         <form v-else class="credential-form" @submit.prevent="submitMfaCode">
