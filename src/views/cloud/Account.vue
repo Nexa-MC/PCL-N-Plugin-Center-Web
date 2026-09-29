@@ -19,11 +19,11 @@
 
       <template v-if="section === 'overview'">
         <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">ACCOUNT</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || '第三方身份账户' }}</p><span class="status-pill">已登录</span></div></div><div class="shortcut-grid"><button v-for="item in navItems.filter(i => i.key !== 'overview')" :key="item.key" type="button" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true">{{ item.icon }}</span><span>{{ item.label }}</span></button></div></section>
-        <section class="work-panel"><h2>会话</h2><p>登录状态 24 小时内有效。退出后会注销该账户在所有设备上的会话。</p><button class="danger-button" :disabled="busy" @click="logout">退出登录</button></section>
+        <section class="work-panel"><h2>会话</h2><p>登录状态 24 小时有效。</p><button class="danger-button" :disabled="busy" @click="logout">退出登录</button></section>
       </template>
 
       <template v-else-if="section === 'linked'">
-        <section class="work-panel"><h2>关联的账号</h2><p>同一个账户可以同时关联 GitHub、Google 和 Microsoft，即使邮箱不同也可以互绑。至少需要保留一个登录方式。</p><p class="login-fine">绑定 Microsoft 时会请求 Xbox 权限，用于查询 Minecraft 拥有状况与游戏档案（UUID）；启动器登录后可据此自动添加游戏档案。解绑 Microsoft 将同时清除已存的档案信息。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true">{{ p.icon }}</span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联<template v-if="p.id === 'microsoft' && minecraftText"> · {{ minecraftText }}</template></small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
+        <section class="work-panel"><h2>关联的账号</h2><p>可同时关联 GitHub、Google 和 Microsoft；至少保留一个登录方式。绑定 Microsoft 会请求 Xbox 权限，用于同步 Minecraft 拥有状况与游戏档案。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true">{{ p.icon }}</span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联<template v-if="p.id === 'microsoft' && minecraftText"> · {{ minecraftText }}</template></small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
       </template>
 
       <template v-else-if="section === 'security'">
@@ -32,28 +32,28 @@
           <div class="profile-row"><span>登录方式</span><strong>{{ factors?.passwordSet ? '第三方 OAuth + 用户 ID 密码（强制两步验证）' : '第三方 OAuth（GitHub / Google / Microsoft）' }}</strong></div>
           <div class="profile-row"><span>登录密码</span><strong>{{ factors ? (factors.passwordSet ? '已设置' : '未设置') : '正在读取…' }}</strong><button v-if="!testMode && factors" class="secondary-button row-action" :disabled="pwDialog.busy" @click="openPasswordDialog">{{ factors.passwordSet ? '修改密码' : '设置密码' }}</button></div>
           <div class="profile-row"><span>会话有效期</span><strong>24 小时</strong></div>
-          <div class="profile-row"><span>凭证存储</span><strong>访问令牌仅保存在浏览器内存，刷新后自动换取</strong></div>
+          
           <p v-if="securityMsg" class="form-success" role="status">{{ securityMsg }}</p>
-          <p>“退出所有设备”会注销该账户当前范围内的全部会话，包括其他浏览器和已换取的访问令牌。</p>
+          
           <button class="danger-button" :disabled="busy" @click="logout">退出所有设备</button>
         </section>
-        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；两步验证管理在真实登录后可用。</p>
+        <p v-if="testMode" class="test-mode-note">前端测试账户不连接真实认证服务。</p>
         <section v-else class="work-panel">
           <div class="section-heading"><div><h2>两步验证（2FA）</h2></div><button class="secondary-button" :disabled="factorsLoading" @click="refreshFactors">刷新</button></div>
-          <p>验证方式优先级：<strong>Passkey › 验证器应用 › 恢复码</strong>。登录时的两步验证界面也按此顺序提供；恢复码仅应在其他方式都不可用时使用。</p>
+          <p>优先级：<strong>Passkey › 验证器应用 › 恢复码</strong>。</p>
           <p v-if="factorsLoading && !factors">正在读取…</p>
           <template v-else-if="factors">
             <h3 class="factor-title">Passkey（{{ factors.passkeys.length }}/10）</h3>
-            <p v-if="!factors.passkeys.length" class="factor-empty">尚未注册。推荐方式：无需记码，用指纹 / 面容 / 设备 PIN 验证。</p>
+            <p v-if="!factors.passkeys.length" class="factor-empty">推荐：指纹 / 面容 / 设备 PIN，无需记码。</p>
             <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true">🔑</span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId, pk.name)">移除</button></div>
             <div class="actions"><button class="primary-button" :disabled="mfaBusy || passkeyDialog.busy || factors.passkeys.length >= 10" @click="openPasskeyDialog">添加 passkey</button></div>
             <h3 class="factor-title">验证器应用（TOTP · {{ confirmedTotpCount }}/10）</h3>
-            <p v-if="!factors.totp.length" class="factor-empty">用 Microsoft / Google Authenticator 等应用生成 6 位动态码；手机、平板、密码管理器可各注册一台。</p>
+            <p v-if="!factors.totp.length" class="factor-empty">用 Authenticator 应用生成 6 位动态码，可注册多台设备。</p>
             <div v-for="device in factors.totp.filter(t => t.confirmed)" :key="device.id" class="identity-row"><span class="identity-icon" aria-hidden="true">⏱</span><div class="meta"><h3>{{ device.name || '未命名验证器' }}</h3><small>启用于 {{ device.confirmedAt ? new Date(device.confirmedAt).toLocaleString() : '—' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removeTotp(device.id, device.name)">停用</button></div>
             <p v-if="factors.totp.some(t => !t.confirmed)" class="factor-empty">存在未确认的注册（15 分钟后自动清理），可重新发起。</p>
             <div class="actions"><button class="secondary-button" :disabled="mfaBusy || totpDialog.busy || factors.totp.length >= 10" @click="startTotp">添加验证器应用</button></div>
             <h3 class="factor-title">恢复码（剩余 {{ factors.recovery.count }}）</h3>
-            <p class="factor-empty">仅在丢失 passkey 与验证器时使用；一次性，重新生成会使旧码全部作废。</p>
+            <p class="factor-empty">应急登录用，一次性；重新生成作废旧码。</p>
             <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!confirmedTotpCount && !factors.passkeys.length)" @click="generateRecovery">生成 10 个恢复码</button><button v-if="factors.recovery.count" class="secondary-button" :disabled="mfaBusy" @click="revealRecovery">查看 / 打印</button></div>
             <p v-if="mfaError" class="form-error" role="alert">{{ mfaError }}</p>
             <p v-if="mfaMsg" class="form-success" role="status">{{ mfaMsg }}</p>
@@ -83,10 +83,10 @@
           <div class="profile-row"><span>用户 ID</span><strong>{{ session.handle ? '@' + session.handle : '未设置' }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="handleDialog.busy" @click="openHandleDialog">{{ session.handle ? '修改' : '设置' }}</button></div>
           <div class="profile-row"><span>邮箱</span><strong>{{ session.email || '未提供' }}</strong></div>
           <div class="profile-row"><span>账户 ID</span><strong>{{ session.id }}</strong></div>
-          <p>邮箱来自第三方身份提供商，在此只读展示。用户 ID 类似微信号，用于「用户 ID + 密码」登录，每 30 天仅可修改一次。</p>
+          <p>邮箱只读，来自第三方身份提供商。</p>
           <p v-if="profileMsg" class="form-success" role="status">{{ profileMsg }}</p>
         </section>
-        <p v-if="testMode" class="test-mode-note">当前为前端测试账户，不连接真实认证服务；修改功能在真实登录后可用。</p>
+        <p v-if="testMode" class="test-mode-note">前端测试账户不连接真实认证服务。</p>
       </template>
 
       <template v-else-if="section === 'wallet'">
@@ -103,7 +103,7 @@
           <section class="work-panel">
             <div class="section-heading"><div><span class="status-pill">已具备资格</span><h2>网站后台管理</h2></div>
               <div class="actions"><a class="primary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">进入后台 ↗</a><button class="secondary-button" :disabled="summaryLoading" @click="loadSummary">刷新摘要</button></div></div>
-            <p>完整的遥测、诊断与灰度控制台由独立后台 <strong>manage.pcln.top</strong> 提供（接线中，完成后「进入后台」直接跳转）。此处仅保留最近 7 天的关键指标摘要{{ testMode ? '；当前为前端测试账户，显示本地模拟数据' : '' }}。</p>
+            <p>完整控制台位于独立后台 <strong>manage.pcln.top</strong>（接线中）；此处为最近 7 天摘要{{ testMode ? '（测试账户为模拟数据）' : '' }}。</p>
           </section>
           <section class="work-panel">
             <div class="section-heading"><div><h2>遥测摘要</h2></div><span class="status-pill">最近 7 天</span></div>
@@ -124,7 +124,7 @@
                   <div v-for="p in summary.platforms" :key="p.os" class="summary-line"><span>{{ platformLabel(p.os) }}</span><div class="track"><i :style="{ width: barWidth(p.count, summary.platformTotal) }" /></div><b>{{ Math.round(p.count / summary.platformTotal * 100) }}%</b></div>
                 </div>
               </div>
-              <p class="summary-note">数据生成于 {{ summary.generatedAt }}。指标口径与完整控制台一致，明细请等待 manage.pcln.top 接线。</p>
+              <p class="summary-note">数据生成于 {{ summary.generatedAt }}。</p>
             </template>
           </section>
         </template>
@@ -135,19 +135,19 @@
     <!-- ===== 二级模态框：所有修改类操作统一入口 ===== -->
     <PasswordConfirmDialog v-model="pwDialog.visible" :mode="pwDialog.mode" :title="pwDialog.title" :description="pwDialog.description" :busy="pwDialog.busy" :error="pwDialog.error" @confirm="onPasswordConfirm" />
 
-    <FormDialog v-model="nameDialog.visible" title="修改用户名" description="用户名用于界面展示，1–60 个字符。" :busy="nameDialog.busy" :error="nameDialog.error" confirm-label="保存用户名" :can-confirm="Boolean(nameInput)" @confirm="saveName">
+    <FormDialog v-model="nameDialog.visible" title="修改用户名" description="1–60 个字符。" :busy="nameDialog.busy" :error="nameDialog.error" confirm-label="保存用户名" :can-confirm="Boolean(nameInput)" @confirm="saveName">
       <label class="dialog-field">用户名<input v-model.trim="nameInput" minlength="1" maxlength="60" required /></label>
     </FormDialog>
 
-    <FormDialog v-model="handleDialog.visible" :title="session.handle ? '修改用户 ID' : '设置用户 ID'" description="用户 ID 类似微信号：6–20 位、字母开头，仅含字母 / 数字 / 下划线 / 连字符，全站唯一。每 30 天仅可修改一次。" :busy="handleDialog.busy" :error="handleDialog.error" :hint="handleDialog.hint" :confirm-label="session.handle ? '修改用户 ID' : '设置用户 ID'" :can-confirm="handleValid" @confirm="saveHandle">
+    <FormDialog v-model="handleDialog.visible" :title="session.handle ? '修改用户 ID' : '设置用户 ID'" description="6–20 位，字母开头，可含数字 / _ / -；每 30 天限改一次。" :busy="handleDialog.busy" :error="handleDialog.error" :hint="handleDialog.hint" :confirm-label="session.handle ? '修改用户 ID' : '设置用户 ID'" :can-confirm="handleValid" @confirm="saveHandle">
       <label class="dialog-field">用户 ID<input v-model.trim="handleInput" minlength="6" maxlength="20" pattern="[A-Za-z][A-Za-z0-9_-]{5,19}" required placeholder="例如 player_one" @blur="checkHandle" /></label>
     </FormDialog>
 
-    <FormDialog v-model="passkeyDialog.visible" title="添加 passkey" description="先为这个 passkey 命名，方便日后识别设备；点击继续后，浏览器会弹出系统验证（指纹 / 面容 / 设备 PIN）。" :busy="passkeyDialog.busy" :error="passkeyDialog.error" busy-label="等待系统验证…" confirm-label="继续并验证" @confirm="runAddPasskey">
+    <FormDialog v-model="passkeyDialog.visible" title="添加 passkey" description="浏览器将弹出系统验证（指纹 / 面容 / PIN）。" :busy="passkeyDialog.busy" :error="passkeyDialog.error" busy-label="等待系统验证…" confirm-label="继续并验证" @confirm="runAddPasskey">
       <label class="dialog-field">名称（可留空）<input v-model.trim="passkeyName" maxlength="60" placeholder="例如 我的 Windows 电脑" /></label>
     </FormDialog>
 
-    <FormDialog v-model="totpDialog.visible" title="添加验证器应用" :description="totpEnroll ? '用验证器应用打开下方链接或手动输入密钥，为设备命名后填写应用显示的 6 位动态码完成绑定。' : '正在生成密钥…'" :busy="totpDialog.busy" :error="totpDialog.error" confirm-label="确认并启用" :can-confirm="Boolean(totpEnroll) && totpCode.length === 6" @confirm="confirmTotp">
+    <FormDialog v-model="totpDialog.visible" title="添加验证器应用" :description="totpEnroll ? '用验证器应用扫码或输入密钥，再填写 6 位动态码。' : '正在生成密钥…'" :busy="totpDialog.busy" :error="totpDialog.error" confirm-label="确认并启用" :can-confirm="Boolean(totpEnroll) && totpCode.length === 6" @confirm="confirmTotp">
       <template v-if="totpEnroll">
         <label class="dialog-field">设备名称（可留空）<input v-model.trim="totpDeviceName" maxlength="60" placeholder="例如 我的手机" /></label>
         <p class="secret-box"><code>{{ totpEnroll.secret }}</code><button class="secondary-button" type="button" @click="copyText(totpEnroll.secret)">复制</button></p>
@@ -157,7 +157,7 @@
       </template>
     </FormDialog>
 
-    <FormDialog v-model="recoveryDialog.visible" :title="recoveryDialog.title" :description="recoveryDialog.title === '恢复码已生成' ? '每个恢复码只能使用一次，重新生成会使旧码全部作废。建议打印或存入密码管理器。' : '每个恢复码只能使用一次；本次查看已记入审计。'" confirm-label="我已妥善保存" @confirm="recoveryDialog.visible = false">
+    <FormDialog v-model="recoveryDialog.visible" :title="recoveryDialog.title" :description="recoveryDialog.title === '恢复码已生成' ? '一次性使用；建议打印或存入密码管理器。' : '查看操作已记入审计。'" confirm-label="我已妥善保存" @confirm="recoveryDialog.visible = false">
       <p v-if="recoveryMissing" class="login-fine">有 {{ recoveryMissing }} 个旧恢复码不支持在线查看；重新生成一批即可查看全部。</p>
       <div class="recovery-grid"><code v-for="code in recoveryCodes" :key="code">{{ code }}</code></div>
       <div class="actions"><button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button><button class="secondary-button" type="button" @click="printCodes">打印</button></div>
@@ -349,9 +349,9 @@ function openPasswordDialog() {
   securityMsg.value = '';
   openPwDialog(factors.value?.passwordSet ? 'change' : 'set', async ({ password, newPassword }) => {
     const result = await platform.setPassword(newPassword!, password);
-    securityMsg.value = result.mfa.factors.length ? '密码已保存。' : '密码已保存。请先注册两步验证，否则密码登录暂不可用。';
+    securityMsg.value = result.mfa.factors.length ? '密码已保存。' : '密码已保存。请先注册两步验证，否则密码登录不可用。';
     await refreshFactors();
-  }, factors.value?.passwordSet ? '修改登录密码' : '设置登录密码', factors.value?.passwordSet ? '修改密码需要先验证当前密码。' : '密码长度 14–256 位。设置后即可使用「用户 ID + 密码」登录。');
+  }, factors.value?.passwordSet ? '修改登录密码' : '设置登录密码', factors.value?.passwordSet ? '需先验证当前密码。' : '密码 14–256 位；密码登录强制两步验证。');
 }
 function openPasskeyDialog() { passkeyName.value = ''; passkeyDialog.error = ''; passkeyDialog.visible = true; }
 async function runAddPasskey() {
@@ -367,7 +367,7 @@ async function runAddPasskey() {
 }
 function removePasskey(credentialId: string, name: string | null) {
   mfaMsg.value = '';
-  sensitive('移除 passkey', `即将移除「${name || '未命名 passkey'}」。移除后该设备无法再用它验证登录。`, async password => {
+  sensitive('移除 passkey', `移除「${name || '未命名 passkey'}」后，该设备无法再用它验证登录。`, async password => {
     await platform.passkeyRemove(credentialId, password);
     mfaMsg.value = 'passkey 已移除。';
     await refreshFactors();
@@ -388,7 +388,7 @@ async function confirmTotp() {
 }
 function removeTotp(id: string, name: string | null) {
   mfaMsg.value = '';
-  sensitive('停用验证器应用', `即将停用「${name || '未命名验证器'}」。停用后无法再用它登录；若这是唯一的两步验证方式且已设密码，密码登录将不可用。`, async password => {
+  sensitive('停用验证器应用', `停用「${name || '未命名验证器'}」后无法再用它登录。`, async password => {
     await platform.totpRemove(id, password);
     mfaMsg.value = '验证器应用已停用。';
     await refreshFactors();
@@ -396,7 +396,7 @@ function removeTotp(id: string, name: string | null) {
 }
 function generateRecovery() {
   mfaMsg.value = ''; recoveryDialog.title = '恢复码已生成';
-  sensitive('生成恢复码', '生成新的恢复码会使旧码全部作废。该操作需要身份复核。', async password => {
+  sensitive('生成恢复码', '新码生成后，旧码全部作废。', async password => {
     const result = await platform.recoveryGenerate(password);
     recoveryCodes.value = result.codes; recoveryMissing.value = 0;
     recoveryDialog.visible = true;
@@ -405,7 +405,7 @@ function generateRecovery() {
 }
 function revealRecovery() {
   mfaMsg.value = ''; recoveryDialog.title = '查看恢复码';
-  sensitive('查看恢复码', '恢复码等同于登录凭证。查看操作将记入审计日志。', async password => {
+  sensitive('查看恢复码', '查看操作将记入审计。', async password => {
     const result = await platform.recoveryReveal(password);
     recoveryCodes.value = result.codes; recoveryMissing.value = result.missing;
     recoveryDialog.visible = true;

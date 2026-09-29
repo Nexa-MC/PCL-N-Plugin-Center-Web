@@ -13,9 +13,9 @@
   >
     <form class="stack-form" @submit.prevent="submit">
       <label v-if="requireCurrent">当前密码<input v-model="current" type="password" autocomplete="current-password" required placeholder="用于身份复核" /></label>
-      <label v-if="mode !== 'reauth'">{{ mode === 'set' ? '新密码' : '新密码' }}（14–256 位）<input v-model="next" type="password" autocomplete="new-password" minlength="14" maxlength="256" required /></label>
+      <label v-if="mode !== 'reauth'">新密码<input v-model="next" type="password" autocomplete="new-password" minlength="14" maxlength="256" required /></label>
     </form>
-    <p v-if="mode !== 'reauth'" class="login-fine">设置密码后，「用户 ID + 密码」登录将强制要求两步验证；未注册 2FA 前密码登录不可用。</p>
+    <p v-if="mode !== 'reauth'" class="login-fine">密码 14–256 位；密码登录强制两步验证。</p>
   </FormDialog>
 </template>
 <script setup lang="ts">

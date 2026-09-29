@@ -17,7 +17,9 @@ export class ApiError extends Error { constructor(message: string, public status
 
 // 开发环境走同源相对路径（vite 代理 → 本地 nexa-auth :5733）；生产仍直连认证域。
 const AUTH_BASE = import.meta.env.DEV ? '' : 'https://auth.pcln.top';
-const POLICY_VERSION = '1.0';
+export const POLICY_VERSION = '1.0';
+export interface RegisterStartResult { challenge: string; handle: string; name: string; totp: { secret: string; otpauthUrl: string }; expiresIn: number }
+
 let accessToken = '', currentUser: Session | undefined, restoring: Promise<Session | undefined> | undefined;
 
 const authHeaders = (): Record<string, string> => accessToken ? { Authorization: 'Bearer ' + accessToken } : {};
@@ -226,6 +228,20 @@ export const platform = {
     window.location.assign(result.url);
   },
   // ---- 用户 ID + 密码登录与两步验证（nexa-auth 提供） ----
+  registerStart: async (payload: { name: string; handle: string; password: string; tos: string }) => {
+    const response = await authFetch('/auth/v1/register/start', { method: 'POST', body: JSON.stringify(payload) });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}) as { detail?: string });
+      throw new ApiError(body.detail || '注册失败，请重试', response.status);
+    }
+    return await response.json() as RegisterStartResult;
+  },
+  registerConfirm: async (challenge: string, code: string) => {
+    const result = await authJson<{ ok: boolean; user: { id: string; name: string } }>(authFetch('/auth/v1/register/confirm', { method: 'POST', body: JSON.stringify({ challenge, code }) }), '验证码不正确');
+    accessToken = ''; currentUser = undefined; restoring = undefined;
+    notifySessionChange();
+    return result;
+  },
   loginWithPassword: async (handle: string, password: string) => {
     const response = await authFetch('/auth/v1/login', { method: 'POST', body: JSON.stringify({ handle, password }) });
     if (!response.ok) {

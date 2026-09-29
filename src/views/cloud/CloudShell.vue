@@ -6,7 +6,7 @@
       <nav aria-label="平台入口"><router-link to="/" :class="{active: route.path === '/'}">主页</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">下载</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">商店</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">文档</router-link></nav>
       <div class="account-menu">
         <button class="account-status" type="button" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span>{{ accountLabel }}</button>
-        <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">我的账户</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">开发者控制台 / 注册成为开发者</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">网站管理后台 / 申请参与网站管理</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">退出登录</button></div>
+        <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">我的账户</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">开发者控制台</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">网站管理</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">退出登录</button></div>
       </div>
     </header>
     <div class="cloud-body">
