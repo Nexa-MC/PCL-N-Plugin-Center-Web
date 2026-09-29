@@ -8,7 +8,8 @@ export interface PrivacyRequest { id: string; type: string; state: string; creat
 export interface Entitlements { cloudPlus: boolean; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
 export interface LoginChallenge { challenge: string; factors: string[]; user: { name: string } }
 export interface MfaPasskey { credentialId: string; name: string | null; createdAt: string; lastUsedAt: string | null }
-export interface MfaFactors { passwordSet: boolean; passkeys: MfaPasskey[]; totp: { confirmed: boolean; createdAt: string; confirmedAt: string | null } | null; recovery: { count: number } }
+export interface MfaTotpDevice { id: string; name: string | null; confirmed: boolean; createdAt: string; confirmedAt: string | null }
+export interface MfaFactors { passwordSet: boolean; passkeys: MfaPasskey[]; totp: MfaTotpDevice[]; recovery: { count: number } }
 export interface StoreItem { id: string; name: string; summary: string; category: string; version: string; publisher: string; description: string }
 export interface Ticket { id: string; subject: string; body: string; status: string; created_at: string; version: number }
 export class ApiError extends Error { constructor(message: string, public status: number) { super(message); } }
@@ -79,6 +80,10 @@ const testState = {
 };
 const testNow = () => new Date().toISOString();
 const isTest = () => testSession !== undefined;
+// 全局会话变更事件：登录 / 登出 / 测试账户切换都会广播，壳层与账户页据此同步，
+// 修复“在账户页登出后不会回到登录卡”的问题。
+export const SESSION_EVENT = 'nexa:session-changed';
+const notifySessionChange = () => { try { window.dispatchEvent(new Event(SESSION_EVENT)); } catch { /* 非浏览器环境 */ } };
 // 供 pluginCenter 等 API 层判断“测试账户 → 走本地桩数据”。
 export const isTestSession = isTest;
 const TEST_STORAGE_KEY = 'nexa.cloud.test-session.v1';
@@ -103,7 +108,7 @@ export function testLogin(overrides: Partial<Session> = {}): Session {
   accessToken = ''; currentUser = testSession; restoring = undefined;
   try { localStorage.setItem(TEST_STORAGE_KEY, JSON.stringify(testSession)); } catch { /* 存储不可用时退化为非持久会话 */ }
   console.info('%c Nexa Cloud %c 已进入前端测试账户「Test」：staff + developer 全 UI 权限；数据为本地模拟，不触达真实 API。已持久化，刷新不失效；test_logout() 退出。', 'background:#1673e6;color:#fff;border-radius:4px 0 0 4px;padding:1px 6px', 'background:#e8f0fe;color:#0f5ecb;border-radius:0 4px 4px 0;padding:1px 6px');
-  window.dispatchEvent(new Event('focus')); // 让 CloudShell 立即刷新登录态
+  notifySessionChange();
   return testSession;
 }
 
@@ -111,7 +116,7 @@ export function testLogout(): void {
   testSession = undefined; currentUser = undefined; accessToken = ''; restoring = undefined;
   try { localStorage.removeItem(TEST_STORAGE_KEY); } catch { /* ignore */ }
   console.info('已退出前端测试账户。');
-  window.dispatchEvent(new Event('focus'));
+  notifySessionChange();
 }
 
 // 页面加载即恢复持久化的测试会话：刷新后登录态与访问、跳转逻辑保持完整。
@@ -231,12 +236,14 @@ export const platform = {
   loginWithCode: async (challenge: string, code: string) => {
     const result = await authJson<{ ok: boolean; method: string; recovery?: { remaining: number }; user: { id: string; name: string } }>(authFetch('/auth/v1/login/totp', { method: 'POST', body: JSON.stringify({ challenge, code }) }), '验证码不正确或挑战已过期');
     accessToken = ''; currentUser = undefined; restoring = undefined;
+    notifySessionChange();
     return result;
   },
   loginPasskeyOptions: (challenge: string) => authJson<AssertOptions>(authFetch('/auth/v1/login/passkey/options', { method: 'POST', body: JSON.stringify({ challenge }) }), '获取 passkey 选项失败'),
   loginPasskey: async (payload: { challenge: string } & PasskeyAssertion) => {
     const result = await authJson<{ ok: boolean; user: { id: string; name: string } }>(authFetch('/auth/v1/login/passkey', { method: 'POST', body: JSON.stringify(payload) }), 'passkey 校验失败');
     accessToken = ''; currentUser = undefined; restoring = undefined;
+    notifySessionChange();
     return result;
   },
   mfaFactors: () => authJson<MfaFactors>(authFetch('/auth/v1/mfa/factors'), '读取两步验证状态失败'),
@@ -244,17 +251,19 @@ export const platform = {
   handleAvailability: (handle: string) => authJson<{ available: boolean; reason?: string }>(authFetch('/auth/v1/account/handle/availability?handle=' + encodeURIComponent(handle)), '查询失败'),
   updateHandle: (handle: string) => authJson<{ ok: boolean; handle: string; nextChangeAt: string }>(authFetch('/auth/v1/account/handle', { method: 'PUT', body: JSON.stringify({ handle }) }), '修改用户 ID 失败'),
   setPassword: (password: string, currentPassword?: string) => authJson<{ ok: boolean; mfa: { required: boolean; factors: string[]; message: string } }>(authFetch('/auth/v1/account/password', { method: 'POST', body: JSON.stringify(currentPassword ? { password, currentPassword } : { password }) }), '保存密码失败'),
-  totpEnroll: () => authJson<{ secret: string; otpauthUrl: string; expiresAt: string }>(authFetch('/auth/v1/mfa/totp/enroll', { method: 'POST', body: '{}' }), '发起注册失败'),
-  totpConfirm: (code: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/totp/confirm', { method: 'POST', body: JSON.stringify({ code }) }), '验证码不正确'),
-  totpDisable: (password?: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/totp', { method: 'DELETE', body: JSON.stringify({ password }) }), '停用失败'),
+  totpEnroll: () => authJson<{ id: string; secret: string; otpauthUrl: string; expiresAt: string }>(authFetch('/auth/v1/mfa/totp/enroll', { method: 'POST', body: '{}' }), '发起注册失败'),
+  totpConfirm: (id: string, code: string, name?: string | null) => authJson<{ ok: boolean; id: string }>(authFetch('/auth/v1/mfa/totp/confirm', { method: 'POST', body: JSON.stringify({ id, code, name }) }), '验证码不正确'),
+  totpRemove: (id: string, password?: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/totp/' + encodeURIComponent(id), { method: 'DELETE', body: JSON.stringify({ password }) }), '停用失败'),
   passkeyRegisterOptions: () => authJson<RegisterOptions>(authFetch('/auth/v1/mfa/passkey/register/options', { method: 'POST', body: '{}' }), '获取注册选项失败'),
   passkeyRegister: (challenge: string, name: string | null, credential: CreatedPasskey) => authJson<{ ok: boolean; credentialId: string; name: string | null }>(authFetch('/auth/v1/mfa/passkey/register', { method: 'POST', body: JSON.stringify({ challenge, name, credential }) }), 'passkey 注册失败'),
   passkeyRemove: (credentialId: string, password?: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/passkey/' + encodeURIComponent(credentialId), { method: 'DELETE', body: JSON.stringify({ password }) }), '移除失败'),
   recoveryGenerate: (password?: string) => authJson<{ codes: string[]; note: string }>(authFetch('/auth/v1/mfa/recovery/generate', { method: 'POST', body: JSON.stringify({ password }) }), '生成恢复码失败'),
+  recoveryReveal: (password?: string) => authJson<{ codes: string[]; missing: number }>(authFetch('/auth/v1/mfa/recovery/reveal', { method: 'POST', body: JSON.stringify({ password }) }), '读取恢复码失败'),
   logout: async () => {
     if (isTest()) { testLogout(); return; }
     try { await authFetch('/auth/v1/sessions/current?scope=console', { method: 'DELETE' }); } catch { /* 网络失败也要清除本地凭证 */ }
     accessToken = ''; currentUser = undefined;
+    notifySessionChange();
   },
   catalog: (query: URLSearchParams) => request<Page<StoreItem>>('/resources?' + query),
   resource: (id: string) => request<StoreItem>('/resources/' + encodeURIComponent(id)),

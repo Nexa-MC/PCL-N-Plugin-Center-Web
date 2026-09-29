@@ -47,15 +47,14 @@
             <p v-if="!factors.passkeys.length" class="factor-empty">尚未注册。推荐方式：无需记码，用指纹 / 面容 / 设备 PIN 验证。</p>
             <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true">🔑</span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId, pk.name)">移除</button></div>
             <div class="actions"><button class="primary-button" :disabled="mfaBusy || passkeyDialog.busy || factors.passkeys.length >= 10" @click="openPasskeyDialog">添加 passkey</button></div>
-            <h3 class="factor-title">验证器应用（TOTP）</h3>
-            <div v-if="factors.totp?.confirmed" class="identity-row"><span class="identity-icon" aria-hidden="true">⏱</span><div class="meta"><h3>验证器应用</h3><small>已启用{{ factors.totp.confirmedAt ? ` · ${new Date(factors.totp.confirmedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="disableTotp">停用</button></div>
-            <template v-else>
-              <p class="factor-empty">用 Microsoft / Google Authenticator 等应用生成 6 位动态码。{{ factors.totp ? '存在未确认的注册，可重新发起。' : '' }}</p>
-              <button class="secondary-button" :disabled="mfaBusy || totpDialog.busy" @click="startTotp">{{ factors.totp ? '重新发起注册' : '注册验证器应用' }}</button>
-            </template>
+            <h3 class="factor-title">验证器应用（TOTP · {{ confirmedTotpCount }}/10）</h3>
+            <p v-if="!factors.totp.length" class="factor-empty">用 Microsoft / Google Authenticator 等应用生成 6 位动态码；手机、平板、密码管理器可各注册一台。</p>
+            <div v-for="device in factors.totp.filter(t => t.confirmed)" :key="device.id" class="identity-row"><span class="identity-icon" aria-hidden="true">⏱</span><div class="meta"><h3>{{ device.name || '未命名验证器' }}</h3><small>启用于 {{ device.confirmedAt ? new Date(device.confirmedAt).toLocaleString() : '—' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removeTotp(device.id, device.name)">停用</button></div>
+            <p v-if="factors.totp.some(t => !t.confirmed)" class="factor-empty">存在未确认的注册（15 分钟后自动清理），可重新发起。</p>
+            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || totpDialog.busy || factors.totp.length >= 10" @click="startTotp">添加验证器应用</button></div>
             <h3 class="factor-title">恢复码（剩余 {{ factors.recovery.count }}）</h3>
             <p class="factor-empty">仅在丢失 passkey 与验证器时使用；一次性，重新生成会使旧码全部作废。</p>
-            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!factors.totp?.confirmed && !factors.passkeys.length)" @click="generateRecovery">生成 10 个恢复码</button></div>
+            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!confirmedTotpCount && !factors.passkeys.length)" @click="generateRecovery">生成 10 个恢复码</button><button v-if="factors.recovery.count" class="secondary-button" :disabled="mfaBusy" @click="revealRecovery">查看 / 打印</button></div>
             <p v-if="mfaError" class="form-error" role="alert">{{ mfaError }}</p>
             <p v-if="mfaMsg" class="form-success" role="status">{{ mfaMsg }}</p>
           </template>
@@ -148,8 +147,9 @@
       <label class="dialog-field">名称（可留空）<input v-model.trim="passkeyName" maxlength="60" placeholder="例如 我的 Windows 电脑" /></label>
     </FormDialog>
 
-    <FormDialog v-model="totpDialog.visible" title="注册验证器应用" :description="totpEnroll ? '用验证器应用打开下方链接或手动输入密钥，然后填写应用显示的 6 位动态码完成绑定。' : '正在生成密钥…'" :busy="totpDialog.busy" :error="totpDialog.error" confirm-label="确认并启用" :can-confirm="Boolean(totpEnroll) && totpCode.length === 6" @confirm="confirmTotp">
+    <FormDialog v-model="totpDialog.visible" title="添加验证器应用" :description="totpEnroll ? '用验证器应用打开下方链接或手动输入密钥，为设备命名后填写应用显示的 6 位动态码完成绑定。' : '正在生成密钥…'" :busy="totpDialog.busy" :error="totpDialog.error" confirm-label="确认并启用" :can-confirm="Boolean(totpEnroll) && totpCode.length === 6" @confirm="confirmTotp">
       <template v-if="totpEnroll">
+        <label class="dialog-field">设备名称（可留空）<input v-model.trim="totpDeviceName" maxlength="60" placeholder="例如 我的手机" /></label>
         <p class="secret-box"><code>{{ totpEnroll.secret }}</code><button class="secondary-button" type="button" @click="copyText(totpEnroll.secret)">复制</button></p>
         <p class="login-fine break-all">{{ totpEnroll.otpauthUrl }}</p>
         <span class="seg-label">6 位动态码</span>
@@ -157,9 +157,10 @@
       </template>
     </FormDialog>
 
-    <FormDialog v-model="recoveryDialog.visible" title="恢复码已生成" description="仅此一次完整展示，请立即复制到密码管理器保存。每个恢复码只能使用一次，重新生成会使这批码作废。" confirm-label="我已妥善保存" @confirm="recoveryDialog.visible = false">
+    <FormDialog v-model="recoveryDialog.visible" :title="recoveryDialog.title" :description="recoveryDialog.title === '恢复码已生成' ? '每个恢复码只能使用一次，重新生成会使旧码全部作废。建议打印或存入密码管理器。' : '每个恢复码只能使用一次；本次查看已记入审计。'" confirm-label="我已妥善保存" @confirm="recoveryDialog.visible = false">
+      <p v-if="recoveryMissing" class="login-fine">有 {{ recoveryMissing }} 个旧恢复码不支持在线查看；重新生成一批即可查看全部。</p>
       <div class="recovery-grid"><code v-for="code in recoveryCodes" :key="code">{{ code }}</code></div>
-      <button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button>
+      <div class="actions"><button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button><button class="secondary-button" type="button" @click="printCodes">打印</button></div>
     </FormDialog>
   </div>
   <div v-else class="login-hero">
@@ -210,9 +211,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { platform, ApiError, isTestSession, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors } from '@/api/platform';
+import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors } from '@/api/platform';
 import { pluginCenterApi } from '@/api/pluginCenter';
 import { createPasskey, assertPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';
@@ -427,8 +428,9 @@ const securityMsg = ref('');
 const mfaBusy = ref(false), mfaError = ref(''), mfaMsg = ref('');
 const passkeyDialog = reactive({ visible: false, busy: false, error: '' }); const passkeyName = ref('');
 const totpDialog = reactive({ visible: false, busy: false, error: '' });
-const totpEnroll = ref<{ secret: string; otpauthUrl: string } | null>(null), totpCode = ref('');
-const recoveryDialog = reactive({ visible: false }); const recoveryCodes = ref<string[]>([]);
+const totpEnroll = ref<{ id: string; secret: string; otpauthUrl: string } | null>(null), totpCode = ref(''), totpDeviceName = ref('');
+const confirmedTotpCount = computed(() => factors.value?.totp.filter(t => t.confirmed).length ?? 0);
+const recoveryDialog = reactive({ visible: false, title: '恢复码已生成' }); const recoveryCodes = ref<string[]>([]); const recoveryMissing = ref(0);
 async function refreshFactors() { factorsLoading.value = true; try { factors.value = await platform.mfaFactors(); } catch (e) { mfaError.value = e instanceof Error ? e.message : '读取两步验证状态失败'; } finally { factorsLoading.value = false; } }
 function openPasswordDialog() {
   securityMsg.value = '';
@@ -459,37 +461,73 @@ function removePasskey(credentialId: string, name: string | null) {
   });
 }
 async function startTotp() {
-  mfaMsg.value = ''; totpDialog.visible = true; totpDialog.busy = true; totpDialog.error = ''; totpEnroll.value = null; totpCode.value = '';
-  try { const result = await platform.totpEnroll(); totpEnroll.value = { secret: result.secret, otpauthUrl: result.otpauthUrl }; await refreshFactors(); }
+  mfaMsg.value = ''; totpDialog.visible = true; totpDialog.busy = true; totpDialog.error = ''; totpEnroll.value = null; totpCode.value = ''; totpDeviceName.value = '';
+  try { const result = await platform.totpEnroll(); totpEnroll.value = { id: result.id, secret: result.secret, otpauthUrl: result.otpauthUrl }; await refreshFactors(); }
   catch (e) { totpDialog.error = e instanceof Error ? e.message : '发起注册失败'; }
   finally { totpDialog.busy = false; }
 }
 async function confirmTotp() {
+  if (!totpEnroll.value) return;
   totpDialog.busy = true; totpDialog.error = '';
-  try { await platform.totpConfirm(totpCode.value); totpDialog.visible = false; totpEnroll.value = null; totpCode.value = ''; mfaMsg.value = '验证器应用已启用。'; await refreshFactors(); }
+  try { await platform.totpConfirm(totpEnroll.value.id, totpCode.value, totpDeviceName.value || null); totpDialog.visible = false; totpEnroll.value = null; totpCode.value = ''; mfaMsg.value = '验证器应用已启用。'; await refreshFactors(); }
   catch (e) { totpDialog.error = e instanceof Error ? e.message : '确认失败，请检查动态码'; }
   finally { totpDialog.busy = false; }
 }
-function disableTotp() {
+function removeTotp(id: string, name: string | null) {
   mfaMsg.value = '';
-  sensitive('停用验证器应用', '停用后无法再使用动态码登录；若这是唯一的两步验证方式且已设密码，密码登录将不可用。', async password => {
-    await platform.totpDisable(password);
+  sensitive('停用验证器应用', `即将停用「${name || '未命名验证器'}」。停用后无法再用它登录；若这是唯一的两步验证方式且已设密码，密码登录将不可用。`, async password => {
+    await platform.totpRemove(id, password);
     mfaMsg.value = '验证器应用已停用。';
     await refreshFactors();
   });
 }
 function generateRecovery() {
-  mfaMsg.value = '';
+  mfaMsg.value = ''; recoveryDialog.title = '恢复码已生成';
   sensitive('生成恢复码', '生成新的恢复码会使旧码全部作废。该操作需要身份复核。', async password => {
     const result = await platform.recoveryGenerate(password);
-    recoveryCodes.value = result.codes;
+    recoveryCodes.value = result.codes; recoveryMissing.value = 0;
     recoveryDialog.visible = true;
     await refreshFactors();
   });
 }
+function revealRecovery() {
+  mfaMsg.value = ''; recoveryDialog.title = '查看恢复码';
+  sensitive('查看恢复码', '恢复码等同于登录凭证。查看操作将记入审计日志。', async password => {
+    const result = await platform.recoveryReveal(password);
+    recoveryCodes.value = result.codes; recoveryMissing.value = result.missing;
+    recoveryDialog.visible = true;
+  });
+}
+const escapeHtml = (value: string) => value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+function printCodes() {
+  const win = window.open('', '_blank');
+  if (!win) { mfaMsg.value = '浏览器阻止了弹窗，请允许后重试，或使用「复制全部」。'; return; }
+  const account = session.value ? `${session.value.name}${session.value.handle ? ' (@' + session.value.handle + ')' : ''}` : '';
+  win.document.write(`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>Nexa Cloud 恢复码</title></head><body style="font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;max-width:640px;margin:40px auto;padding:0 24px;color:#1f2733">
+<h1 style="font-size:22px;margin:0 0 6px">Nexa Cloud · 两步验证恢复码</h1>
+<p style="font-size:13px;color:#66738a;margin:0 0 18px">账户：${escapeHtml(account)}　·　打印时间：${new Date().toLocaleString()}</p>
+<p style="font-size:13px;line-height:1.8">每个恢复码仅可使用一次，用后作废；重新生成会使整批旧码失效。请离线保存此页，不要截图上传或存入云端笔记。</p>
+<ol style="font-family:ui-monospace,Consolas,monospace;font-size:16px;line-height:2.3;letter-spacing:.1em;padding-left:28px">${recoveryCodes.value.map(code => `<li>${escapeHtml(code)}</li>`).join('')}</ol>
+</body></html>`);
+  win.document.close();
+  win.focus();
+  win.print();
+}
 async function copyText(text: string) { try { await navigator.clipboard.writeText(text); mfaMsg.value = '已复制到剪贴板。'; } catch { mfaMsg.value = '复制失败，请手动选择复制。'; } }
 
+// 会话全局同步：登出（含顶栏菜单发起的）或测试账户切换时，本页立即回到对应状态。
+async function syncSession() {
+  const next = await platform.session();
+  session.value = next;
+  if (!next) { factors.value = null; identities.value = undefined; summary.value = null; }
+  else {
+    nameInput.value = next.name ?? ''; handleInput.value = next.handle ?? '';
+    if (section.value === 'security' && !testMode.value && !factors.value) void refreshFactors();
+  }
+}
+
 onMounted(async () => {
+  window.addEventListener(SESSION_EVENT, syncSession);
   session.value = await platform.session();
   checking.value = false;
   if (session.value) {
@@ -504,6 +542,7 @@ onMounted(async () => {
     if (section.value === 'security' && !testMode.value) void refreshFactors();
   }
 });
+onUnmounted(() => { window.removeEventListener(SESSION_EVENT, syncSession); });
 </script>
 <style scoped>
 .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 6px}

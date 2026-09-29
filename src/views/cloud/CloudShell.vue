@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { platform, type Session } from '@/api/platform';
+import { platform, SESSION_EVENT, type Session } from '@/api/platform';
 const route = useRoute(), router = useRouter();
 const session = ref<Session>(), menuOpen = ref(false);
 const accountLabel = computed(() => session.value ? (session.value.name || '账户管理') : '登录 / 注册');
@@ -32,6 +32,6 @@ function onDocumentClick(event: MouseEvent) {
   if (!target?.closest('.account-menu')) menuOpen.value = false;
 }
 router.afterEach(() => { menuOpen.value = false; });
-onMounted(() => { void loadSession(); window.addEventListener('focus', onFocus); document.addEventListener('click', onDocumentClick); });
-onUnmounted(() => { window.removeEventListener('focus', onFocus); document.removeEventListener('click', onDocumentClick); });
+onMounted(() => { void loadSession(); window.addEventListener('focus', onFocus); window.addEventListener(SESSION_EVENT, onFocus); });
+onUnmounted(() => { window.removeEventListener('focus', onFocus); window.removeEventListener(SESSION_EVENT, onFocus); document.removeEventListener('click', onDocumentClick); });
 </script>
