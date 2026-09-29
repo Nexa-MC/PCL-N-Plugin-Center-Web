@@ -185,11 +185,25 @@
       </form>
       <form v-else class="credential-form" @submit.prevent="submitMfaCode">
         <p class="mfa-title">两步验证 · {{ loginUserName }}</p>
-        <p class="login-fine">可用方式：{{ factorLabels }}</p>
-        <label>验证器动态码或恢复码<input v-model.trim="mfaCode" autocomplete="one-time-code" required placeholder="6 位动态码，或 XXXXX-XXXXX" /></label>
+        <p class="login-fine">验证方式优先级：{{ factorLabels }}</p>
+        <template v-if="loginFactors.includes('passkey')">
+          <button class="primary-button passkey-primary" type="button" :disabled="loginBusy" @click="passkeyLogin">🔑 {{ loginBusy ? '正在验证…' : '使用 passkey 验证' }}</button>
+          <div v-if="hasCodeFactor" class="login-divider" aria-hidden="true"><span>或使用验证码</span></div>
+        </template>
+        <template v-if="mfaMode === 'app' && loginFactors.includes('totp')">
+          <span class="seg-label">验证器应用 · 6 位动态码</span>
+          <SegmentedCode v-model="appCode" :length="6" charset="digits" label="验证器动态码" :disabled="loginBusy" @complete="onCodeComplete" />
+        </template>
+        <template v-else-if="mfaMode === 'recovery' && loginFactors.includes('recovery')">
+          <span class="seg-label">恢复码 · 一次性使用</span>
+          <SegmentedCode v-model="recoveryInput" :length="10" charset="alnum" :group-size="5" label="恢复码" :disabled="loginBusy" @complete="onCodeComplete" />
+        </template>
         <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
-        <button class="primary-button" type="submit" :disabled="loginBusy">{{ loginBusy ? '正在验证…' : '登录' }}</button>
-        <button v-if="loginFactors.includes('passkey')" class="provider-button microsoft" type="button" :disabled="loginBusy" @click="passkeyLogin">🔑 使用 passkey 登录</button>
+        <button class="primary-button" type="submit" :disabled="loginBusy || !currentCode">{{ loginBusy ? '正在验证…' : '验证并登录' }}</button>
+        <div class="mfa-switch">
+          <button v-if="mfaMode === 'app' && loginFactors.includes('recovery')" class="back-link" type="button" @click="switchMfaMode('recovery')">拿不到动态码？改用恢复码</button>
+          <button v-if="mfaMode === 'recovery' && loginFactors.includes('totp')" class="back-link" type="button" @click="switchMfaMode('app')">‹ 返回验证器动态码</button>
+        </div>
         <button class="back-link" type="button" @click="backToCreds">‹ 返回重输密码</button>
       </form>
       <p v-if="error || oauthError" class="form-error" role="alert">{{ oauthError || error }}</p>
@@ -203,6 +217,7 @@ import { useRoute } from 'vue-router';
 import { platform, ApiError, isTestSession, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors } from '@/api/platform';
 import { pluginCenterApi } from '@/api/pluginCenter';
 import { createPasskey, assertPasskey } from '@/utils/webauthnClient';
+import SegmentedCode from '@/components/SegmentedCode.vue';
 const route = useRoute();
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
 const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
@@ -297,24 +312,30 @@ const visibleTickets = computed(() => tickets.value.filter(t => showResolved.val
 async function loadTickets(){ busy.value = true; error.value = ''; try { const result = await platform.tickets('console', offset.value); tickets.value = result.data; total.value = result.pagination.total; ticketsLoaded.value = true; } catch (e) { error.value = e instanceof Error ? e.message : '操作失败，请重试。'; } finally { busy.value = false; } }
 async function submit(){ busy.value = true; error.value = ''; message.value = ''; try { await platform.createTicket(subject.value, body.value); subject.value = ''; body.value = ''; message.value = '请求已提交。'; showResolved.value = false; await loadTickets(); } catch (e) { error.value = e instanceof Error ? e.message : '操作失败，请重试。'; } finally { busy.value = false; } }
 
-// ---- 用户 ID + 密码登录（两段式：密码 → 2FA） ----
+// ---- 用户 ID + 密码登录（两段式：密码 → 2FA，优先级 Passkey › 验证器 › 恢复码） ----
 const loginStep = ref<'creds' | 'mfa'>('creds');
 const loginHandle = ref(''), loginPassword = ref(''), loginError = ref(''), loginBusy = ref(false);
-const loginChallenge = ref(''), loginFactors = ref<string[]>([]), loginUserName = ref(''), mfaCode = ref('');
-const FACTOR_NAMES: Record<string, string> = { passkey: 'Passkey', totp: '验证器应用', recovery: '恢复码' };
-const factorLabels = computed(() => loginFactors.value.map(f => FACTOR_NAMES[f] ?? f).join(' / ') || '—');
+const loginChallenge = ref(''), loginFactors = ref<string[]>([]), loginUserName = ref('');
+const mfaMode = ref<'app' | 'recovery'>('app');
+const appCode = ref(''), recoveryInput = ref('');
+const currentCode = computed(() => mfaMode.value === 'app' ? appCode.value : recoveryInput.value);
+const hasCodeFactor = computed(() => loginFactors.value.includes('totp') || loginFactors.value.includes('recovery'));
+const FACTOR_NAMES: Record<string, string> = { passkey: 'Passkey', totp: '验证器动态码', recovery: '恢复码' };
+const FACTOR_ORDER = ['passkey', 'totp', 'recovery'];
+const factorLabels = computed(() => [...loginFactors.value].sort((a, b) => FACTOR_ORDER.indexOf(a) - FACTOR_ORDER.indexOf(b)).map(f => FACTOR_NAMES[f] ?? f).join(' › ') || '—');
 async function submitLogin() {
   loginBusy.value = true; loginError.value = '';
   try {
     const result = await platform.loginWithPassword(loginHandle.value, loginPassword.value);
     loginChallenge.value = result.challenge; loginFactors.value = result.factors; loginUserName.value = result.user?.name || loginHandle.value;
-    loginPassword.value = ''; mfaCode.value = ''; loginStep.value = 'mfa';
+    mfaMode.value = result.factors.includes('totp') ? 'app' : 'recovery';
+    loginPassword.value = ''; appCode.value = ''; recoveryInput.value = ''; loginStep.value = 'mfa';
   } catch (e) { loginError.value = e instanceof Error ? e.message : '登录失败，请稍后重试。'; }
   finally { loginBusy.value = false; }
 }
 async function finishLogin() {
   session.value = await platform.session();
-  loginStep.value = 'creds'; mfaCode.value = ''; loginChallenge.value = '';
+  loginStep.value = 'creds'; appCode.value = ''; recoveryInput.value = ''; loginChallenge.value = '';
   if (session.value) {
     nameInput.value = session.value.name ?? ''; handleInput.value = session.value.handle ?? '';
     void loadIdentities();
@@ -322,11 +343,18 @@ async function finishLogin() {
   }
 }
 async function submitMfaCode() {
+  if (!currentCode.value) return;
   loginBusy.value = true; loginError.value = '';
-  try { await platform.loginWithCode(loginChallenge.value, mfaCode.value); await finishLogin(); }
-  catch (e) { loginError.value = e instanceof Error ? e.message : '验证失败，请重试。'; }
+  try { await platform.loginWithCode(loginChallenge.value, currentCode.value); await finishLogin(); }
+  catch (e) {
+    loginError.value = e instanceof Error ? e.message : '验证失败，请重试。';
+    // 验证失败即清空当前输入，分段框会自动聚焦回第一格。
+    if (mfaMode.value === 'app') appCode.value = ''; else recoveryInput.value = '';
+  }
   finally { loginBusy.value = false; }
 }
+function onCodeComplete() { if (!loginBusy.value) void submitMfaCode(); }
+function switchMfaMode(mode: 'app' | 'recovery') { mfaMode.value = mode; loginError.value = ''; appCode.value = ''; recoveryInput.value = ''; }
 async function passkeyLogin() {
   loginBusy.value = true; loginError.value = '';
   try {
@@ -337,7 +365,7 @@ async function passkeyLogin() {
   } catch (e) { loginError.value = e instanceof Error ? e.message : 'passkey 校验失败'; }
   finally { loginBusy.value = false; }
 }
-function backToCreds() { loginStep.value = 'creds'; loginError.value = ''; mfaCode.value = ''; }
+function backToCreds() { loginStep.value = 'creds'; loginError.value = ''; appCode.value = ''; recoveryInput.value = ''; }
 
 // ---- 个人信息：用户名 / 用户 ID ----
 const nameInput = ref(''), handleInput = ref(''), handleHint = ref(''), profileBusy = ref(false), profileMsg = ref(''), profileError = ref('');
@@ -447,4 +475,8 @@ onMounted(async () => {
 .recovery-box{margin-top:14px;padding:16px;border:1px solid var(--market-border);border-radius:12px;background:var(--market-surface-soft)}
 .recovery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 14px}.recovery-grid code{background:#fff;border:1px solid var(--market-border);border-radius:8px;padding:8px 10px;font-size:13px;letter-spacing:.06em;text-align:center}
 @media(max-width:480px){.recovery-grid{grid-template-columns:1fr}.secret-box{flex-direction:column;align-items:flex-start}}
+.seg-label{display:block;text-align:center;font-size:12px;color:#708693;margin:6px 0 10px}
+.passkey-primary{width:100%;min-height:46px;font-size:14px;margin-top:6px}
+.credential-form .login-divider{margin:16px 0 4px}
+.mfa-switch{display:flex;justify-content:center;margin-top:-2px}
 </style>
