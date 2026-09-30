@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { startProgress, doneProgress } from '@/utils/progressBar';
 import CloudShell from '@/views/cloud/CloudShell.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), scrollBehavior: () => ({ top: 0 }),
@@ -46,5 +47,8 @@ function titleFor(path: string): string {
   if (path.startsWith('/account')) return '账户 · NexaCL';
   return 'NexaCL';
 }
+router.beforeEach(() => { startProgress(); });
+router.afterEach(() => { doneProgress(); });
+router.onError(() => { doneProgress(); });
 router.afterEach(to => { document.title = titleFor(to.path); });
 export default router;

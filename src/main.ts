@@ -18,3 +18,5 @@ window.test_logout = testLogout;
 console.info('提示：控制台输入 test_login() 进入全权限前端测试账户（本地持久，test_logout() 退出）。');
 
 createApp(App).use(i18n).use(ElementPlus).use(router).mount('#app');
+// 首屏引导进度条交接给路由进度条
+document.getElementById('boot-progress')?.remove();

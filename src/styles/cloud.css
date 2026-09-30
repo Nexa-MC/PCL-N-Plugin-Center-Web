@@ -33,3 +33,17 @@
 .ticket-row:first-of-type{margin-top:18px}
 .ticket-row .status-pill{align-self:center}
 @media(max-width:800px){.ticket-row .status-pill{align-self:flex-start}}
+
+/* GitHub 风格顶部路由进度条(route 导航时由 utils/progressBar 驱动) */
+#route-progress{position:fixed;top:0;left:0;height:2.5px;width:0;background:linear-gradient(90deg,var(--nc-accent),#4a90ef);box-shadow:0 0 8px rgba(22,115,230,.5);z-index:4000;pointer-events:none;border-radius:0 2px 2px 0}
+/* Microsoft 式登录步骤切换:新步骤右侧滑入,旧步骤左侧滑出(返回时反向) */
+.ms-step-enter-active,.ms-step-leave-active,.ms-step-back-enter-active,.ms-step-back-leave-active{transition:opacity .26s cubic-bezier(.2,.8,.25,1),transform .26s cubic-bezier(.2,.8,.25,1)}
+.ms-step-enter-from{opacity:0;transform:translateX(34px)}
+.ms-step-leave-to{opacity:0;transform:translateX(-34px)}
+.ms-step-back-enter-from{opacity:0;transform:translateX(-34px)}
+.ms-step-back-leave-to{opacity:0;transform:translateX(34px)}
+.step-pane{min-width:100%}
+/* Microsoft 式按钮加载环 */
+.btn-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:btn-spin .75s linear infinite;vertical-align:-2px}
+.btn-spinner.dark{border-color:rgba(22,115,230,.3);border-top-color:var(--nc-accent)}
+@keyframes btn-spin{to{transform:rotate(360deg)}}
