@@ -184,24 +184,24 @@ watchEffect(() => { applyPageSeo({ title: en.value ? 'NexaCL — The Minecraft l
 @keyframes hero-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .hero-anim{animation:hero-rise .6s cubic-bezier(.22,.8,.32,1) both}.hero-anim.d1{animation-delay:.02s}.hero-anim.d2{animation-delay:.08s}.hero-anim.d3{animation-delay:.15s}.hero-anim.d4{animation-delay:.22s}.hero-anim.d5{animation-delay:.29s}.hero-anim.d6{animation-delay:.36s;animation-duration:.8s}
 /* --- hero --- */
-.hero-card{position:relative;overflow:hidden;text-align:center;color:#fff;border-radius:22px;padding:58px 40px 40px;background:linear-gradient(135deg,#0d47a1 0%,#1673e6 52%,#4a90ef 100%);box-shadow:0 24px 60px -28px rgba(13,71,161,.5)}
-.hero-card:before{content:'';position:absolute;inset:0;background:radial-gradient(620px 320px at 22% -5%,rgba(255,255,255,.22),transparent 62%);pointer-events:none;animation:hero-sheen 9s ease-in-out infinite alternate}
+.hero-card{position:relative;overflow:hidden;text-align:center;color:var(--market-text);border-radius:22px;padding:58px 40px 40px;background:var(--market-surface);border:1px solid var(--market-border);box-shadow:0 18px 44px -26px rgba(23,43,77,.22)}
+.hero-card:before{content:'';position:absolute;inset:0;background:radial-gradient(620px 320px at 22% -5%,rgba(91,161,245,.14),transparent 62%);pointer-events:none;animation:hero-sheen 9s ease-in-out infinite alternate}
 @keyframes hero-sheen{from{transform:translateX(-5%)}to{transform:translateX(5%)}}
-.hero-badge{position:relative;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:6px 15px;border-radius:999px;font-size:11px;font-weight:650;letter-spacing:.08em}
-.hero-badge i{width:6px;height:6px;border-radius:50%;background:#8ff0c0;animation:badge-pulse 2.4s ease-in-out infinite}
+.hero-badge{position:relative;display:inline-flex;align-items:center;gap:8px;background:var(--market-accent-soft);border:1px solid #c9ddf8;color:var(--nc-accent);padding:6px 15px;border-radius:999px;font-size:11px;font-weight:650;letter-spacing:.08em}
+.hero-badge i{width:6px;height:6px;border-radius:50%;background:#2fa96b;animation:badge-pulse 2.4s ease-in-out infinite}
 @keyframes badge-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.8)}}
 .hero-card h1{position:relative;font-size:40px;font-weight:700;letter-spacing:-.025em;line-height:1.25;margin:20px auto 0;max-width:720px}
-.hero-sub{position:relative;font-size:14.5px;line-height:1.9;color:rgba(255,255,255,.88);max-width:620px;margin:16px auto 0}
+.hero-sub{position:relative;font-size:14.5px;line-height:1.9;color:var(--market-muted);max-width:620px;margin:16px auto 0}
 .hero-actions{position:relative;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px}
 .hero-btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:12px 26px;font-size:14px;font-weight:600;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
 .hero-btn:hover{transform:translateY(-1px)}.hero-btn:active{transform:scale(.97)}
-.hero-btn-solid{background:#fff;color:#0f5ecb;box-shadow:0 10px 26px rgba(9,45,94,.35)}.hero-btn-solid:hover{box-shadow:0 14px 32px rgba(9,45,94,.45)}
-.hero-btn-ghost{border:1px solid rgba(255,255,255,.55);color:#fff}.hero-btn-ghost:hover{background:rgba(255,255,255,.12)}
-.hero-version{position:relative;margin:20px 0 0;font-size:12px;color:rgba(255,255,255,.78)}
-.hero-version code{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);padding:2px 10px;border-radius:999px;font-size:11.5px;margin:0 4px}
+.hero-btn-solid{background:var(--nc-accent);color:#fff;box-shadow:0 10px 26px rgba(22,115,230,.30)}.hero-btn-solid:hover{background:var(--nc-accent-strong);box-shadow:0 14px 32px rgba(22,115,230,.38)}
+.hero-btn-ghost{background:var(--market-surface);border:1px solid #dbe2ee;color:#43536b}.hero-btn-ghost:hover{border-color:var(--nc-accent);color:var(--nc-accent)}
+.hero-version{position:relative;margin:20px 0 0;font-size:12px;color:var(--market-muted)}
+.hero-version code{background:var(--market-surface-soft);border:1px solid var(--market-border);color:var(--nc-accent);padding:2px 10px;border-radius:999px;font-size:11.5px;margin:0 4px}
 .product-stage{position:relative;padding:42px 0 6px;margin:auto;max-width:880px}
-.product-window{border-radius:16px;background:#f8faff;border:1px solid rgba(255,255,255,.5);box-shadow:0 40px 70px -30px rgba(6,32,66,.65),0 6px 18px rgba(6,32,66,.25);overflow:hidden;text-align:left;color:#1e3350}
-.window-caption{height:46px;background:#0f5ecb;color:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 18px;font-size:15px;font-weight:600}
+.product-window{border-radius:16px;background:#f8faff;border:1px solid #dce7f6;box-shadow:0 30px 55px -30px rgba(48,78,118,.35),0 4px 16px rgba(48,78,118,.10);overflow:hidden;text-align:left;color:#1e3350}
+.window-caption{height:46px;background:var(--nc-accent);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:0 18px;font-size:15px;font-weight:600}
 .window-caption>span{display:flex;align-items:center;gap:9px}.window-caption img{width:21px;height:21px}.window-controls{font-weight:400;opacity:.85}
 .window-body{display:grid;grid-template-columns:46px .8fr 1.2fr;gap:16px;padding:20px 20px 20px 0;height:330px}
 .window-rail{display:flex;align-items:center;flex-direction:column;gap:22px;color:#5e718a;font-size:20px}.window-rail .active{color:#1673e6}
@@ -218,7 +218,7 @@ watchEffect(() => { applyPageSeo({ title: en.value ? 'NexaCL — The Minecraft l
 .mock-launch{background:#1673e6;border-radius:10px;text-align:center;padding:8px;color:#fff;font-size:14px;animation:launch-pulse 3.2s ease-in-out infinite}
 @keyframes launch-pulse{0%,100%{box-shadow:0 0 0 0 rgba(22,115,230,.35)}55%{box-shadow:0 0 0 7px rgba(22,115,230,0)}}
 .window-about{display:flex;align-items:center;gap:15px;padding:18px}.about-mark{font-size:30px;color:#1673e6;font-weight:650}.window-about p{font-size:12px;color:#748196;margin-top:3px}
-.product-caption{color:rgba(255,255,255,.66);font-size:11px;margin-top:14px}
+.product-caption{color:var(--market-muted);font-size:11px;margin-top:14px}
 /* --- sections --- */
 .home-section{margin-top:56px}.section-head{max-width:660px;margin-bottom:26px}.section-head.center{text-align:center;margin-inline:auto}.section-head h2{font-size:24px;font-weight:700;letter-spacing:-.015em;margin:9px 0 0}.section-head>p:not(.eyebrow){font-size:13.5px;color:var(--market-muted);margin-top:10px;line-height:1.8}.home-section .work-panel{margin:0;transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
 .stats{margin-top:26px}.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);padding:0;border-radius:16px;overflow:hidden;box-shadow:0 12px 32px -18px rgba(23,43,77,.25)}
@@ -284,18 +284,15 @@ watchEffect(() => { applyPageSeo({ title: en.value ? 'NexaCL — The Minecraft l
 .faq-item summary:hover{color:var(--nc-accent)}
 .faq-item p{font-size:12.5px;line-height:1.85;color:var(--market-muted);padding:0 2px 18px;max-width:760px}
 .final-cta{margin-bottom:16px}
-.cta-panel{position:relative;overflow:hidden;text-align:center;border-radius:20px;padding:56px 32px;color:#fff;background:linear-gradient(135deg,#0d47a1 0%,#1673e6 55%,#4a90ef 100%);box-shadow:0 20px 50px -24px rgba(13,71,161,.5)}
-.cta-panel:before{content:'';position:absolute;inset:0;background:radial-gradient(560px 280px at 78% 0%,rgba(255,255,255,.2),transparent 60%);pointer-events:none}
-.cta-panel .eyebrow{color:rgba(255,255,255,.75)}
+.cta-panel{position:relative;overflow:hidden;text-align:center;border-radius:20px;padding:56px 32px;color:var(--market-text);background:var(--market-surface);border:1px solid var(--market-border);box-shadow:0 16px 40px -24px rgba(23,43,77,.20)}
+.cta-panel:before{content:'';position:absolute;inset:0;background:radial-gradient(560px 280px at 78% 0%,rgba(91,161,245,.12),transparent 60%);pointer-events:none}
+.cta-panel .eyebrow{color:var(--market-muted)}
 .cta-panel h2{position:relative;font-size:28px;font-weight:700;letter-spacing:-.02em;margin:10px 0 0}
-.cta-panel>p:not(.eyebrow):not(.cta-fine){position:relative;font-size:13px;color:rgba(255,255,255,.85);margin-top:12px}
+.cta-panel>p:not(.eyebrow):not(.cta-fine){position:relative;font-size:13px;color:var(--market-muted);margin-top:12px}
 .cta-actions{position:relative;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px}
 .cta-panel .hero-cta{min-height:44px;padding:12px 28px;font-size:14px}
-.cta-panel .primary-button{background:#fff;color:#0f5ecb;border-color:#fff}
-.cta-panel .primary-button:hover{background:#f0f6ff;box-shadow:0 10px 26px rgba(9,45,94,.35)}
-.cta-panel .secondary-button{background:transparent;border-color:rgba(255,255,255,.55);color:#fff}
-.cta-panel .secondary-button:hover{background:rgba(255,255,255,.12);border-color:#fff}
-.cta-fine{position:relative;font-size:11.5px;color:rgba(255,255,255,.72);margin-top:24px}.cta-fine a{color:#fff;text-decoration:underline}
+.cta-panel .primary-button:hover{box-shadow:0 10px 26px rgba(22,115,230,.30)}
+.cta-fine{position:relative;font-size:11.5px;color:var(--market-muted);margin-top:24px}.cta-fine a{color:var(--nc-accent);text-decoration:underline}
 /* --- tablet / phone --- */
 @media(max-width:800px){
 .hero-card{padding:42px 22px 30px;border-radius:18px}.hero-card h1{font-size:28px}.hero-sub{font-size:13px}
