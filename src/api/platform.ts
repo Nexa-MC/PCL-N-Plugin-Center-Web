@@ -21,7 +21,7 @@ export interface LoginChallenge { challenge: string; factors: string[]; user: { 
 export interface MfaPasskey { credentialId: string; name: string | null; createdAt: string; lastUsedAt: string | null }
 export interface MfaTotpDevice { id: string; name: string | null; confirmed: boolean; createdAt: string; confirmedAt: string | null }
 export interface MfaFactors { passwordSet: boolean; passkeys: MfaPasskey[]; totp: MfaTotpDevice[]; recovery: { count: number } }
-export interface MinecraftProfile { microsoftLinked: boolean; owned: number | null; profileId: string | null; profileName: string | null; error: string | null; checkedAt: string | null }
+export interface MinecraftProfile { microsoftLinked: boolean; xboxAuthorized: boolean; owned: number | null; profileId: string | null; profileName: string | null; error: string | null; checkedAt: string | null }
 export interface StoreItem { id: string; name: string; summary: string; category: string; version: string; publisher: string; description: string }
 export interface Ticket { id: string; subject: string; body: string; status: string; created_at: string; version: number }
 export class ApiError extends Error { constructor(message: string, public status: number) { super(message); } }
@@ -320,10 +320,20 @@ export const platform = {
   passkeyRemove: (credentialId: string, password?: string) => authJson<{ ok: boolean }>(authFetch('/auth/v1/mfa/passkey/' + encodeURIComponent(credentialId), { method: 'DELETE', body: JSON.stringify({ password }) }), '移除失败'),
   recoveryGenerate: (password?: string) => authJson<{ codes: string[]; note: string }>(authFetch('/auth/v1/mfa/recovery/generate', { method: 'POST', body: JSON.stringify({ password }) }), '生成恢复码失败'),
   recoveryReveal: (password?: string) => authJson<{ codes: string[]; missing: number }>(authFetch('/auth/v1/mfa/recovery/reveal', { method: 'POST', body: JSON.stringify({ password }) }), '读取恢复码失败'),
-  // Microsoft 绑定时查询并存储的 Minecraft 拥有状况与档案（启动器自动添加档案的数据源）。
+  // Minecraft 游戏授权独立于网站 Microsoft 登录身份；只读取服务端存储的档案状态。
   minecraftProfile: async () => {
-    if (isTest()) return { microsoftLinked: true, owned: 1, profileId: '8f6a1b2c3d4e5f60718293a4b5c6d7e8', profileName: 'TestPlayer', error: null, checkedAt: testNow() } as MinecraftProfile;
+    if (isTest()) return { microsoftLinked: true, xboxAuthorized: true, owned: 1, profileId: '8f6a1b2c3d4e5f60718293a4b5c6d7e8', profileName: 'TestPlayer', error: null, checkedAt: testNow() } as MinecraftProfile;
     return authJson<MinecraftProfile>(authFetch('/auth/v1/account/minecraft'), '读取 Minecraft 档案失败');
+  },
+  authorizeMinecraft: async () => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    const result = await authJson<{ url: string }>(authFetch('/auth/v1/minecraft/authorizations', { method: 'POST', body: '{}' }), '无法开始 Minecraft 授权');
+    window.location.assign(result.url);
+  },
+  revokeMinecraftAuthorization: async () => {
+    if (isTest()) throw new ApiError('测试账户不撤销真实授权', 403);
+    const response = await authFetch('/auth/v1/minecraft/authorization', { method: 'DELETE' });
+    if (!response.ok) await authJson(response, '撤销 Minecraft 授权失败');
   },
   logout: async () => {
     if (isTest()) { testLogout(); return; }

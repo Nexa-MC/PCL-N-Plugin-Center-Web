@@ -25,7 +25,16 @@
       </template>
 
       <template v-else-if="section === 'linked'">
-        <section class="work-panel"><h2>关联的账号</h2><p>可同时关联 GitHub、Google 和 Microsoft；至少保留一个登录方式。绑定 Microsoft 会请求 Xbox 权限，用于同步 Minecraft 拥有状况与游戏档案。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联<template v-if="p.id === 'microsoft' && minecraftText"> · {{ minecraftText }}</template></small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
+        <section class="work-panel"><h2>关联的账号</h2><p>GitHub、Google 和 Microsoft 用于登录 Nexa；至少保留一个登录方式。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联</small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
+        <section v-if="bound('microsoft')" class="work-panel">
+          <h2>Minecraft</h2>
+          <p>单独授权 Xbox / Minecraft 权限，同步游戏拥有状况与档案。所选游戏账户独立关联到当前 Nexa 账户。</p>
+          <p v-if="minecraftLoading" role="status">正在读取游戏档案…</p>
+          <p v-else>{{ minecraftText }}</p>
+          <p v-if="minecraftError" class="form-error" role="alert">{{ minecraftError }}</p>
+          <p v-if="minecraftMessage" class="form-success" role="status">{{ minecraftMessage }}</p>
+          <div class="actions"><button class="secondary-button" :disabled="busy || minecraftLoading || testMode" @click="authorizeMinecraft">授权 Minecraft</button><button v-if="minecraft?.xboxAuthorized || minecraft?.checkedAt" class="danger-button" :disabled="busy || minecraftLoading || testMode" @click="revokeMinecraftAuthorization">撤销游戏授权</button></div>
+        </section>
         <section class="work-panel"><h2>社区与赞助账户</h2><div v-for="connection in connections" :key="connection.provider" class="identity-row"><div class="meta"><h3>{{ connection.label }}</h3><small v-if="connection.account">{{ connection.account.name || connection.account.subject }} · 已绑定</small><small v-else>{{ connection.configured ? '尚未绑定' : '暂未开放' }}</small></div><button v-if="!connection.account" class="secondary-button" :disabled="busy || !connection.configured || testMode" @click="bindConnection(connection.provider)">绑定</button><button v-else class="danger-button" :disabled="busy" @click="removeConnection(connection.provider)">解除绑定</button></div><p v-if="connectionError" class="form-error" role="alert">{{ connectionError }}</p><p v-if="connectionMessage" class="form-success" role="status">{{ connectionMessage }}</p></section>
       </template>
 
@@ -183,7 +192,8 @@ import FormDialog from '@/components/FormDialog.vue';
 import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
 const route = useRoute();
 const router = useRouter();
-const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref('');
+function statusMessage(value: unknown): string { return typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 200) : ''; }
+const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref(statusMessage(route.query.oauth_error));
 const acceptChecked = ref(false);
 async function accept(){ busy.value = true; error.value = ''; try { await platform.acceptPolicies(); session.value = { ...session.value!, termsAccepted: 1 }; } catch (e) { error.value = e instanceof ApiError ? e.message : '接受条款失败，请重试。'; } finally { busy.value = false; } }
 async function logout(){ busy.value=true; error.value=''; await platform.logout(); session.value=undefined; busy.value=false; }
@@ -258,18 +268,23 @@ const identities = ref<LinkedIdentity[]>();
 const bound = (id: LinkedIdentity['provider']) => Boolean(identities.value?.some(i => i.provider === id));
 const identityMail = (id: LinkedIdentity['provider']) => identities.value?.find(i => i.provider === id)?.email || '已关联';
 async function loadIdentities(){ try { identities.value = (await platform.identities()).identities; } catch (e) { error.value = e instanceof Error ? e.message : '暂时无法读取已关联的账号。'; } }
-// Microsoft 绑定附带的 Minecraft 拥有状况与档案（供启动器自动添加档案）。
+// 网站登录身份与游戏授权分开；读取的游戏档案来自当前 Nexa 账户的独立授权。
 const minecraft = ref<MinecraftProfile | null>(null);
+const minecraftLoading = ref(false), minecraftError = ref(statusMessage(route.query.minecraft_error));
+const minecraftMessage = ref(!minecraftError.value && typeof route.query.minecraft_success === 'string' ? 'Minecraft 授权成功' : '');
 const minecraftText = computed(() => {
   const m = minecraft.value;
-  if (!m || !m.microsoftLinked) return '';
+  if (!m) return '尚未读取游戏档案';
+  if (!m.xboxAuthorized) return m.checkedAt ? '需要重新授权 Minecraft' : '尚未授权 Minecraft';
   if (m.owned === 1) return `Minecraft 已拥有${m.profileName ? ` · ${m.profileName}` : ''}${m.profileId ? ` · ${m.profileId.slice(0, 8)}…` : ''}`;
   if (m.owned === 0) return 'Minecraft 未拥有';
-  return m.error ? `Minecraft 核查未完成（${m.error}）` : 'Minecraft 尚未核查';
+  return m.error ? `Minecraft 核查未完成（${statusMessage(m.error)}）` : m.checkedAt ? 'Minecraft 尚未核查' : '尚未授权 Minecraft';
 });
-async function loadMinecraft(){ try { minecraft.value = await platform.minecraftProfile(); } catch { minecraft.value = null; } }
+async function loadMinecraft(){ minecraftLoading.value = true; try { minecraft.value = await platform.minecraftProfile(); } catch (e) { minecraft.value = null; minecraftError.value = e instanceof ApiError ? e.message : '暂时无法读取 Minecraft 档案，请稍后重试。'; } finally { minecraftLoading.value = false; } }
+async function authorizeMinecraft(){ busy.value = true; minecraftError.value = ''; minecraftMessage.value = ''; try { await platform.authorizeMinecraft(); } catch (e) { minecraftError.value = e instanceof ApiError ? e.message : '无法开始 Minecraft 授权，请稍后重试。'; } finally { busy.value = false; } }
+async function revokeMinecraftAuthorization(){ busy.value = true; minecraftError.value = ''; minecraftMessage.value = ''; try { await platform.revokeMinecraftAuthorization(); minecraftMessage.value = 'Minecraft 授权已撤销'; await loadMinecraft(); } catch (e) { minecraftError.value = e instanceof ApiError ? e.message : '撤销 Minecraft 授权失败，请稍后重试。'; } finally { busy.value = false; } }
 async function bind(id: LinkedIdentity['provider']){ busy.value = true; platform.oauthStart(id, '/account?section=linked', 'link'); }
-async function unbind(id: LinkedIdentity['provider']){ busy.value = true; error.value = ''; try { await platform.unbind(id); await loadIdentities(); } catch (e) { error.value = e instanceof ApiError ? e.message : '解绑失败，请重试。'; } finally { busy.value = false; } }
+async function unbind(id: LinkedIdentity['provider']){ busy.value = true; error.value = ''; try { await platform.unbind(id); await loadIdentities(); if (id === 'microsoft') { minecraft.value = null; minecraftError.value = ''; minecraftMessage.value = ''; } } catch (e) { error.value = e instanceof ApiError ? e.message : '解绑失败，请重试。'; } finally { busy.value = false; } }
 
 const policies = ref<PolicyStatus[]>([]);
 async function loadPolicies(){ try { policies.value = (await platform.policiesStatus()).policies; } catch (e) { error.value = e instanceof ApiError ? e.message : '暂时无法读取政策状态'; } }
@@ -461,7 +476,7 @@ async function syncSession() {
   progression.value = undefined; entitlements.value = null; connections.value = [];
   void loadProgression();
   if (section.value === 'wallet') void loadEntitlements();
-  if (section.value === 'linked') void loadConnections();
+  if (section.value === 'linked') { void loadIdentities(); void loadMinecraft(); void loadConnections(); }
   if (section.value === 'security' && !testMode.value && !factors.value) void refreshFactors();
 }
 
