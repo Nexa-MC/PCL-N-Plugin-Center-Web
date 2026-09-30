@@ -47,3 +47,14 @@
 .btn-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:btn-spin .75s linear infinite;vertical-align:-2px}
 .btn-spinner.dark{border-color:rgba(22,115,230,.3);border-top-color:var(--nc-accent)}
 @keyframes btn-spin{to{transform:rotate(360deg)}}
+
+/* 门户导航改为浅色表面：消除与顶部蓝色进度条的同色冲突，并与营销页白色导航统一。 */
+.cloud-header{background:var(--market-surface);border-bottom:1px solid var(--market-border)}
+.cloud-brand strong{color:var(--market-text)}
+.cloud-header nav a{color:var(--market-muted)}
+.cloud-header nav a:hover{color:var(--nc-accent);background:var(--market-surface-soft)}
+.cloud-header nav a.active{color:var(--nc-accent);background:var(--market-accent-soft);font-weight:600}
+.account-status{color:var(--market-text)}
+.account-status:hover{color:var(--nc-accent)}
+.status-dot{background:var(--nc-accent)}
+@media(max-width:800px){.account-status{padding:8px 12px;background:var(--market-surface-soft);border-radius:8px}}
