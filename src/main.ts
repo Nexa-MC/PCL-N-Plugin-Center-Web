@@ -1,11 +1,14 @@
 import { createApp } from 'vue';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
+import 'element-plus/theme-chalk/dark/css-vars.css';
+import './utils/theme';
 import App from './App.vue';
 import router from './routers';
 import i18n from './languages';
 import { testLogin, testLogout } from './api/platform';
 import './styles/cloud.css';
+import './styles/theme.css';
 
 // 仅前端测试账户入口：控制台输入 test_login() 进入、test_logout() 退出。
 // 默认 staff + developer 全 UI 权限；数据为本地桩，不触达真实 API。

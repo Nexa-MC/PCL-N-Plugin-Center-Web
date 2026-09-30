@@ -1,0 +1,3 @@
+# Legal hashes and acceptance records reference exact original UTF-8 bytes.
+# Do not let core.autocrlf rewrite current documents or historical archives.
+public/legal/**/*.md -text

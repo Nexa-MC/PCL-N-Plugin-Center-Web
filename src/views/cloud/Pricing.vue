@@ -6,6 +6,7 @@
         <button type="button" :class="{ active: cycle === 'year' }" @click="cycle = 'year'">按年</button>
       </div>
     </div>
+    <p v-if="session" class="pricing-note">当前会员等级：<strong>{{ membership?.name || membershipError || '正在读取…' }}</strong></p>
     <p class="pricing-note">价格由 Paddle 实时返回并按你的地区本地化展示。{{ isSandbox ? '当前为沙箱环境，使用测试支付方式，不会产生真实扣款。' : '' }}</p>
     <p v-if="envError" class="form-error" role="alert">{{ envError }}</p>
     <template v-else>
@@ -31,13 +32,14 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { initializePaddle, type Paddle } from '@paddle/paddle-js';
 import { TIERS, type Tier, type BillingCycle } from '@/config/pricing';
-import { platform, type Session } from '@/api/platform';
+import { platform, type Session, type Membership } from '@/api/platform';
 
 const cycle = ref<BillingCycle>('month'), loading = ref(true), error = ref(''), busy = ref<Tier['name'] | ''>('');
 const totals = ref<Record<string, string>>({});
 const tiers = TIERS;
 // 沙箱测试门禁：仅 staff 账户可发起结账；普通用户看到明确提示，按钮禁用。
 const session = ref<Session>(), sessionReady = ref(false);
+const membership = ref<Membership>(), membershipError = ref('');
 const canCheckout = computed(() => session.value?.staff === 1);
 
 // 环境必须显式配置：禁止在未设置环境变量时静默默认，避免连错 Paddle 账户。
@@ -90,7 +92,7 @@ async function loadPrices() {
   }
 }
 watch(cycle, () => { if (!envError.value) void loadPrices(); });
-onMounted(() => { void loadPrices(); platform.session().then(result => { session.value = result; }).finally(() => { sessionReady.value = true; }); });
+onMounted(() => { void loadPrices(); platform.session().then(async result => { session.value = result; if (result) { try { membership.value = (await platform.entitlements()).membership; } catch { membershipError.value = '暂时无法读取'; } } }).finally(() => { sessionReady.value = true; }); });
 
 async function subscribe(tier: Tier) {
   busy.value = tier.name; error.value = '';

@@ -1,0 +1,149 @@
+:root {
+  color-scheme: light;
+  --nc-accent: #087f9c;
+  --nc-accent-strong: #0e7490;
+  --nc-on-accent: #fff;
+  --market-surface-solid: var(--market-surface);
+  --market-accent: #087f9c;
+  --market-accent-soft: #e0f4f8;
+  --el-color-primary: #087f9c;
+  --el-color-primary-light-3: #3babc5;
+  --el-color-primary-light-5: #7dc6d8;
+  --el-color-primary-light-7: #b0dfe9;
+  --el-color-primary-light-9: #e0f4f8;
+  --el-color-primary-dark-2: #0e7490;
+}
+
+html.dark {
+  color-scheme: dark;
+  color: var(--market-text);
+  background: var(--market-bg);
+  --nc-accent: #38c7e4;
+  --nc-accent-strong: #6cd9ed;
+  --nc-on-accent: #082b35;
+  --market-bg: #10181f;
+  --market-surface: #17232e;
+  --market-surface-solid: #17232e;
+  --market-surface-soft: #21313f;
+  --market-border: #344653;
+  --market-text: #e2edf3;
+  --market-muted: #a4b6c4;
+  --market-accent: #38c7e4;
+  --market-accent-soft: #153a46;
+  --el-color-primary: #38c7e4;
+  --el-color-primary-light-3: #2da0b8;
+  --el-color-primary-light-5: #24748a;
+  --el-color-primary-light-7: #1b4e60;
+  --el-color-primary-light-9: #153a46;
+  --el-color-primary-dark-2: #6cd9ed;
+  --el-bg-color: #17232e;
+  --el-bg-color-overlay: #17232e;
+  --el-bg-color-page: #10181f;
+  --el-fill-color: #263846;
+  --el-fill-color-light: #21313f;
+  --el-fill-color-lighter: #1b2935;
+  --el-fill-color-extra-light: #182630;
+  --el-fill-color-blank: #17232e;
+  --el-text-color-primary: #e2edf3;
+  --el-text-color-regular: #c8d7e2;
+  --el-text-color-secondary: #a4b6c4;
+  --el-text-color-placeholder: #8fa4b5;
+  --el-border-color: #344653;
+  --el-border-color-light: #344653;
+  --el-border-color-lighter: #293c49;
+}
+
+body { background: var(--market-bg); color: var(--market-text); }
+input, textarea, select { accent-color: var(--nc-accent); }
+select:focus-visible { outline: 2px solid var(--nc-accent); outline-offset: 3px; }
+
+:is(.work-panel, .resource-card, .login-panel, .login-card, .launcher-placeholder,
+    .account-dropdown, .shortcut-grid button, .secondary-button, .category-tabs button,
+    .search-field, .skip-link) {
+  background: var(--market-surface);
+  border-color: var(--market-border);
+  color: var(--market-text);
+}
+
+/* html.dark also outranks the scoped styles in modal and account components. */
+html.dark :is(.support-form input, .support-form textarea, .support-form select,
+    .login-panel input, .dialog-field input, .dialog-field select, .dialog-field textarea,
+    .credential-form input, .stack-form input, .seg-code input,
+    .privacy-select select, .delete-confirm input, .category-filter select) {
+  background: var(--market-surface);
+  color: var(--market-text);
+  border-color: var(--market-border);
+}
+
+html.dark :is(.profile-row, .identity-row, .ticket-row, .factor-title, .legal-doc h2,
+    .legal-doc hr, .privacy-list, .catalog-toolbar, .faq-item, .progress-list,
+    .progress-list li, .hero-btn-ghost, .hero-badge) { border-color: var(--market-border); }
+
+.account-nav button { color: var(--market-text); }
+.account-nav button:hover { background: var(--market-surface-soft); }
+.account-nav button.active { background: var(--market-accent-soft); color: var(--nc-accent-strong); }
+.account-dropdown a, .account-dropdown button { color: var(--market-text); }
+.account-divider { background: var(--market-border); }
+:is(.identity-icon, .billing-toggle, .legal-doc code, .legal-doc th) {
+  background: var(--market-surface-soft); color: var(--market-text);
+}
+.billing-toggle button { color: var(--market-muted); }
+.billing-toggle button.active { background: var(--market-surface); color: var(--nc-accent); }
+:is(.legal-doc, .legal-doc p, .legal-doc li, .legal-doc blockquote, .tier-features,
+    .accept-check, .search-field input) { color: var(--market-text); }
+:is(.legal-doc th, .legal-doc td, .legal-doc code) { border-color: var(--market-border); }
+
+html.dark :is(.provider-button.microsoft, .provider-button.google, .danger-button) {
+  background: var(--market-surface); border-color: var(--market-border);
+}
+html.dark .provider-button { color: var(--market-text); }
+html.dark .provider-button.github { background: #263b4b; }
+html.dark .provider-button.github:hover { background: #304b60; }
+html.dark .danger-button { color: #f5a5a5; }
+html.dark .danger-button:hover { background: #3c252b; }
+html.dark .form-error { color: #ffc2ae; background: #3e2728; }
+html.dark :is(.profile-row span, .identity-row small, .ticket-row small, .ticket-row p,
+    .login-fine, .legal-hashes, .legal-meta, .legal-entry small, .seg-label,
+    .seg-sep, .stack-form label, .dialog-field, .category-filter, .privacy-select,
+    .delete-confirm, .resource-meta, .resource-card footer, .resource-card p,
+    .hero-description, .resource-description, .eyebrow, .empty-state,
+    .empty-state h3, .pagination, .catalog-toolbar > span) { color: var(--market-muted); }
+html.dark .recovery-grid code { background: var(--market-surface-soft); color: var(--market-text); }
+html.dark .seg-code input.filled { background: var(--market-accent-soft); border-color: var(--nc-accent); }
+html.dark .seg-code input:disabled { background: var(--market-surface-soft); color: var(--market-muted); }
+html.dark :is(.primary-button, .hero-btn-solid, .login-mark, .overview-avatar,
+    .download-main .pill, .nexa-site .pill, .window-caption, .mock-launch) { color: var(--nc-on-accent); }
+html.dark .primary-button .btn-spinner { border-color: #082b3555; border-top-color: var(--nc-on-accent); }
+
+/* The public download routes and their lazy stylesheet inherit the same palette. */
+.nexa-site { --market-accent: var(--nc-accent); }
+.nexa-site .pill { background: var(--nc-accent); color: var(--nc-on-accent); }
+.nexa-site .pill:hover { background: var(--nc-accent-strong); }
+html:root body .thanks-page {
+  --market-bg: inherit; --market-surface: inherit; --market-surface-soft: inherit;
+  --market-border: inherit; --market-text: inherit; --market-muted: inherit;
+  --market-accent: inherit; --market-accent-soft: inherit;
+}
+html.dark .thanks-page .primary { color: var(--nc-on-accent); }
+
+html.dark :is(.window-account, .window-version, .window-about, .product-window,
+    .launch-steps span, .hero-btn-ghost) {
+  background: var(--market-surface); color: var(--market-text); border-color: var(--market-border);
+}
+html.dark .window-body { background: #152735; }
+html.dark :is(.window-account small, .window-about p, .mock-label, .window-rail,
+    .version-detail small, .version-detail > span:last-child) { color: var(--market-muted); }
+html:root :is(.mock-label span, .window-rail .active, .about-mark) { color: var(--nc-accent); }
+html:root .mock-launch { background: var(--nc-accent); }
+html.dark .mock-chip { background: var(--market-accent-soft); color: var(--nc-accent); }
+html.dark .t-launch { background: linear-gradient(165deg, var(--market-accent-soft), var(--market-surface) 62%); }
+html.dark .t-drop { background: linear-gradient(180deg, var(--market-surface-soft), var(--market-surface)); }
+html.dark .progress-list b.wip { color: #f4c667; }
+
+@media (max-width: 800px) {
+  .cloud-header { gap: 10px; padding: 12px 16px; min-height: 60px; height: auto; flex-wrap: wrap; }
+  .cloud-brand { min-width: 0; }
+  .cloud-header nav { order: 4; width: 100%; }
+  .account-menu { margin-left: auto; }
+  .cloud-content { padding: 24px 16px 44px; }
+}

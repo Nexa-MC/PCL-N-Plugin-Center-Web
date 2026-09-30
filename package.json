@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "test": "node --test scripts/nexa-releases.test.mjs",
+    "test": "node --test scripts/*.test.mjs",
     "test:releases": "node --test scripts/nexa-releases.test.mjs",
     "build": "vue-tsc --noEmit && vite build",
     "build:prod": "pnpm build",

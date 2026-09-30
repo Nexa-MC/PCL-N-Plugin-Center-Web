@@ -5,7 +5,18 @@ export interface LinkedIdentity { provider: 'github' | 'microsoft' | 'google'; e
 export interface PolicyStatus { kind: string; version: string; effectiveAt: string; contentHash: string; acceptedAt: string | null }
 export interface DeletionRequest { id: string; state: 'pending' | 'cancelled' | 'finalized'; requestedAt: string; executeAfter?: number; cancelledAt: string | null; finalizedAt: string | null }
 export interface PrivacyRequest { id: string; type: string; state: string; createdAt: string; updatedAt: string }
-export interface Entitlements { cloudPlus: boolean; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
+export interface Membership { id: string; name: string; rank: number; billingCycle: 'month' | 'year' | null; status: string }
+export interface Entitlements { cloudPlus: boolean; membership: Membership; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
+export interface AccountBadge { id: string; name: string; replacesLevel: boolean; earned: boolean; requirement: string; progress: string }
+export interface AccountProgression {
+  level: number; xp: number; launched: boolean;
+  next: { level: number; threshold: number | null; remaining: number | null; requirement: string } | null;
+  badges: AccountBadge[]; display: { kind: string; label: string; badgeId: string | null };
+  activity: { gameSeconds: number; launcherSeconds: number; currentStreak: number; bestStreak: number; todayXp: number };
+  rewards: { launcherLogin: number; firstGameStart: number; gameMinutes: number; launcherMinutes: number; dailyCap: number; timeZone: string };
+}
+export type ConnectionProvider = 'bilibili' | 'afdian';
+export interface AccountConnection { provider: ConnectionProvider; label: string; configured: boolean; account: { subject: string; name: string | null; followers: number | null; connectedAt: string; checkedAt: string } | null }
 export interface LoginChallenge { challenge: string; factors: string[]; user: { name: string } }
 export interface MfaPasskey { credentialId: string; name: string | null; createdAt: string; lastUsedAt: string | null }
 export interface MfaTotpDevice { id: string; name: string | null; confirmed: boolean; createdAt: string; confirmedAt: string | null }
@@ -17,7 +28,7 @@ export class ApiError extends Error { constructor(message: string, public status
 
 // 开发环境走同源相对路径（vite 代理 → 本地 nexa-auth :5733）；生产仍直连认证域。
 const AUTH_BASE = import.meta.env.DEV ? '' : 'https://auth.pcln.top';
-export const POLICY_VERSION = '1.0';
+export const POLICY_VERSION = '1.1';
 export interface RegisterCompletePayload { name: string; handle: string; password?: string; totpId?: string; totpCode?: string }
 
 let accessToken = '', currentUser: Session | undefined, restoring: Promise<Session | undefined> | undefined;
@@ -78,8 +89,23 @@ const testState = {
   deletion: null as DeletionRequest | null,
   entitlements: {
     cloudPlus: true,
+    membership: { id: 'advanced', name: 'Cloud+ Advanced', rank: 3, billingCycle: 'month', status: 'active' },
     subscriptions: [{ subscription_id: 'sub_local_test', status: 'active', price_id: 'pri_local_test', product_id: 'pro_cloud_plus', scheduled_change_action: null }]
   } as Entitlements
+};
+const testProgression: AccountProgression = {
+  level: 4, xp: 12850, launched: true, next: { level: 5, threshold: 20000, remaining: 7150, requirement: 'xp' },
+  display: { kind: 'level', label: 'Lv4', badgeId: null },
+  activity: { gameSeconds: 36000, launcherSeconds: 90000, currentStreak: 12, bestStreak: 12, todayXp: 87 },
+  rewards: { launcherLogin: 20, firstGameStart: 30, gameMinutes: 1, launcherMinutes: 5, dailyCap: 500, timeZone: 'Asia/Shanghai' },
+  badges: [
+    { id: 'infinity', name: 'Lv∞', replacesLevel: true, earned: false, requirement: 'Lv7 · MC 100h · 通过∞答题', progress: '4/7 · 10/100h · 题库未开放' },
+    { id: 'administrator', name: 'Lv-1', replacesLevel: true, earned: true, requirement: '成为网站管理员', progress: '已达成' },
+    { id: 'mc-streak', name: 'LvMC', replacesLevel: true, earned: false, requirement: '连续100天启动MC', progress: '12/100天' },
+    { id: 'bilibili-level', name: 'b站来的', replacesLevel: false, earned: true, requirement: 'B站达到Lv6', progress: '已核验' },
+    { id: 'bilibili-million', name: '小黄标', replacesLevel: false, earned: false, requirement: 'B站粉丝达到100w+', progress: '待核验' },
+    { id: 'donor', name: '我喜欢你', replacesLevel: false, earned: false, requirement: '向Nexa无偿捐赠累计超过1000元', progress: '待核验' }
+  ]
 };
 const testNow = () => new Date().toISOString();
 const isTest = () => testSession !== undefined;
@@ -136,10 +162,10 @@ try {
 } catch { try { localStorage.removeItem(TEST_STORAGE_KEY); } catch { /* ignore */ } }
 
 const testPolicyFixtures = (): PolicyStatus[] => {
-  const acceptedAt = testSession?.termsAccepted ? '2026-09-26T08:00:00.000Z' : null;
+  const acceptedAt = testSession?.termsAccepted ? '2026-10-01T08:00:00.000Z' : null;
   return [
-    { kind: 'terms', version: POLICY_VERSION, effectiveAt: '2026-09-26T00:00:00.000Z', contentHash: '0123456789abcdef'.repeat(4), acceptedAt },
-    { kind: 'privacy', version: POLICY_VERSION, effectiveAt: '2026-09-26T00:00:00.000Z', contentHash: 'abcdef0123456789'.repeat(4), acceptedAt }
+    { kind: 'terms', version: POLICY_VERSION, effectiveAt: '2026-10-01T00:00:00.000Z', contentHash: '0123456789abcdef'.repeat(4), acceptedAt },
+    { kind: 'privacy', version: POLICY_VERSION, effectiveAt: '2026-10-01T00:00:00.000Z', contentHash: 'abcdef0123456789'.repeat(4), acceptedAt }
   ];
 };
 
@@ -165,7 +191,7 @@ export const platform = {
   },
   acceptPolicies: async () => {
     if (isTest()) { if (testSession) testSession.termsAccepted = 1; return { terms: { acceptedAt: testNow() } }; }
-    const result = await authJson<{ terms: { acceptedAt: string } }>(await authFetch('/auth/v1/policies/accept', { method: 'POST', body: '{}' }), '接受条款失败，请重试。');
+    const result = await authJson<{ terms: { acceptedAt: string } }>(await authFetch('/auth/v1/policies/accept', { method: 'POST', body: JSON.stringify({ termsVersion: POLICY_VERSION, privacyVersion: POLICY_VERSION }) }), '接受条款失败，请重试。');
     if (currentUser) currentUser.termsAccepted = 1;
     return result;
   },
@@ -221,6 +247,32 @@ export const platform = {
   entitlements: async () => {
     if (isTest()) return testState.entitlements;
     return request<Entitlements>('/billing/entitlements');
+  },
+  accountProgression: async () => {
+    if (isTest()) return structuredClone(testProgression);
+    return authJson<AccountProgression>(authFetch('/auth/v1/account/level'), '暂时无法读取等级与经验');
+  },
+  selectLevelDisplay: async (badgeId: string | null) => {
+    if (isTest()) { const badge = testProgression.badges.find(b => b.id === badgeId && b.earned && b.replacesLevel); testProgression.display = badge ? { kind: 'badge', label: badge.name, badgeId } : { kind: 'level', label: 'Lv' + testProgression.level, badgeId: null }; return structuredClone(testProgression); }
+    return authJson<AccountProgression>(authFetch('/auth/v1/account/level-display', { method: 'PUT', body: JSON.stringify({ badgeId }) }), '更换等级展示失败');
+  },
+  verifyBadge: async (target: string, badgeId: string, proof: { value: number; sourceAccount: string; evidence: string }) => {
+    if (isTest()) throw new ApiError('测试账户不能审核真实铭牌', 403);
+    return authJson(authFetch(`/auth/v1/users/${encodeURIComponent(target)}/badge-verifications/${encodeURIComponent(badgeId)}`, { method: 'PUT', body: JSON.stringify(proof) }), '核验失败');
+  },
+  connections: async () => {
+    if (isTest()) return { connections: [{ provider: 'bilibili', label: 'B站', configured: true, account: null }, { provider: 'afdian', label: '爱发电', configured: true, account: null }] as AccountConnection[] };
+    return authJson<{ connections: AccountConnection[] }>(authFetch('/auth/v1/connections'), '暂时无法读取社区账户');
+  },
+  authorizeConnection: async (provider: ConnectionProvider) => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    const result = await authJson<{ url: string }>(authFetch(`/auth/v1/connections/${provider}/authorizations`, { method: 'POST' }), '无法开始关联授权');
+    window.location.assign(result.url);
+  },
+  unlinkConnection: async (provider: ConnectionProvider) => {
+    if (isTest()) return;
+    const response = await authFetch(`/auth/v1/connections/${provider}`, { method: 'DELETE' });
+    if (!response.ok) await authJson(response, '解除绑定失败');
   },
   billingPortal: async () => {
     if (isTest()) { console.info('[test] 测试模式不打开支付门户。'); return; }

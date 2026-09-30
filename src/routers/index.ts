@@ -11,6 +11,7 @@ const router = createRouter({
       { path: 'download', component: () => import('@/views/site/download.vue') },
       { path: 'changelog', component: () => import('@/views/site/changelog.vue') },
       { path: 'account', component: () => import('@/views/cloud/Account.vue') },
+      { path: 'account/delete', redirect: '/account?section=delete' },
       { path: 'docs', component: () => import('@/views/cloud/Placeholder.vue'), props: { title: '文档', eyebrow: 'DOCUMENTATION', description: '' } },
       { path: 'pricing', component: () => import('@/views/cloud/Pricing.vue') },
       { path: 'welcome', component: () => import('@/views/cloud/Welcome.vue') },

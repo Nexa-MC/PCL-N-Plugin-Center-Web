@@ -8,6 +8,7 @@
         <button class="account-status" type="button" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span>{{ accountLabel }}</button>
         <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">我的账户</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">开发者控制台</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">网站管理</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">退出登录</button></div>
       </div>
+      <ThemeControl />
     </header>
     <div class="cloud-body">
       <main id="cloud-content" class="cloud-content"><router-view :key="route.path.startsWith('/store') ? 'store' : route.path" /></main>
@@ -18,6 +19,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, SESSION_EVENT, type Session } from '@/api/platform';
+import ThemeControl from '@/components/ThemeControl.vue';
 const route = useRoute(), router = useRouter();
 const session = ref<Session>(), menuOpen = ref(false);
 const accountLabel = computed(() => session.value ? (session.value.name || '账户管理') : '登录 / 注册');
@@ -31,7 +33,8 @@ function onDocumentClick(event: MouseEvent) {
   const target = event.target instanceof Element ? event.target : null;
   if (!target?.closest('.account-menu')) menuOpen.value = false;
 }
-router.afterEach(() => { menuOpen.value = false; });
-onMounted(() => { void loadSession(); window.addEventListener('focus', onFocus); window.addEventListener(SESSION_EVENT, onFocus); });
-onUnmounted(() => { window.removeEventListener('focus', onFocus); window.removeEventListener(SESSION_EVENT, onFocus); document.removeEventListener('click', onDocumentClick); });
+function onDocumentKeydown(event: KeyboardEvent) { if (event.key === 'Escape') menuOpen.value = false; }
+const removeRouteListener = router.afterEach(() => { menuOpen.value = false; });
+onMounted(() => { void loadSession(); window.addEventListener('focus', onFocus); window.addEventListener(SESSION_EVENT, onFocus); document.addEventListener('click', onDocumentClick); document.addEventListener('keydown', onDocumentKeydown); });
+onUnmounted(() => { window.removeEventListener('focus', onFocus); window.removeEventListener(SESSION_EVENT, onFocus); document.removeEventListener('click', onDocumentClick); document.removeEventListener('keydown', onDocumentKeydown); removeRouteListener(); });
 </script>

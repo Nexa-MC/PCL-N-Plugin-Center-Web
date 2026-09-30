@@ -1,13 +1,14 @@
 <template>
   <p v-if="checking" class="empty-state" role="status">正在检查会话…</p>
-  <div v-else-if="session && !session.termsAccepted" class="account-panel">
+  <div v-else-if="session && !session.termsAccepted && !['privacy', 'delete', 'wallet'].includes(section)" class="account-panel">
     <section class="work-panel accept-panel">
       <span class="status-pill">需要确认</span>
-      <h2>接受《Nexa Cloud 服务条款 v1.0》</h2>
+      <h2>接受《Nexa Cloud 服务条款 v1.1》</h2>
       <p>在继续使用账户功能前，请阅读并接受当前生效的服务条款。《<router-link to="/legal/privacy">隐私政策</router-link>》说明了数据处理方式，将随接受一并记录。</p>
-      <label class="accept-check"><input type="checkbox" v-model="acceptChecked" />我已阅读并接受《<router-link to="/legal/terms">Nexa Cloud 服务条款 v1.0</router-link>》，并知悉《隐私政策》的内容。</label>
+      <label class="accept-check"><input type="checkbox" v-model="acceptChecked" />我已阅读并接受《<router-link to="/legal/terms">Nexa Cloud 服务条款 v1.1</router-link>》，并知悉《隐私政策》的内容。</label>
       <p v-if="error" class="form-error" role="alert">{{ error }}</p>
       <button class="primary-button" :disabled="busy || !acceptChecked" @click="accept">接受并继续</button>
+      <p><router-link to="/account?section=privacy">隐私与数据</router-link> · <router-link to="/account?section=wallet">管理订阅</router-link> · <router-link to="/account/delete">注销账户</router-link></p>
     </section>
   </div>
   <div v-else-if="session" class="account-layout">
@@ -19,11 +20,13 @@
 
       <template v-if="section === 'overview'">
         <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">ACCOUNT</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || '第三方身份账户' }}</p><span class="status-pill">已登录</span></div></div><div class="shortcut-grid"><button v-for="item in navItems.filter(i => i.key !== 'overview')" :key="item.key" type="button" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span><span>{{ item.label }}</span></button></div></section>
+        <AccountProgress :progression="progression" :busy="levelBusy" :error="levelError" @refresh="loadProgression" @select="selectDisplay" />
         <section class="work-panel"><h2>会话</h2><p>登录状态 24 小时有效。</p><button class="danger-button" :disabled="busy" @click="logout">退出登录</button></section>
       </template>
 
       <template v-else-if="section === 'linked'">
         <section class="work-panel"><h2>关联的账号</h2><p>可同时关联 GitHub、Google 和 Microsoft；至少保留一个登录方式。绑定 Microsoft 会请求 Xbox 权限，用于同步 Minecraft 拥有状况与游戏档案。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联<template v-if="p.id === 'microsoft' && minecraftText"> · {{ minecraftText }}</template></small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
+        <section class="work-panel"><h2>社区与赞助账户</h2><div v-for="connection in connections" :key="connection.provider" class="identity-row"><div class="meta"><h3>{{ connection.label }}</h3><small v-if="connection.account">{{ connection.account.name || connection.account.subject }} · 已绑定</small><small v-else>{{ connection.configured ? '尚未绑定' : '暂未开放' }}</small></div><button v-if="!connection.account" class="secondary-button" :disabled="busy || !connection.configured || testMode" @click="bindConnection(connection.provider)">绑定</button><button v-else class="danger-button" :disabled="busy" @click="removeConnection(connection.provider)">解除绑定</button></div><p v-if="connectionError" class="form-error" role="alert">{{ connectionError }}</p><p v-if="connectionMessage" class="form-success" role="status">{{ connectionMessage }}</p></section>
       </template>
 
       <template v-else-if="section === 'security'">
@@ -62,7 +65,7 @@
       </template>
 
       <template v-else-if="section === 'privacy'">
-        <section class="work-panel"><h2>政策接受状态</h2><template v-if="policies.length"><div v-for="p in policies" :key="p.kind" class="profile-row"><span>{{ p.kind === 'terms' ? '服务条款' : '隐私政策' }} v{{ p.version }}</span><strong>{{ p.acceptedAt ? `已接受 · ${new Date(p.acceptedAt).toLocaleString()}` : '未接受' }}</strong></div><p class="legal-hashes">文档哈希（SHA-256）：{{ policies.map(p => `${p.kind}:${p.contentHash.slice(0, 16)}…`).join('　') }}</p></template><p v-else>正在读取…</p><p>历史版本见 <router-link to="/legal">法律文档索引</router-link>。</p></section>
+        <section class="work-panel"><h2>政策确认记录</h2><template v-if="policies.length"><div v-for="p in policies" :key="p.kind" class="profile-row"><span>{{ p.kind === 'terms' ? '服务条款' : '隐私政策' }} v{{ p.version }}</span><strong>{{ p.acceptedAt ? `${p.kind === 'privacy' ? '已知悉' : '已接受'} · ${new Date(p.acceptedAt).toLocaleString()}` : (p.kind === 'privacy' ? '未记录知悉' : '未接受') }}</strong></div><p class="legal-hashes">文档哈希（SHA-256）：{{ policies.map(p => `${p.kind}:${p.contentHash.slice(0, 16)}…`).join('　') }}</p></template><p v-else>正在读取…</p><p>历史版本见 <router-link to="/legal">法律文档索引</router-link>。</p></section>
         <section class="work-panel"><h2>数据导出</h2><p>导出账户资料、关联身份、会话状态、政策接受与隐私请求记录（JSON，不含凭据与哈希）。</p><button class="primary-button" :disabled="busy" @click="exportData">下载我的数据</button></section>
         <section class="work-panel"><h2>隐私请求</h2><p>根据《隐私政策》第 11 条，你可以在此提交查阅、更正、删除、可携带、限制或异议请求，我们会通过 privacy@pcln.top 处理。</p><label class="privacy-select">请求类型<select v-model="privacyType"><option value="access">查阅 / 复制</option><option value="correction">更正 / 补充</option><option value="portability">数据可携带副本</option><option value="objection">限制或异议</option><option value="other">其他</option></select></label><button class="secondary-button" :disabled="busy" @click="submitPrivacy">提交请求</button><div v-if="privacyList.length" class="privacy-list"><div v-for="r in privacyList" :key="r.id" class="profile-row"><span>{{ privacyLabel(r.type) }} · {{ new Date(r.createdAt).toLocaleDateString() }}</span><span class="status-pill">{{ privacyState(r.state) }}</span></div></div></section>
       </template>
@@ -90,7 +93,7 @@
       </template>
 
       <template v-else-if="section === 'wallet'">
-        <section class="work-panel"><h2>钱包与订阅</h2><div class="profile-row"><span>Cloud+</span><strong>{{ entitlements ? (entitlements.cloudPlus ? '已激活' : '未激活') : '正在读取…' }}</strong></div><p v-if="entitlements && !entitlements.cloudPlus" class="hint">订阅权益由 Paddle 事件实时同步；完成订阅后几秒内生效。</p><p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">注意：当前订阅存在待生效的变更（如已排期取消），在变更生效前权益仍可用。</p><div class="actions"><router-link class="primary-button" to="/pricing">查看套餐与价格</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">管理订阅</button></div><p v-if="portalError" class="form-error" role="alert">{{ portalError }}</p><p class="login-fine">支付方式更新、取消与发票在 Paddle 客户门户完成；取消与退款适用 <router-link to="/legal/refunds">退款政策</router-link>。</p></section>
+        <section class="work-panel"><h2>钱包与订阅</h2><div class="profile-row"><span>当前会员等级</span><strong>{{ entitlements?.membership.name || (portalError ? '读取失败' : '正在读取…') }}</strong></div><div v-if="entitlements?.cloudPlus" class="profile-row"><span>订阅状态</span><strong>{{ entitlements.membership.status === 'trialing' ? '试用中' : '已激活' }}{{ entitlements.membership.billingCycle === 'year' ? ' · 年付' : entitlements.membership.billingCycle === 'month' ? ' · 月付' : '' }}</strong></div><p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">订阅变更将在当前计费周期结束时生效。</p><div class="actions"><router-link class="primary-button" to="/pricing">查看套餐与价格</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">管理订阅</button></div><p v-if="portalError" class="form-error" role="alert">{{ portalError }}</p><p class="login-fine">支付方式、取消与发票在 Paddle 客户门户管理。<router-link to="/legal/refunds">退款政策</router-link></p></section>
       </template>
 
       <template v-else-if="section === 'developer'">
@@ -100,6 +103,7 @@
 
       <template v-else-if="section === 'website'">
         <template v-if="session.staff">
+          <form class="work-panel support-form" @submit.prevent="reviewBadge"><h2>铭牌核验</h2><label>账户用户 ID<input v-model.trim="badgeReview.target" required maxlength="120" placeholder="用户 ID 或账户 ID" /></label><label>铭牌<select v-model="badgeReview.badgeId" @change="badgeReview.value = badgeReview.badgeId === 'bilibili-level' ? 6 : badgeReview.badgeId === 'bilibili-million' ? 1000000 : 100001"><option value="bilibili-level">b站来的</option><option value="bilibili-million">小黄标</option><option value="donor">我喜欢你</option></select></label><label>{{ badgeReview.badgeId === 'donor' ? '累计无偿捐赠（人民币分，不含订阅付款）' : badgeReview.badgeId === 'bilibili-level' ? 'B站等级' : 'B站粉丝数' }}<input v-model.number="badgeReview.value" type="number" min="0" step="1" required /></label><label>来源账户或捐赠记录编号<input v-model.trim="badgeReview.sourceAccount" required maxlength="120" /></label><label>核验凭证说明<textarea v-model.trim="badgeReview.evidence" required minlength="8" maxlength="1000" rows="2" /></label><p v-if="badgeReview.error" class="form-error" role="alert">{{ badgeReview.error }}</p><p v-if="badgeReview.message" class="form-success" role="status">{{ badgeReview.message }}</p><button class="primary-button" :disabled="badgeReview.busy || testMode">保存核验结果</button></form>
           <section class="work-panel">
             <div class="section-heading"><div><span class="status-pill">已具备资格</span><h2>网站后台管理</h2></div>
               <div class="actions"><a class="primary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">进入后台 ↗</a><button class="secondary-button" :disabled="summaryLoading" @click="loadSummary">刷新摘要</button></div></div>
@@ -169,6 +173,8 @@
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors, type MinecraftProfile } from '@/api/platform';
+import type { AccountProgression, AccountConnection, ConnectionProvider } from '@/api/platform';
+import AccountProgress from '@/components/AccountProgress.vue';
 import { pluginCenterApi } from '@/api/pluginCenter';
 import { createPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';
@@ -200,11 +206,12 @@ const validSections = navItems.map(i => i.key);
 const section = ref(validSections.includes(String(route.query.section)) ? String(route.query.section) : 'overview');
 watch(() => route.query.section, value => { if (validSections.includes(String(value))) section.value = String(value); });
 watch(section, value => {
+  if (value === 'overview') void loadProgression();
   if (value === 'tickets' && !ticketsLoaded.value) void loadTickets();
   if (value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
   if (value === 'delete') void loadDeletion();
   if (value === 'wallet') void loadEntitlements();
-  if (value === 'linked') void loadMinecraft();
+  if (value === 'linked') { void loadMinecraft(); void loadConnections(); }
   if (value === 'website' && session.value?.staff && !summary.value && !summaryLoading.value) void loadSummary();
   if (value === 'security' && session.value && !testMode.value && !factors.value) void refreshFactors();
 });
@@ -265,7 +272,7 @@ async function bind(id: LinkedIdentity['provider']){ busy.value = true; platform
 async function unbind(id: LinkedIdentity['provider']){ busy.value = true; error.value = ''; try { await platform.unbind(id); await loadIdentities(); } catch (e) { error.value = e instanceof ApiError ? e.message : '解绑失败，请重试。'; } finally { busy.value = false; } }
 
 const policies = ref<PolicyStatus[]>([]);
-async function loadPolicies(){ try { policies.value = (await platform.policiesStatus()).policies; } catch { /* 状态读取失败不阻塞 */ } }
+async function loadPolicies(){ try { policies.value = (await platform.policiesStatus()).policies; } catch (e) { error.value = e instanceof ApiError ? e.message : '暂时无法读取政策状态'; } }
 const privacyType = ref('access'), privacyList = ref<PrivacyRequest[]>([]);
 const privacyLabel = (type: string) => ({ access: '查阅 / 复制', correction: '更正 / 补充', deletion: '删除', portability: '数据可携带', objection: '限制或异议', other: '其他' }[type] || type);
 const privacyState = (state: string) => ({ received: '已收到', verified: '已验证', processing: '处理中', completed: '已完成', rejected: '已拒绝' }[state] || state);
@@ -275,8 +282,17 @@ async function exportData(){ busy.value = true; try { const data = await platfor
 
 const deletion = ref<DeletionRequest | null>(), deleteConfirm = ref(''), deleteError = ref('');
 const entitlements = ref<Entitlements | null>(), portalError = ref('');
-async function loadEntitlements(){ try { entitlements.value = await platform.entitlements(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法读取订阅状态。'; } }
-async function openPortal(){ busy.value = true; portalError.value = ''; try { await platform.billingPortal(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法打开订阅管理，请稍后重试。'; busy.value = false; } }
+async function loadEntitlements(){ portalError.value = ''; try { entitlements.value = await platform.entitlements(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法读取订阅状态。'; } }
+async function openPortal(){ busy.value = true; portalError.value = ''; try { await platform.billingPortal(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法打开订阅管理，请稍后重试。'; } finally { busy.value = false; } }
+const progression = ref<AccountProgression>(), levelBusy = ref(false), levelError = ref('');
+async function loadProgression(){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.accountProgression(); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '暂时无法读取等级与经验'; } finally { levelBusy.value = false; } }
+async function selectDisplay(badgeId: string | null){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.selectLevelDisplay(badgeId); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '更换等级展示失败'; } finally { levelBusy.value = false; } }
+const connections = ref<AccountConnection[]>([]), connectionError = ref(String(route.query.connection_error || '').slice(0, 200)), connectionMessage = ref(route.query.connection_success ? '绑定成功' : '');
+async function loadConnections(){ try { connections.value = (await platform.connections()).connections; } catch (e) { connectionError.value = e instanceof ApiError ? e.message : '读取社区账户失败'; } }
+async function bindConnection(provider: ConnectionProvider){ busy.value = true; connectionError.value = ''; try { await platform.authorizeConnection(provider); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '无法开始授权'; } finally { busy.value = false; } }
+async function removeConnection(provider: ConnectionProvider){ busy.value = true; connectionError.value = ''; try { await platform.unlinkConnection(provider); await loadConnections(); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '解除绑定失败'; } finally { busy.value = false; } }
+const badgeReview = reactive({ target: '', badgeId: 'bilibili-level', value: 6, sourceAccount: '', evidence: '', busy: false, error: '', message: '' });
+async function reviewBadge(){ badgeReview.busy = true; badgeReview.error = ''; badgeReview.message = ''; try { await platform.verifyBadge(badgeReview.target, badgeReview.badgeId, { value: badgeReview.value, sourceAccount: badgeReview.sourceAccount, evidence: badgeReview.evidence }); badgeReview.message = '核验结果已保存'; } catch (e) { badgeReview.error = e instanceof ApiError ? e.message : '核验失败'; } finally { badgeReview.busy = false; } }
 async function loadDeletion(){ try { deletion.value = (await platform.deletionStatus()).request; } catch { /* 忽略 */ } }
 async function requestDeletion(){ busy.value = true; deleteError.value = ''; try { deletion.value = (await platform.requestDeletion()).request; deleteConfirm.value = ''; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '申请失败，请重试。'; } finally { busy.value = false; } }
 async function cancelDeletion(){ busy.value = true; deleteError.value = ''; try { await platform.cancelDeletion(); deletion.value = null; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '撤销失败，请重试。'; } finally { busy.value = false; } }
@@ -442,6 +458,10 @@ async function syncSession() {
   if (!next) { factors.value = null; identities.value = undefined; summary.value = null; gotoLogin(); return; }
   if (next.setupRequired) { void router.replace('/register?setup=1'); return; }
   nameInput.value = next.name ?? ''; handleInput.value = next.handle ?? '';
+  progression.value = undefined; entitlements.value = null; connections.value = [];
+  void loadProgression();
+  if (section.value === 'wallet') void loadEntitlements();
+  if (section.value === 'linked') void loadConnections();
   if (section.value === 'security' && !testMode.value && !factors.value) void refreshFactors();
 }
 
@@ -452,13 +472,14 @@ onMounted(async () => {
   if (!session.value) { gotoLogin(); return; }
   if (session.value.setupRequired) { void router.replace('/register?setup=1'); return; }
   void loadIdentities();
+  void loadProgression();
   nameInput.value = session.value.name ?? '';
   handleInput.value = session.value.handle ?? '';
   if (section.value === 'tickets') void loadTickets();
   if (section.value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
   if (section.value === 'delete') void loadDeletion();
   if (section.value === 'wallet') void loadEntitlements();
-  if (section.value === 'linked') void loadMinecraft();
+  if (section.value === 'linked') { void loadMinecraft(); void loadConnections(); }
   if (section.value === 'website' && session.value.staff) void loadSummary();
   if (section.value === 'security' && !testMode.value) void refreshFactors();
 });
