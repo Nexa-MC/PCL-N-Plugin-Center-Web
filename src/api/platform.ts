@@ -256,10 +256,6 @@ export const platform = {
     if (isTest()) { const badge = testProgression.badges.find(b => b.id === badgeId && b.earned && b.replacesLevel); testProgression.display = badge ? { kind: 'badge', label: badge.name, badgeId } : { kind: 'level', label: 'Lv' + testProgression.level, badgeId: null }; return structuredClone(testProgression); }
     return authJson<AccountProgression>(authFetch('/auth/v1/account/level-display', { method: 'PUT', body: JSON.stringify({ badgeId }) }), '更换等级展示失败');
   },
-  verifyBadge: async (target: string, badgeId: string, proof: { value: number; sourceAccount: string; evidence: string }) => {
-    if (isTest()) throw new ApiError('测试账户不能审核真实铭牌', 403);
-    return authJson(authFetch(`/auth/v1/users/${encodeURIComponent(target)}/badge-verifications/${encodeURIComponent(badgeId)}`, { method: 'PUT', body: JSON.stringify(proof) }), '核验失败');
-  },
   connections: async () => {
     if (isTest()) return { connections: [{ provider: 'bilibili', label: 'B站', configured: true, account: null }, { provider: 'afdian', label: '爱发电', configured: true, account: null }] as AccountConnection[] };
     return authJson<{ connections: AccountConnection[] }>(authFetch('/auth/v1/connections'), '暂时无法读取社区账户');
