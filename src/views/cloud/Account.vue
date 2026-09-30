@@ -12,18 +12,18 @@
   </div>
   <div v-else-if="session" class="account-layout">
     <nav class="account-nav" aria-label="账户分类">
-      <button v-for="item in navItems" :key="item.key" type="button" :class="{ active: section === item.key }" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true">{{ item.icon }}</span>{{ item.label }}</button>
+      <button v-for="item in navItems" :key="item.key" type="button" :class="{ active: section === item.key }" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span>{{ item.label }}</button>
     </nav>
     <div class="account-panel">
       <p v-if="error" class="form-error" role="alert">{{ error }}</p>
 
       <template v-if="section === 'overview'">
-        <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">ACCOUNT</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || '第三方身份账户' }}</p><span class="status-pill">已登录</span></div></div><div class="shortcut-grid"><button v-for="item in navItems.filter(i => i.key !== 'overview')" :key="item.key" type="button" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true">{{ item.icon }}</span><span>{{ item.label }}</span></button></div></section>
+        <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">ACCOUNT</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || '第三方身份账户' }}</p><span class="status-pill">已登录</span></div></div><div class="shortcut-grid"><button v-for="item in navItems.filter(i => i.key !== 'overview')" :key="item.key" type="button" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span><span>{{ item.label }}</span></button></div></section>
         <section class="work-panel"><h2>会话</h2><p>登录状态 24 小时有效。</p><button class="danger-button" :disabled="busy" @click="logout">退出登录</button></section>
       </template>
 
       <template v-else-if="section === 'linked'">
-        <section class="work-panel"><h2>关联的账号</h2><p>可同时关联 GitHub、Google 和 Microsoft；至少保留一个登录方式。绑定 Microsoft 会请求 Xbox 权限，用于同步 Minecraft 拥有状况与游戏档案。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true">{{ p.icon }}</span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联<template v-if="p.id === 'microsoft' && minecraftText"> · {{ minecraftText }}</template></small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
+        <section class="work-panel"><h2>关联的账号</h2><p>可同时关联 GitHub、Google 和 Microsoft；至少保留一个登录方式。绑定 Microsoft 会请求 Xbox 权限，用于同步 Minecraft 拥有状况与游戏档案。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联<template v-if="p.id === 'microsoft' && minecraftText"> · {{ minecraftText }}</template></small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
       </template>
 
       <template v-else-if="section === 'security'">
@@ -45,11 +45,11 @@
           <template v-else-if="factors">
             <h3 class="factor-title">Passkey（{{ factors.passkeys.length }}/10）</h3>
             <p v-if="!factors.passkeys.length" class="factor-empty">推荐：指纹 / 面容 / 设备 PIN，无需记码。</p>
-            <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true">🔑</span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId, pk.name)">移除</button></div>
+            <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true"><KoiIcon name="key-square" /></span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId, pk.name)">移除</button></div>
             <div class="actions"><button class="primary-button" :disabled="mfaBusy || passkeyDialog.busy || factors.passkeys.length >= 10" @click="openPasskeyDialog">添加 passkey</button></div>
             <h3 class="factor-title">验证器应用（TOTP · {{ confirmedTotpCount }}/10）</h3>
             <p v-if="!factors.totp.length" class="factor-empty">用 Authenticator 应用生成 6 位动态码，可注册多台设备。</p>
-            <div v-for="device in factors.totp.filter(t => t.confirmed)" :key="device.id" class="identity-row"><span class="identity-icon" aria-hidden="true">⏱</span><div class="meta"><h3>{{ device.name || '未命名验证器' }}</h3><small>启用于 {{ device.confirmedAt ? new Date(device.confirmedAt).toLocaleString() : '—' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removeTotp(device.id, device.name)">停用</button></div>
+            <div v-for="device in factors.totp.filter(t => t.confirmed)" :key="device.id" class="identity-row"><span class="identity-icon" aria-hidden="true"><KoiIcon name="timer" /></span><div class="meta"><h3>{{ device.name || '未命名验证器' }}</h3><small>启用于 {{ device.confirmedAt ? new Date(device.confirmedAt).toLocaleString() : '—' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removeTotp(device.id, device.name)">停用</button></div>
             <p v-if="factors.totp.some(t => !t.confirmed)" class="factor-empty">存在未确认的注册（15 分钟后自动清理），可重新发起。</p>
             <div class="actions"><button class="secondary-button" :disabled="mfaBusy || totpDialog.busy || factors.totp.length >= 10" @click="startTotp">添加验证器应用</button></div>
             <h3 class="factor-title">恢复码（剩余 {{ factors.recovery.count }}）</h3>
@@ -172,6 +172,7 @@ import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ti
 import { pluginCenterApi } from '@/api/pluginCenter';
 import { createPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';
+import KoiIcon from '@/components/KoiIcon.vue';
 import FormDialog from '@/components/FormDialog.vue';
 import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
 const route = useRoute();
@@ -184,16 +185,16 @@ async function logout(){ busy.value=true; error.value=''; await platform.logout(
 function gotoLogin() { void router.replace({ path: '/login', query: { return: route.fullPath } }); }
 
 const navItems = [
-  { key: 'overview', label: '概览', icon: '⌂', color: '#1a73e8' },
-  { key: 'linked', label: '关联的账号', icon: '⇄', color: '#1e8e3e' },
-  { key: 'security', label: '安全性与登录', icon: '•••', color: '#f2a100' },
-  { key: 'profile', label: '个人信息', icon: '◉', color: '#9334e6' },
-  { key: 'privacy', label: '隐私与数据', icon: '◇', color: '#00897b' },
-  { key: 'wallet', label: '钱包与订阅', icon: '¤', color: '#c5221f' },
-  { key: 'tickets', label: '支持工单', icon: '✉', color: '#12a5af' },
-  { key: 'developer', label: '开发者控制台', icon: '</>', color: '#3f51b5' },
-  { key: 'website', label: '网站管理', icon: '⚙', color: '#e8546e' },
-  { key: 'delete', label: '删除账户', icon: '✕', color: '#5f6368' }
+  { key: 'overview', label: '概览', icon: 'home', color: '#1a73e8' },
+  { key: 'linked', label: '关联的账号', icon: 'arrow-left-right', color: '#1e8e3e' },
+  { key: 'security', label: '安全性与登录', icon: 'shield-tick', color: '#f2a100' },
+  { key: 'profile', label: '个人信息', icon: 'personal-card', color: '#9334e6' },
+  { key: 'privacy', label: '隐私与数据', icon: 'lock-circle', color: '#00897b' },
+  { key: 'wallet', label: '钱包与订阅', icon: 'card', color: '#c5221f' },
+  { key: 'tickets', label: '支持工单', icon: 'conversation-box', color: '#12a5af' },
+  { key: 'developer', label: '开发者控制台', icon: 'console', color: '#3f51b5' },
+  { key: 'website', label: '网站管理', icon: 'setting', color: '#e8546e' },
+  { key: 'delete', label: '删除账户', icon: 'trash-square', color: '#5f6368' }
 ];
 const validSections = navItems.map(i => i.key);
 const section = ref(validSections.includes(String(route.query.section)) ? String(route.query.section) : 'overview');
@@ -236,10 +237,16 @@ async function loadSummary() {
 }
 
 const providers = [
-  { id: 'github', name: 'GitHub', icon: '' },
-  { id: 'google', name: 'Google', icon: 'G' },
-  { id: 'microsoft', name: 'Microsoft', icon: '⊞' }
+  { id: 'github', name: 'GitHub' },
+  { id: 'google', name: 'Google' },
+  { id: 'microsoft', name: 'Microsoft' }
 ] as const;
+// 品牌官方标识(与登录按钮同款内联 SVG),用于关联账号列表。
+const PROVIDER_SVG: Record<string, string> = {
+  github: '<svg viewBox="0 0 16 16" width="18" height="18"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>',
+  google: '<svg viewBox="0 0 48 48" width="17" height="17"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>',
+  microsoft: '<svg viewBox="0 0 23 23" width="16" height="16"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="12" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="12" width="10" height="10" fill="#00a4ef"/><rect x="12" y="12" width="10" height="10" fill="#ffb900"/></svg>'
+};
 const identities = ref<LinkedIdentity[]>();
 const bound = (id: LinkedIdentity['provider']) => Boolean(identities.value?.some(i => i.provider === id));
 const identityMail = (id: LinkedIdentity['provider']) => identities.value?.find(i => i.provider === id)?.email || '已关联';
@@ -474,6 +481,9 @@ onUnmounted(() => { window.removeEventListener(SESSION_EVENT, syncSession); });
 .test-mode-note{font-size:12px;color:var(--market-muted);background:var(--market-surface-soft);border:1px dashed var(--market-border);border-radius:10px;padding:12px 16px;margin:18px 0 0}
 .seg-label{display:block;text-align:center;font-size:12px;color:#708693;margin:6px 0 10px}
 .row-action{flex-shrink:0;margin-top:6px}
+.nav-icon{font-size:15px}
+.identity-icon :deep(svg){width:18px;height:18px}
+.identity-icon .koi-icon{font-size:17px}
 .factor-title{font-size:13px;font-weight:650;margin:22px 0 6px;padding-top:16px;border-top:1px solid #e8edf3}.factor-empty{font-size:12px;color:var(--market-muted);margin-bottom:10px;line-height:1.7}
 .secret-box{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:10px;padding:12px 14px;margin:0}
 .secret-box code{font-size:14px;letter-spacing:.12em;font-weight:650;color:var(--nc-accent);overflow-wrap:anywhere}

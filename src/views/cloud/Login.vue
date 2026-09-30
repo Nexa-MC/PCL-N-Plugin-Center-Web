@@ -34,7 +34,7 @@
           <div v-else key="mfa" class="step-pane">
             <form class="credential-form" @submit.prevent="submitMfaCode">
               <template v-if="loginFactors.includes('passkey')">
-                <button class="primary-button passkey-primary" type="button" :disabled="loginBusy" @click="passkeyLogin"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span>🔑 {{ loginBusy ? '正在验证…' : '使用 passkey 验证' }}</button>
+                <button class="primary-button passkey-primary" type="button" :disabled="loginBusy" @click="passkeyLogin"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span><KoiIcon v-else name="key-square" /> {{ loginBusy ? '正在验证…' : '使用 passkey 验证' }}</button>
                 <div v-if="hasCodeFactor" class="login-divider" aria-hidden="true"><span>或使用验证码</span></div>
               </template>
               <template v-if="mfaMode === 'app' && loginFactors.includes('totp')">
@@ -73,6 +73,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { platform } from '@/api/platform';
 import { assertPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';
+import KoiIcon from '@/components/KoiIcon.vue';
 import { applyPageSeo } from '@/utils/seo';
 
 const route = useRoute(), router = useRouter();

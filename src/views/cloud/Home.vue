@@ -6,16 +6,16 @@
       <h1 class="hero-anim d2">{{ en ? 'The Minecraft launcher that asks less from you.' : '一个更省心的 Minecraft 启动器。' }}</h1>
       <p class="hero-sub hero-anim d3">{{ en ? 'NexaCL 2.0 — the next generation of PCL N. Instances, Java, accounts, resources and updates: whatever can be automated is automated. You only make the choices that matter.' : 'NexaCL 2.0，PCL N 的下一代。实例、Java、账号、资源和更新，能自动处理的都交给启动器，你只做真正需要选择的事。' }}</p>
       <div class="hero-actions hero-anim d4">
-        <router-link class="hero-btn hero-btn-solid" to="/download">{{ en ? 'Download 2.0 Alpha' : '下载 2.0 Alpha' }} <span aria-hidden="true">↓</span></router-link>
-        <router-link class="hero-btn hero-btn-ghost" to="/changelog">{{ en ? 'What’s new' : '看看新在哪' }} <span aria-hidden="true">›</span></router-link>
+        <router-link class="hero-btn hero-btn-solid" to="/download">{{ en ? 'Download 2.0 Alpha' : '下载 2.0 Alpha' }} <KoiIcon name="arrow-down" /></router-link>
+        <router-link class="hero-btn hero-btn-ghost" to="/changelog">{{ en ? 'What’s new' : '看看新在哪' }} <KoiIcon name="right" /></router-link>
       </div>
       <p class="hero-version hero-anim d5" v-if="latestVersion">{{ en ? 'Current build' : '当前测试版本' }} <code>{{ latestVersion }}</code> · {{ en ? 'Windows / macOS / Linux' : '三大平台 · x64 与 ARM64' }}</p>
       <div class="product-stage hero-anim d6">
         <div class="product-window" role="img" :aria-label="en ? 'Illustration of the NexaCL launcher layout' : 'NexaCL 启动器布局示意'">
           <div class="window-caption"><span><img src="/pcln.png" alt="">NexaCL</span><span class="window-controls" aria-hidden="true">−　□　×</span></div>
-          <div class="window-body"><div class="window-rail" aria-hidden="true"><span class="active">▷</span><span>▧</span><span>▦</span><span>⚙</span></div>
+          <div class="window-body"><div class="window-rail" aria-hidden="true"><span class="active"><KoiIcon name="video-play" /></span><span><KoiIcon name="grid-equal" /></span><span><KoiIcon name="folder" /></span><span><KoiIcon name="setting" /></span></div>
             <div class="window-account"><div class="mock-label">{{ en ? 'Profile' : '档案' }}<span>＋</span></div><div class="player-mark" aria-hidden="true"><span></span><i></i></div><strong>Player</strong><small>{{ en ? 'Offline profile' : '离线档案' }}</small><div class="mock-chip">{{ en ? 'Switch profile' : '切换档案' }}　⌄</div></div>
-            <div class="window-right"><div class="window-version"><div class="mock-label">{{ en ? 'Version' : '版本' }}<span>☷</span></div><div class="version-detail"><div class="grass-block" aria-hidden="true">▧</div><div><strong>1.21.1</strong><small>Minecraft Java Edition</small></div><span>›</span></div><div class="mock-launch">▷　{{ en ? 'Launch game' : '启动游戏' }}</div></div><div class="window-about"><span class="about-mark">N</span><div><strong>NexaCL</strong><p>{{ en ? 'Your next game starts here.' : '下一次游戏，从这里开始。' }}</p></div></div></div>
+            <div class="window-right"><div class="window-version"><div class="mock-label">{{ en ? 'Version' : '版本' }}<span>☷</span></div><div class="version-detail"><div class="grass-block" aria-hidden="true"><KoiIcon name="landscape" /></div><div><strong>1.21.1</strong><small>Minecraft Java Edition</small></div><span>›</span></div><div class="mock-launch">▷　{{ en ? 'Launch game' : '启动游戏' }}</div></div><div class="window-about"><span class="about-mark">N</span><div><strong>NexaCL</strong><p>{{ en ? 'Your next game starts here.' : '下一次游戏，从这里开始。' }}</p></div></div></div>
           </div>
         </div>
         <p class="product-caption">{{ en ? 'Interface illustration. The Alpha interface may change.' : '界面示意。Alpha 版本的界面仍会调整。' }}</p>
@@ -37,25 +37,25 @@
       <div class="section-head center"><p class="eyebrow">{{ en ? 'Why you will like it' : '为什么你会喜欢它' }}</p><h2>{{ en ? 'The chores are ours. The game is yours.' : '把麻烦留给启动器，把游戏留给你。' }}</h2><p>{{ en ? 'Twelve things NexaCL handles for you every day.' : '下面这十二件事，NexaCL 每天都替你处理。' }}</p></div>
       <div class="bento stagger">
         <article class="work-panel tile t-launch">
-          <div class="launch-steps" aria-hidden="true"><span>{{ en ? 'Find instances' : '查找实例' }}</span><i>→</i><span>{{ en ? 'Pick Java' : '选择 Java' }}</span><i>→</i><span>{{ en ? 'Prepare assets' : '准备资源' }}</span><i>→</i><span>{{ en ? 'Watch process' : '记录进程' }}</span></div>
-          <div class="tile-icon">▷</div><h3>{{ en ? 'Launch Minecraft' : '启动 Minecraft' }}</h3>
+          <div class="launch-steps" aria-hidden="true"><span>{{ en ? 'Find instances' : '查找实例' }}</span><i><KoiIcon name="right" /></i><span>{{ en ? 'Pick Java' : '选择 Java' }}</span><i><KoiIcon name="right" /></i><span>{{ en ? 'Prepare assets' : '准备资源' }}</span><i><KoiIcon name="right" /></i><span>{{ en ? 'Watch process' : '记录进程' }}</span></div>
+          <div class="tile-icon"><KoiIcon name="video-play" /></div><h3>{{ en ? 'Launch Minecraft' : '启动 Minecraft' }}</h3>
           <p>{{ en ? 'Pick a profile and a version — the launcher finds local instances, resolves version inheritance, matches the right Java, prepares assets, and keeps watching the process so crashes are traceable.' : '选好档案和版本就好。启动器会找到本地实例、处理版本继承、配好合适的 Java、准备资源依赖，并在游戏运行期间持续记录进程状态，崩溃有迹可循。' }}</p>
         </article>
-        <article class="work-panel tile"><div class="tile-icon">☕</div><h3>{{ en ? 'Java? Handled.' : 'Java？不用你管。' }}</h3><p>{{ en ? 'A built-in runtime catalog covers Java 8 / 17 / 21 / 25, downloaded on demand and matched to each game version. No more hunting for paths.' : '内置 Java 运行时目录，覆盖 8 / 17 / 21 / 25 常见世代，按需自动下载、按游戏版本自动匹配，告别手动找路径。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">⇩</div><h3>{{ en ? 'Cut off? Keep going.' : '断网了？接着下。' }}</h3><p>{{ en ? 'Interrupted downloads resume, large files arrive in parallel segments, and a failing source is swapped automatically.' : '下载中断可以续传，大文件分段并行，来源失效自动切换，慢网络也能把东西完整拿回来。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">↻</div><h3>{{ en ? 'Updates, minus the fuss.' : '更新，少折腾。' }}</h3><p>{{ en ? 'It picks a full package or a smaller patch for you, verifies every file before installing, and upgrades 1.4.x straight to 2.0.' : '完整包还是小补丁，它替你决定；每个文件先验证再安装；1.4.x 可以直接升到 2.0。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">☺</div><h3>{{ en ? 'Accounts and looks.' : '账号和外观。' }}</h3><p>{{ en ? 'Microsoft, Yggdrasil and LittleSkin sign-in, with skins, capes and the LittleSkin closet filling in. Credentials stay out of public state.' : 'Microsoft、Yggdrasil、LittleSkin 三种登录，皮肤、披风与 LittleSkin 衣柜持续补齐，凭据不进公开状态。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="coffee" /></div><h3>{{ en ? 'Java? Handled.' : 'Java？不用你管。' }}</h3><p>{{ en ? 'A built-in runtime catalog covers Java 8 / 17 / 21 / 25, downloaded on demand and matched to each game version. No more hunting for paths.' : '内置 Java 运行时目录，覆盖 8 / 17 / 21 / 25 常见世代，按需自动下载、按游戏版本自动匹配，告别手动找路径。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="arrow-down" /></div><h3>{{ en ? 'Cut off? Keep going.' : '断网了？接着下。' }}</h3><p>{{ en ? 'Interrupted downloads resume, large files arrive in parallel segments, and a failing source is swapped automatically.' : '下载中断可以续传，大文件分段并行，来源失效自动切换，慢网络也能把东西完整拿回来。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="refresh-arrow" /></div><h3>{{ en ? 'Updates, minus the fuss.' : '更新，少折腾。' }}</h3><p>{{ en ? 'It picks a full package or a smaller patch for you, verifies every file before installing, and upgrades 1.4.x straight to 2.0.' : '完整包还是小补丁，它替你决定；每个文件先验证再安装；1.4.x 可以直接升到 2.0。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="profile-circle" /></div><h3>{{ en ? 'Accounts and looks.' : '账号和外观。' }}</h3><p>{{ en ? 'Microsoft, Yggdrasil and LittleSkin sign-in, with skins, capes and the LittleSkin closet filling in. Credentials stay out of public state.' : 'Microsoft、Yggdrasil、LittleSkin 三种登录，皮肤、披风与 LittleSkin 衣柜持续补齐，凭据不进公开状态。' }}</p></article>
         <article class="work-panel tile t-drop">
-          <div class="tile-icon">⤓</div><h3>{{ en ? 'Drop it in. Done.' : '拖进来，就能装。' }}</h3>
+          <div class="tile-icon"><KoiIcon name="folder-cloud" /></div><h3>{{ en ? 'Drop it in. Done.' : '拖进来，就能装。' }}</h3>
           <p>{{ en ? 'Drag files onto the window — imports run as transactions, so a failure changes nothing.' : '把文件拖到窗口上即可安装。导入以事务执行，失败不会留下半成品。' }}</p>
           <div class="chip-row"><span>MRPACK</span><span>CurseForge ZIP</span><span>{{ en ? 'Mod JARs' : '模组 JAR' }}</span><span>Forge / NeoForge / OptiFine</span><span>{{ en ? 'Game folders (inherited import)' : '游戏文件夹（继承导入）' }}</span></div>
         </article>
-        <article class="work-panel tile"><div class="tile-icon">▦</div><h3>{{ en ? 'Mods, organized.' : '模组，管得清楚。' }}</h3><p>{{ en ? 'Filter by category, toggle in place, check verified compatible updates, and search resources without leaving the launcher.' : '分类筛选、就地启停、更新前校验兼容性，资源目录直接搜索，不用离开启动器。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">↩</div><h3>{{ en ? 'Broke it? Roll back.' : '装坏了？退回来。' }}</h3><p>{{ en ? 'A successful launch records a baseline snapshot. Review the diff and roll back item by item, or in one click.' : '成功启动即记录基线快照，出问题可查看差异清单，逐条或一键回滚到上次的正常状态。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">⧗</div><h3>{{ en ? 'Progress in view.' : '进度，看得见。' }}</h3><p>{{ en ? 'One task center for downloads and installs: stage-by-stage progress, pause and cancel, persisted checkpoints that resume after a restart.' : '下载与安装统一进任务中心：阶段化进度、可暂停可取消，检查点持久化，重启后接着跑。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">✦</div><h3>{{ en ? 'A brand-new interface.' : '全新的界面。' }}</h3><p>{{ en ? 'New window, navigation and launch page, with fluid motion, reduced-motion support and accessibility wired in.' : '新窗口、新导航、新启动页，动效流畅、支持减少动态效果、无障碍已接入。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">🔒</div><h3>{{ en ? 'Yours stays yours.' : '你的东西是你的。' }}</h3><p>{{ en ? 'Credentials are protected by the system keyring, telemetry is transparent and never collects log bodies, and game data stays local.' : '凭据由系统钥匙串保护，遥测透明、不采集日志正文，游戏数据始终留在本地。' }}</p></article>
-        <article class="work-panel tile"><div class="tile-icon">⌘</div><h3>{{ en ? 'Community, open source.' : '社区开发，开源。' }}</h3><p>{{ en ? 'Apache-2.0 licensed and built by the community. Every line is public; feedback lands straight on GitHub.' : 'Apache-2.0 许可，由社区开发。每行代码公开，反馈直达 GitHub。' }}</p><a class="tile-link" :href="NEXA_GITHUB" target="_blank" rel="noreferrer">GitHub ↗</a></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="grid-equal" /></div><h3>{{ en ? 'Mods, organized.' : '模组，管得清楚。' }}</h3><p>{{ en ? 'Filter by category, toggle in place, check verified compatible updates, and search resources without leaving the launcher.' : '分类筛选、就地启停、更新前校验兼容性，资源目录直接搜索，不用离开启动器。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="recovery-convert" /></div><h3>{{ en ? 'Broke it? Roll back.' : '装坏了？退回来。' }}</h3><p>{{ en ? 'A successful launch records a baseline snapshot. Review the diff and roll back item by item, or in one click.' : '成功启动即记录基线快照，出问题可查看差异清单，逐条或一键回滚到上次的正常状态。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="task-square" /></div><h3>{{ en ? 'Progress in view.' : '进度，看得见。' }}</h3><p>{{ en ? 'One task center for downloads and installs: stage-by-stage progress, pause and cancel, persisted checkpoints that resume after a restart.' : '下载与安装统一进任务中心：阶段化进度、可暂停可取消，检查点持久化，重启后接着跑。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="gallery-edit" /></div><h3>{{ en ? 'A brand-new interface.' : '全新的界面。' }}</h3><p>{{ en ? 'New window, navigation and launch page, with fluid motion, reduced-motion support and accessibility wired in.' : '新窗口、新导航、新启动页，动效流畅、支持减少动态效果、无障碍已接入。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="lock-circle" /></div><h3>{{ en ? 'Yours stays yours.' : '你的东西是你的。' }}</h3><p>{{ en ? 'Credentials are protected by the system keyring, telemetry is transparent and never collects log bodies, and game data stays local.' : '凭据由系统钥匙串保护，遥测透明、不采集日志正文，游戏数据始终留在本地。' }}</p></article>
+        <article class="work-panel tile"><div class="tile-icon"><KoiIcon name="code-square" /></div><h3>{{ en ? 'Community, open source.' : '社区开发，开源。' }}</h3><p>{{ en ? 'Apache-2.0 licensed and built by the community. Every line is public; feedback lands straight on GitHub.' : 'Apache-2.0 许可，由社区开发。每行代码公开，反馈直达 GitHub。' }}</p><a class="tile-link" :href="NEXA_GITHUB" target="_blank" rel="noreferrer">GitHub ↗</a></article>
       </div>
     </section>
 
@@ -120,7 +120,7 @@
         <h2>{{ en ? 'Ready to meet NexaCL?' : '准备好认识 NexaCL 了吗？' }}</h2>
         <p>{{ en ? 'The Alpha moves fast, and every piece of feedback shapes the next build.' : 'Alpha 正在快速迭代，你的每一条反馈都会影响下一个版本。' }}</p>
         <div class="cta-actions">
-          <router-link class="primary-button hero-cta" to="/download">{{ en ? 'Download NexaCL 2.0 Alpha' : '下载 NexaCL 2.0 Alpha' }} <span aria-hidden="true">↓</span></router-link>
+          <router-link class="primary-button hero-cta" to="/download">{{ en ? 'Download NexaCL 2.0 Alpha' : '下载 NexaCL 2.0 Alpha' }} <KoiIcon name="arrow-down" /></router-link>
           <router-link class="secondary-button hero-cta" to="/download?product=legacy">{{ en ? 'Stay on PCL N 1.4.x' : '继续用 PCL N 1.4.x' }}</router-link>
         </div>
         <p class="cta-fine">{{ en ? 'Built by the community' : '由社区开发' }} · Apache-2.0 · <a :href="NEXA_GITHUB" target="_blank" rel="noreferrer">GitHub ↗</a></p>
@@ -132,6 +132,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { NEXA_GITHUB, loadNexaCatalog } from '@/utils/nexaReleases';
+import KoiIcon from '@/components/KoiIcon.vue';
 import { applyPageSeo } from '@/utils/seo';
 const { locale } = useI18n();
 const en = computed(() => locale.value !== 'zh');
@@ -227,11 +228,11 @@ watchEffect(() => { applyPageSeo({ title: en.value ? 'NexaCL — The Minecraft l
 .bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .tile{position:relative;border-radius:16px;padding:22px;display:flex;flex-direction:column}
 .tile:hover{transform:translateY(-3px);border-color:#c9d8ee;box-shadow:0 14px 30px rgba(23,43,77,.10)}
-.tile-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--market-accent-soft);color:var(--nc-accent);font-size:17px;margin-bottom:14px}
+.tile-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--market-accent-soft);color:var(--nc-accent);font-size:19px;margin-bottom:14px}
 .tile h3{font-size:14.5px;font-weight:650}.tile p{font-size:12px;line-height:1.8;color:var(--market-muted);margin-top:8px}
 .tile-link{font-size:12px;color:var(--nc-accent);margin-top:10px}
 .t-launch{grid-column:span 2;grid-row:span 2;justify-content:flex-end;background:linear-gradient(165deg,var(--market-accent-soft),#fff 62%)}
-.t-launch .tile-icon{width:44px;height:44px;font-size:19px}.t-launch h3{font-size:19px}.t-launch p{font-size:13px;max-width:420px}
+.t-launch .tile-icon{width:44px;height:44px;font-size:21px}.t-launch h3{font-size:19px}.t-launch p{font-size:13px;max-width:420px}
 .launch-steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:auto;padding:2px 0 26px}
 .launch-steps span{background:#fff;border:1px solid var(--market-border);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:550;box-shadow:0 1px 2px rgba(23,43,77,.05);animation:step-glow 3.2s ease-in-out infinite}
 .launch-steps span:nth-of-type(2){animation-delay:.4s}.launch-steps span:nth-of-type(3){animation-delay:.8s}.launch-steps span:nth-of-type(4){animation-delay:1.2s}

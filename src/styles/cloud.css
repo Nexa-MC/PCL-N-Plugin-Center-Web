@@ -58,3 +58,6 @@
 .account-status:hover{color:var(--nc-accent)}
 .status-dot{background:var(--nc-accent)}
 @media(max-width:800px){.account-status{padding:8px 12px;background:var(--market-surface-soft);border-radius:8px}}
+
+/* 商店分类图标改用 KOI SVG 后的尺寸适配(线性图标 38px 会显得过细)。 */
+.resource-art{font-size:32px}

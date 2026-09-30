@@ -8,7 +8,7 @@
       <div class="release-line"><div><strong>NexaCL</strong><span v-if="selectedRelease">{{ selectedRelease.tag_name.replace(/^v/, '') }}</span><span v-else>2.0.0 Alpha</span></div><router-link to="/changelog">{{ en ? 'Release notes' : '更新日志' }} ›</router-link></div>
       <p class="alpha-advice">{{ en ? 'Alpha is an early test release. Some features are not yet available. Back up your game data before trying it.' : 'Alpha 为早期测试版本，部分功能尚未迁移。体验前，请备份游戏数据。' }}</p>
       <div class="platform-tabs" role="tablist" :aria-label="en ? 'Operating system' : '操作系统'">
-        <button v-for="(item, index) in platforms" :id="`platform-${item.id}`" :key="item.id" role="tab" :aria-selected="platform === item.id" :tabindex="platform === item.id ? 0 : -1" aria-controls="platform-panel" @click="setPlatform(item.id)" @keydown="platformKey($event,index)"><span aria-hidden="true">{{ item.icon }}</span>{{ item.name }}</button>
+        <button v-for="(item, index) in platforms" :id="`platform-${item.id}`" :key="item.id" role="tab" :aria-selected="platform === item.id" :tabindex="platform === item.id ? 0 : -1" aria-controls="platform-panel" @click="setPlatform(item.id)" @keydown="platformKey($event,index)"><KoiIcon :name="item.icon" />{{ item.name }}</button>
       </div>
       <div id="platform-panel" role="tabpanel" :aria-labelledby="`platform-${platform}`" tabindex="0">
         <div class="download-options"><label>{{ en ? 'Processor' : '处理器架构' }}<select v-model="architecture"><option value="x64">{{ platform === 'osx' ? 'Intel' : 'Intel / AMD · x64' }}</option><option value="arm64">{{ platform === 'osx' ? 'Apple Silicon' : 'ARM64' }}</option></select></label><label v-if="releases.length > 1">{{ en ? 'Version' : '版本' }}<select v-model="releaseTag"><option v-for="release in releases" :key="release.tag_name" :value="release.tag_name">{{ release.tag_name.replace(/^v/,'') }}</option></select></label></div>
@@ -28,6 +28,7 @@
 import { computed, onMounted, onBeforeUnmount, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ProductSwitch from '@/components/market/ProductSwitch.vue';
+import KoiIcon from '@/components/KoiIcon.vue';
 import LegacyDownloads from '@/components/market/LegacyDownloads.vue';
 import { useI18n } from 'vue-i18n';
 import { NEXA_GITHUB, loadNexaCatalog, releaseAssets, type NexaRelease } from '@/utils/nexaReleases';
@@ -36,7 +37,7 @@ import { applyPageSeo } from '@/utils/seo';
 const { locale } = useI18n(); const en = computed(() => locale.value !== 'zh');
 const route = useRoute(); const router = useRouter();
 const product = computed({ get: () => route.query.product === 'legacy' ? 'legacy' : 'nexa', set: (value: string) => { void router.replace({query:{...route.query, product: value === 'legacy' ? 'legacy' : undefined}}); } });
-const platforms = [{id:'win',name:'Windows',icon:'⊞'},{id:'osx',name:'macOS',icon:'⌘'},{id:'linux',name:'Linux',icon:'◇'}];
+const platforms = [{id:'win',name:'Windows',icon:'grid-equal'},{id:'osx',name:'macOS',icon:'monitor'},{id:'linux',name:'Linux',icon:'console'}];
 const platform = ref('win'); const architecture = ref('x64');
 const releases = ref<NexaRelease[]>([]); const releaseTag = ref(''); const loading = ref(true); const failed = ref(false);
 let controller: AbortController | undefined;
