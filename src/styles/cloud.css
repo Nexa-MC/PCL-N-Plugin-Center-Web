@@ -5,3 +5,59 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 .pagination{display:flex;align-items:center;justify-content:flex-end;gap:15px;font-size:11px;color:#8198a4;margin-top:22px}
+
+/* Account dropdown layout fix: full-width stacked items, on-brand hover, entrance motion, mobile bounds. */
+.account-dropdown{display:flex;flex-direction:column;gap:2px;min-width:252px;max-width:min(340px,calc(100vw - 24px));transform-origin:top right;animation:nc-drop-in .16s cubic-bezier(.22,.8,.32,1)}
+.account-dropdown a,.account-dropdown button{display:block;width:100%;border-radius:7px;line-height:1.55;overflow-wrap:anywhere;transition:background .12s ease,color .12s ease}
+.account-dropdown a:hover,.account-dropdown button:hover{background:var(--market-accent-soft);color:var(--nc-accent-strong)}
+.account-divider{margin:5px 4px}
+@keyframes nc-drop-in{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+@media(max-width:800px){.cloud-header nav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}.cloud-header nav::-webkit-scrollbar{display:none}.cloud-header nav a{white-space:nowrap;flex-shrink:0}.account-status{padding:8px 12px;background:rgba(255,255,255,.14);border-radius:8px}}
+
+/* 账户页统一模态框外观（FormDialog / PasswordConfirmDialog 基于 el-dialog） */
+.nexa-dialog{border-radius:16px}
+.nexa-dialog .el-dialog__title{font-size:17px;font-weight:650;color:var(--market-text);letter-spacing:-.01em}
+.nexa-dialog .el-dialog__header{margin-right:0;padding-bottom:10px}
+.nexa-dialog .el-dialog__body{padding-top:4px}
+.nexa-dialog .el-dialog__footer{padding-top:10px}
+
+/* 工单页：分类标签按钮此前无任何样式（只有 a 版本），按云主题补齐胶囊分段样式。 */
+.category-tabs{margin:4px 0 0}
+.category-tabs button{border:1px solid var(--market-border);background:#fff;color:var(--market-muted);padding:7px 18px;border-radius:999px;font-size:12px;line-height:1.4;transition:color .15s ease,border-color .15s ease,background .15s ease}
+.category-tabs button:hover{color:var(--nc-accent);border-color:var(--nc-accent)}
+.category-tabs button.active{background:var(--market-accent-soft);border-color:var(--nc-accent);color:var(--nc-accent);font-weight:600}
+.category-tabs button:focus-visible{outline:2px solid #0899bb;outline-offset:2px}
+/* 提交成功提示：从遗留青色统一到品牌蓝。 */
+.form-success{color:var(--nc-accent)}
+/* 工单列表细节：首行分隔线与状态徽章对齐。 */
+.ticket-row:first-of-type{margin-top:18px}
+.ticket-row .status-pill{align-self:center}
+@media(max-width:800px){.ticket-row .status-pill{align-self:flex-start}}
+
+/* GitHub 风格顶部路由进度条(route 导航时由 utils/progressBar 驱动) */
+#route-progress{position:fixed;top:0;left:0;height:2.5px;width:0;background:linear-gradient(90deg,var(--nc-accent),#4a90ef);box-shadow:0 0 8px rgba(22,115,230,.5);z-index:4000;pointer-events:none;border-radius:0 2px 2px 0}
+/* Microsoft 式登录步骤切换:新步骤右侧滑入,旧步骤左侧滑出(返回时反向) */
+.ms-step-enter-active,.ms-step-leave-active,.ms-step-back-enter-active,.ms-step-back-leave-active{transition:opacity .26s cubic-bezier(.2,.8,.25,1),transform .26s cubic-bezier(.2,.8,.25,1)}
+.ms-step-enter-from{opacity:0;transform:translateX(34px)}
+.ms-step-leave-to{opacity:0;transform:translateX(-34px)}
+.ms-step-back-enter-from{opacity:0;transform:translateX(-34px)}
+.ms-step-back-leave-to{opacity:0;transform:translateX(34px)}
+.step-pane{min-width:100%}
+/* Microsoft 式按钮加载环 */
+.btn-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:btn-spin .75s linear infinite;vertical-align:-2px}
+.btn-spinner.dark{border-color:rgba(22,115,230,.3);border-top-color:var(--nc-accent)}
+@keyframes btn-spin{to{transform:rotate(360deg)}}
+
+/* 门户导航改为浅色表面：消除与顶部蓝色进度条的同色冲突，并与营销页白色导航统一。 */
+.cloud-header{background:var(--market-surface);border-bottom:1px solid var(--market-border)}
+.cloud-brand strong{color:var(--market-text)}
+.cloud-header nav a{color:var(--market-muted)}
+.cloud-header nav a:hover{color:var(--nc-accent);background:var(--market-surface-soft)}
+.cloud-header nav a.active{color:var(--nc-accent);background:var(--market-accent-soft);font-weight:600}
+.account-status{color:var(--market-text)}
+.account-status:hover{color:var(--nc-accent)}
+.status-dot{background:var(--nc-accent)}
+@media(max-width:800px){.account-status{padding:8px 12px;background:var(--market-surface-soft);border-radius:8px}}
+
+/* 商店分类图标改用 KOI SVG 后的尺寸适配(线性图标 38px 会显得过细)。 */
+.resource-art{font-size:32px}

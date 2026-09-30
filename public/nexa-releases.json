@@ -1,6 +1,205 @@
 {
-  "generatedAt": "2026-09-24T23:53:47.374Z",
+  "generatedAt": "2026-09-28T03:06:39.781Z",
   "releases": [
+    {
+      "tag_name": "v2.0.0.alpha.5",
+      "name": "Nexa 2.0.0.alpha.5",
+      "body": "# Nexa 2.0.0.alpha.5 Alpha 预览版\n\n## 下载\n\n每个平台选择**一个**包即可；`portable` 为免安装便携版。\n安装包为所有用户安装，需要管理员授权；macOS 请打开 DMG 内的 NexaCL.pkg。\n所有文件的 SHA256 校验值见附件 `SHA256SUMS`。\n\n### Windows\n\n- `Nexa-2.0.0.alpha.5-win-x64.setup.exe` — Windows 安装包（Inno Setup 向导，可选创建桌面快捷方式）\n- `Nexa-2.0.0.alpha.5-win-x64.msi` — Windows MSI 安装包（适合系统级部署）\n- `Nexa-2.0.0.alpha.5-win-x64.portable.zip` — Windows 便携版（解压即用，免安装）\n- `Nexa-2.0.0.alpha.5-win-arm64.setup.exe` — Windows 安装包（Inno Setup 向导，可选创建桌面快捷方式）\n- `Nexa-2.0.0.alpha.5-win-arm64.msi` — Windows MSI 安装包（适合系统级部署）\n- `Nexa-2.0.0.alpha.5-win-arm64.portable.zip` — Windows 便携版（解压即用，免安装）\n\n### Linux\n\n- `Nexa-2.0.0.alpha.5-linux-x64.deb` — Linux DEB 安装包（Debian / Ubuntu）\n- `Nexa-2.0.0.alpha.5-linux-x64.rpm` — Linux RPM 安装包（Fedora / openSUSE）\n- `Nexa-2.0.0.alpha.5-linux-x64.AppImage` — Linux AppImage（免安装单文件）\n- `Nexa-2.0.0.alpha.5-linux-x64.portable.tar.gz` — Linux 便携版（解压即用）\n- `Nexa-2.0.0.alpha.5-linux-arm64.deb` — Linux DEB 安装包（Debian / Ubuntu）\n- `Nexa-2.0.0.alpha.5-linux-arm64.rpm` — Linux RPM 安装包（Fedora / openSUSE）\n- `Nexa-2.0.0.alpha.5-linux-arm64.AppImage` — Linux AppImage（免安装单文件）\n- `Nexa-2.0.0.alpha.5-linux-arm64.portable.tar.gz` — Linux 便携版（解压即用）\n\n### macOS\n\n- `Nexa-2.0.0.alpha.5-osx-x64.dmg` — macOS 安装映像（打开 NexaCL.pkg，为所有用户安装）\n- `Nexa-2.0.0.alpha.5-osx-x64.portable.tar.gz` — macOS 便携版（解压即用）\n- `Nexa-2.0.0.alpha.5-osx-arm64.dmg` — macOS 安装映像（打开 NexaCL.pkg，为所有用户安装）\n- `Nexa-2.0.0.alpha.5-osx-arm64.portable.tar.gz` — macOS 便携版（解压即用）\n\n`SHA256SUMS` 列出全部文件的哈希。每个包和清单均附有 `.asc` 签名。\n验证发布者时，先核对仓库 `GPG-PUBLIC-KEY.asc` 的指纹为 `5701218D69B531E1A7ED35BB6E31F5974A273AEE`，导入公钥后运行 `gpg --verify SHA256SUMS.asc SHA256SUMS`，再运行 `sha256sum -c SHA256SUMS`。\nOpenPGP 签名不等同于 Windows 代码签名或 macOS 公证。\n## 更新内容\n\n- fix(settings): separate card surfaces from padded content (`2d80795f`)\n- fix(recovery): keep completed installs out of startup task recovery (`fe6eaf29`)\n- feat(instances): filter mods with a segmented category selector (`37fe2f69`)\n- feat(mods): project package health and verified compatible updates (`e2427bce`)\n- fix(ui): keep text input gestures from arming ancestor pagers (`df0569d2`)\n- fix(instances): format resource pack titles consistently (`98e0bd7d`)\n- test(ui): allow animation completion before delayed CI samples (`295dafd3`)\n- fix(instances): correct pack labels card insets and stale recovery previews (`6459b1e4`)\n- fix(recovery): recognize and atomically restore mod enablement changes (`be755b4a`)\n- feat(instances): redesign content lists gallery and installed details (`c3782907`)\n- feat(ui): render styled content names and bounded aspect-fit previews (`2b2678c6`)\n- feat(instances): project bounded local content metadata and artwork (`c3822268`)\n- fix(install): authenticate recovery records outside imported game roots (`2f1da4c8`)\n- fix(updates): refuse unprotected path-based installation application (`078a14f5`)\n- fix(sidecar): make mirror invalidation terminal across all producers (`c22c9664`)\n- fix(state): invalidate derived caches by revision vectors and availability (`55556237`)\n- fix(packaging): require the Linux credential storage client (`c26dd502`)\n- fix(settings): serve committed snapshots without waiting for persistence (`45dac44f`)\n- fix(preflight): keep empirical memory limits advisory and avoid double counting (`07cda5ee`)\n- fix(updates): preserve prerelease identity across launch policies (`041a5814`)\n- docs(xsr): reconcile component completion with implemented product paths (`d07c6354`)\n- feat(instances): add searchable content and recoverable removal (`819a5637`)\n- test(launch): keep concurrent launch fixture alive through window detection (`0ff929ff`)\n- feat(capabilities): probe Linux input bits and macOS HID collections (`87c6c0cb`)\n- feat(preflight): bind scoped repairs to managed Java and install lifetimes (`9acefc0e`)\n- feat(diagnostics): inspect nested mod content and isolate configuration history (`3930e809`)\n- feat(preflight): verify installed loader compatibility against scoped catalogs (`e6cdc587`)\n- feat(recovery): connect selected snapshot rollback and interrupted transaction recovery (`60cf81f4`)\n- fix(install): normalize roots before recording rename transactions (`5245a49c`)\n- fix(install): prune terminal task payloads after safe completion (`5ac5101f`)\n- feat(install): recover renames together with component modifications (`38bc77d3`)\n- feat(install): persist modpack recovery and atomic instance publication (`4d1d7aad`)\n- feat(java): resume verified runtime downloads and coordinate safe exit (`b9dff6f6`)\n- ci(release): preserve Windows installer failure diagnostics (`4284c6ae`)\n- feat(install): own processor lifetime and pin recoverable installers (`f554bf4e`)\n- fix(install): include queued recovery jobs in exit cancellation (`1cbbea36`)\n- feat(desktop): resolve active installations before closing the window (`46fb7fd6`)\n- feat(install): stop active workers with durable pause or rollback (`674c76dd`)\n- fix(install): distinguish paused recovery workers from canceled tasks (`5bcc9d7b`)\n- feat(install): stage new installations and recover interrupted downloads (`2fac5c73`)\n- feat(install): discover and recover modification tasks at desktop startup (`353887b6`)\n- feat(install): persist rollback intent and terminal recovery states (`e43dbde9`)\n- feat(install): resume durable modification preparation and publication (`bcb73948`)\n- feat(install): persist merged addon download identities for recovery (`b3b26593`)\n- feat(install): freeze modification metadata in durable task cache (`3c35c688`)\n- feat(install): persist immutable modification intent before staging (`ba70ddb5`)\n- feat(install): journal version modification publication and rollback (`ee34383e`)\n- feat(recovery): coordinate durable file and settings compensation (`729f5807`)\n- feat(recovery): reserve exclusive root operations without nested install deadlocks (`e859e8f6`)\n- feat(recovery): apply selected files with durable progress and compensating rollback (`c33e960a`)\n- feat(settings): add snapshot storage page with history policy and change lists (`8cb6dcdf`)\n- feat(recovery): retain optional snapshot history and expose bounded storage summaries (`17554a73`)\n- feat(recovery): stage and verify durable restore preparation before live mutations (`f26cc5c1`)\n- feat(recovery): show paged instance changes in crash analysis without blocking UI (`68806883`)\n- feat(recovery): compare files and launch settings against the successful baseline (`fc0173c4`)\n- feat(recovery): capture confirmed normal exits and reclaim unreferenced blobs (`5b27d0f3`)\n- feat(instances): rename versions from the modification page without losing settings (`90900610`)\n- feat(settings): merge instance Java settings into game preferences (`dbc773b6`)\n- feat(recovery): capture bounded instance files and inherited artifacts (`2d860cc4`)\n- feat(recovery): preserve instance launch settings and inherited values (`aa1d3c22`)\n- feat(recovery): store deduplicated content and atomically publish snapshot manifests (`0a8c2562`)\n- feat(recovery): distinguish confirmed successful sessions from launch fallback (`4c30989e`)\n- feat(instances): toggle mods safely and retain the active management page (`4280bf37`)\n- feat(instances): connect management pages and windowed content lists (`10fc10d3`)\n- feat(install): default to standalone versions with optional vanilla inheritance (`aa4f73ea`)\n- feat(instances): project management pages from enabled capabilities (`d5156a8b`)\n- docs(instances): define full dev management parity and capability visibility (`8035f247`)\n- fix(telemetry): enable Windows client certificate authentication and report delivery (`7c382571`)\n- feat(install): recognize local OptiFine installers without executing metadata (`ba1cbd31`)\n- docs(alpha5): record complete six-platform package validation (`1e9b0f13`)\n- test(release): reject Windows uninstall leftovers between package checks (`f32e6fe5`)\n- fix(preflight): invalidate history when persisted game settings change (`7d701db3`)\n- fix(preflight): match enabled mod identities before reusing history (`07fc67bf`)\n- fix(preflight): admit only stable completed runs to resource history (`bd517f2c`)\n- docs(benchmarks): record real pilot evidence without training admission (`ab42784f`)\n- fix(benchmarks): create isolated game root before guarded import (`d58440ac`)\n- fix(benchmarks): run Xvfb beneath container init instead of PID 1 (`e0929968`)\n- test(preflight): verify empty models revoke cached coefficients (`f07f52e6`)\n- docs(alpha5): reconcile telemetry and preflight acceptance evidence (`b5377f60`)\n- fix(benchmarks): keep display probe and client in one X server lifetime (`9e7a6281`)\n- test(launch): keep acquisition fixture alive through window confirmation (`d8b8e748`)\n- fix(preflight): scope resource history to the selected instance directory (`2bb5bd7a`)\n- fix(preflight): exclude disabled mods from fallback memory estimates (`8270f1b9`)\n- fix(benchmarks): validate observation consistency and retain mod dependencies (`a17dece3`)\n- fix(benchmarks): bound and identify runtime startup stalls (`164514ba`)\n- fix(preflight): suspend classpath-only online resource calibration (`ee8347b1`)\n- fix(telemetry): inspect bounded nested Fabric mod candidates (`f8680e4e`)\n- feat(benchmarks): retain bounded loader and mod context with measurements (`44932ca0`)\n- fix(ci): clear expected rejection exit codes after benchmark assertions (`1a22fe1f`)\n- ci(benchmarks): run a pinned modpack client in an isolated pilot (`d023337f`)\n- feat(benchmarks): add isolated modpack import and JNI sampling harness (`3c4d0699`)\n- docs(preflight): define controlled modpack benchmarks for cold-start priors (`d03029ce`)\n- feat(preflight): apply bounded online working-set calibration off the UI path (`13b89163`)\n- feat(preflight): validate and bound downloaded working-set models (`b3f600a4`)\n- docs(preflight): define learned working-set model admission and remaining integration (`56c16d8f`)\n- feat(desktop): add modifier-based version selection for multi-directory drag (`652f23f3`)\n- feat(desktop): bridge version directory drag-out to native file transfers (`adb325af`)\n- fix(desktop): return home immediately while recognizing directory double clicks (`a1fdedf1`)\n- fix(ui): suppress DWM frame shadow while retaining native window styles (`c65fb892`)\n- fix(ui): composite rounded edges outside the preserved scene viewport (`7a809905`)\n- feat(launch): ship and select the validated macOS JVM host (`231764ad`)\n- fix(jvm): retain safe host failure diagnostics for repair (`eac41759`)\n- feat(jvm): execute macOS Java on the native first thread (`7319716f`)\n- test(jvm): cover runtime generations and installed host payloads (`70d8ba68`)\n- feat(launch): route packaged games through isolated JVM host (`402043af`)\n- feat(jvm): execute Java in an isolated native host (`18df56f0`)\n- feat(jvm): define bounded isolated host bootstrap contract (`c971e188`)\n- feat(import): stage required parent versions from the source game root (`8030be89`)\n- fix(launch): deduplicate bootstrap classpaths and retain exit causes (`8bdaf89b`)\n- fix(launch): handle absent core patch metadata in existing instances (`f4b568b7`)\n- refactor(settings): present editable forms instead of catalog content lists (`e66a60a3`)\n- fix(install): enforce actual byte budgets for local jar parsing and patching (`349b4aa6`)\n- fix(preflight): bind final checks to fresh cancellable launch scope (`7fe97b78`)\n- feat(preflight): gate product launches and correlate bounded run diagnostics (`77cf8335`)\n- feat(telemetry): collect bounded errors performance and feature diagnostics (`262ab348`)\n- feat(rollouts): persist local cohorts and gate updates and compiled features (`f37a78e1`)\n- feat(telemetry): separate necessary events from channel-gated diagnostics (`1023bdcf`)\n- fix(accounts): guard LittleSkin refresh and serialize login upserts (`4247a202`)\n- docs(releases): describe system macOS installation (`1ab99839`)\n- docs(updates): lock same-account privileged updater boundary (`57b15c7e`)\n- feat(packaging): install native packages for all users (`506057f6`)\n- fix(releases): sign complete distributions with pinned publisher key (`f4e512ac`)\n- fix(packaging): omit debug bundles from macOS installers (`83cbb6a6`)\n- feat(telemetry): record anonymous game and failure lifecycle facts (`1ff447b8`)\n- fix(inputs): bound file reads and PXML structure before parsing (`d32121f7`)\n- fix(ci): pin release tools runtimes and action commits (`5f8d9d38`)\n- fix(updates): bind advertised and final package versions (`f9735e95`)\n- style(services): order shared archive helper imports (`fbfde629`)\n- fix(updates): require signed ownership before deleting old files (`0439b3ea`)\n- fix(updates): enforce actual archive byte budgets (`303a93c1`)\n- fix(sidecar): bound peer resources and terminate pending exchanges (`81db222b`)\n- fix(accounts): protect live credentials with system-backed encryption (`614dfc74`)\n- fix(accounts): bind Microsoft refresh writes to roster generation (`2c42a59c`)\n- feat(desktop): refresh settings and connect Nexa update and testing policies (`51b0f0d4`)\n- fix(import): validate inheritance and qualify running instance identity (`33e5342d`)\n- fix(tasks): serialize lifecycle publications across registration reuse (`7f8f78f1`)\n- fix(import): bound actual archive reads before publishing instances (`1d4775f2`)\n- fix(setup): accept empty bootstrap folders without following settings links (`a7843229`)\n- feat(setup): add first-run storage and telemetry onboarding (`8c687e9e`)\n- feat(import): install MRPACK and CurseForge packs transactionally (`3f35dd56`)\n- feat(import): add local jar mods core patches and loader installers (`3b758792`)\n- feat(import): route dropped game folders through services (`a93f0f2a`)\n- feat(versions): distinguish delayed selection from directory double click (`c5331b74`)\n- feat(telemetry): add consent-controlled Cloudflare aggregates (`1ba91a98`)\n- feat(settings): connect per-instance overrides to game launches (`51c30fb5`)\n- fix(window): preserve interrupted reveal and collapse to zero (`405cdaa2`)\n- fix(desktop): expand task and process bubbles horizontally (`e159ee40`)\n- fix(capabilities): detect Windows input devices accurately (`ede57b51`)\n\n**完整变更**：`v2.0.0.alpha.4` → `2.0.0.alpha.5`\n",
+      "published_at": "2026-09-26T01:36:44Z",
+      "html_url": "https://github.com/PCL-N-Edition/PCL-N/releases/tag/v2.0.0.alpha.5",
+      "assets": [
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.AppImage",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.AppImage",
+          "size": 39070216
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.AppImage.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.AppImage.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.deb",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.deb",
+          "size": 40458024
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.deb.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.deb.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.portable.tar.gz",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.portable.tar.gz",
+          "size": 40373538
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.rpm",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.rpm",
+          "size": 40402150
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-arm64.rpm.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-arm64.rpm.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.AppImage",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.AppImage",
+          "size": 40770040
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.AppImage.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.AppImage.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.deb",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.deb",
+          "size": 42140168
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.deb.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.deb.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.portable.tar.gz",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.portable.tar.gz",
+          "size": 42062739
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.rpm",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.rpm",
+          "size": 42090746
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-linux-x64.rpm.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-linux-x64.rpm.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-arm64.dmg",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-arm64.dmg",
+          "size": 21266016
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-arm64.dmg.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-arm64.dmg.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-arm64.portable.tar.gz",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-arm64.portable.tar.gz",
+          "size": 20856446
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-arm64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-arm64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-x64.dmg",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-x64.dmg",
+          "size": 22477231
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-x64.dmg.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-x64.dmg.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-x64.portable.tar.gz",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-x64.portable.tar.gz",
+          "size": 22041580
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-osx-x64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-osx-x64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-arm64.msi",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-arm64.msi",
+          "size": 54730752
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-arm64.msi.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-arm64.msi.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-arm64.portable.zip",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-arm64.portable.zip",
+          "size": 69941566
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-arm64.portable.zip.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-arm64.portable.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-arm64.setup.exe",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-arm64.setup.exe",
+          "size": 45991194
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-arm64.setup.exe.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-arm64.setup.exe.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-x64.msi",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-x64.msi",
+          "size": 56487936
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-x64.msi.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-x64.msi.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-x64.portable.zip",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-x64.portable.zip",
+          "size": 71905355
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-x64.portable.zip.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-x64.portable.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-x64.setup.exe",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-x64.setup.exe",
+          "size": 47590822
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.5-win-x64.setup.exe.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/Nexa-2.0.0.alpha.5-win-x64.setup.exe.asc",
+          "size": 228
+        },
+        {
+          "name": "SHA256SUMS",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/SHA256SUMS",
+          "size": 1868
+        },
+        {
+          "name": "SHA256SUMS.asc",
+          "browser_download_url": "https://github.com/PCL-N-Edition/PCL-N/releases/download/v2.0.0.alpha.5/SHA256SUMS.asc",
+          "size": 228
+        }
+      ]
+    },
     {
       "tag_name": "v2.0.0.alpha.4",
       "name": "Nexa 2.0.0.alpha.4",

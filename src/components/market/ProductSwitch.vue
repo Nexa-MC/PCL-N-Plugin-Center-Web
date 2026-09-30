@@ -8,7 +8,7 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 const props = defineProps<{modelValue:string;label:string}>();
 const emit = defineEmits<{ 'update:modelValue':[value:string] }>();
-const options=[{id:'nexa',label:'PCL Nexa 2.0'},{id:'legacy',label:'PCL N 1.x'}];
+const options=[{id:'nexa',label:'NexaCL 2.0'},{id:'legacy',label:'PCL N 1.x'}];
 const root=ref<HTMLElement>(); const position=ref(0);
 let target=0, velocity=0, frame=0, last=0, observer:ResizeObserver;
 let reduced:MediaQueryList;
