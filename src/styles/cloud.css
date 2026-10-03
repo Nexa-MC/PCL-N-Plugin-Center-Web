@@ -61,3 +61,5 @@
 
 /* 商店分类图标改用 KOI SVG 后的尺寸适配(线性图标 38px 会显得过细)。 */
 .resource-art{font-size:32px}
+/* Standalone authentication pages share the site's locale and theme controls. */
+.login-controls{display:flex;align-items:center;gap:8px}

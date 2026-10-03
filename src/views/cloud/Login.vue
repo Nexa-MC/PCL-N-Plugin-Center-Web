@@ -5,27 +5,27 @@
          “确认设备登录”界面(待启动器侧就绪后实现),登录态与 return 机制已具备。 -->
     <header class="login-topbar">
       <router-link class="login-brand" to="/"><strong>NexaCL</strong></router-link>
-      <ThemeControl />
+      <div class="login-controls"><LanguageControl /><ThemeControl /></div>
     </header>
     <main class="login-hero">
-      <p v-if="checking" class="empty-state" role="status">正在检查会话…</p>
+      <p v-if="checking" class="empty-state" role="status">{{ $ui("正在检查会话…") }}</p>
       <div v-else class="login-card">
         <span class="login-mark" aria-hidden="true">N</span>
         <p class="eyebrow card-eyebrow">NEXACL ID</p>
-        <h2>{{ loginStep === 'creds' ? '登录' : '两步验证' }}</h2>
-        <p class="login-sub">{{ loginStep === 'creds' ? '账户 · 订阅 · 下载' : loginUserName }}</p>
+        <h2>{{ loginStep === 'creds' ? $ui("登录") : $ui("两步验证") }}</h2>
+        <p class="login-sub">{{ loginStep === 'creds' ? $ui("账户 · 订阅 · 下载") : loginUserName }}</p>
 
         <Transition :name="stepName" mode="out-in">
           <div v-if="loginStep === 'creds'" key="creds" class="step-pane">
             <form class="credential-form" @submit.prevent="submitLogin">
-              <label>用户 ID<input v-model.trim="loginHandle" autocomplete="username" minlength="6" maxlength="20" required placeholder="6–20 位，字母开头" /></label>
-              <label>密码<input v-model="loginPassword" type="password" autocomplete="current-password" required /></label>
-              <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
-              <button class="primary-button" type="submit" :disabled="loginBusy"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span>{{ loginBusy ? '正在验证…' : '登录' }}</button>
-              <p class="form-switch">没有账户？<router-link to="/register">创建账户</router-link></p>
+              <label>{{ $ui("用户 ID") }}<input v-model.trim="loginHandle" autocomplete="username" minlength="6" maxlength="20" required :placeholder="$ui('6–20 位，字母开头')" /></label>
+              <label>{{ $ui("密码") }}<input v-model="loginPassword" type="password" autocomplete="current-password" required /></label>
+              <p v-if="loginError" class="form-error" role="alert">{{ $ui(loginError) }}</p>
+              <button class="primary-button" type="submit" :disabled="loginBusy"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span>{{ loginBusy ? $ui("正在验证…") : $ui("登录") }}</button>
+              <p class="form-switch">{{ $ui("没有账户？") }}<router-link to="/register">{{ $ui("创建账户") }}</router-link></p>
             </form>
-            <div class="login-divider" aria-hidden="true"><span>或使用第三方账户</span></div>
-            <label class="accept-check"><input type="checkbox" v-model="tosRead" /><span>我接受《<router-link to="/legal/terms">服务条款 v{{ POLICY_VERSION }}</router-link>》，并知悉《<router-link to="/legal/privacy">隐私政策 v{{ POLICY_VERSION }}</router-link>》</span></label>
+            <div class="login-divider" aria-hidden="true"><span>{{ $ui("或使用第三方账户") }}</span></div>
+            <label class="accept-check"><input type="checkbox" v-model="tosRead" /><span>{{ $ui("我接受《") }}<router-link to="/legal/terms">{{ $ui("服务条款 v") }}{{ POLICY_VERSION }}</router-link>{{ $ui("》，并知悉《") }}<router-link to="/legal/privacy">{{ $ui("隐私政策 v") }}{{ POLICY_VERSION }}</router-link>{{ $ui("》") }}</span></label>
             <div class="login-providers">
               <button class="provider-button github" :disabled="busy || !tosRead" @click="oauth('github')"><span v-if="busy && busyProvider === 'github'" class="btn-spinner" aria-hidden="true"></span><svg v-else viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span>GitHub</span></button>
               <button class="provider-button google" :disabled="busy || !tosRead" @click="oauth('google')"><span v-if="busy && busyProvider === 'google'" class="btn-spinner dark" aria-hidden="true"></span><svg v-else viewBox="0 0 48 48" width="16" height="16" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg><span>Google</span></button>
@@ -35,35 +35,35 @@
           <div v-else key="mfa" class="step-pane">
             <form class="credential-form" @submit.prevent="submitMfaCode">
               <template v-if="loginFactors.includes('passkey')">
-                <button class="primary-button passkey-primary" type="button" :disabled="loginBusy" @click="passkeyLogin"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span><KoiIcon v-else name="key-square" /> {{ loginBusy ? '正在验证…' : '使用 passkey 验证' }}</button>
-                <div v-if="hasCodeFactor" class="login-divider" aria-hidden="true"><span>或使用验证码</span></div>
+                <button class="primary-button passkey-primary" type="button" :disabled="loginBusy" @click="passkeyLogin"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span><KoiIcon v-else name="key-square" /> {{ loginBusy ? $ui("正在验证…") : $ui("使用 passkey 验证") }}</button>
+                <div v-if="hasCodeFactor" class="login-divider" aria-hidden="true"><span>{{ $ui("或使用验证码") }}</span></div>
               </template>
               <template v-if="mfaMode === 'app' && loginFactors.includes('totp')">
-                <span class="seg-label">验证器应用 · 6 位动态码</span>
-                <SegmentedCode v-model="appCode" :length="6" charset="digits" label="验证器动态码" :disabled="loginBusy" @complete="onCodeComplete" />
+                <span class="seg-label">{{ $ui("验证器应用 · 6 位动态码") }}</span>
+                <SegmentedCode v-model="appCode" :length="6" charset="digits" :label="$ui('验证器动态码')" :disabled="loginBusy" @complete="onCodeComplete" />
               </template>
               <template v-else-if="mfaMode === 'recovery' && loginFactors.includes('recovery')">
-                <span class="seg-label">恢复码 · 一次性使用</span>
-                <SegmentedCode v-model="recoveryInput" :length="10" charset="alnum" :group-size="5" label="恢复码" :disabled="loginBusy" @complete="onCodeComplete" />
+                <span class="seg-label">{{ $ui("恢复码 · 一次性使用") }}</span>
+                <SegmentedCode v-model="recoveryInput" :length="10" charset="alnum" :group-size="5" :label="$ui('恢复码')" :disabled="loginBusy" @complete="onCodeComplete" />
               </template>
-              <p class="login-fine">优先级：{{ factorLabels }}</p>
-              <p v-if="loginError" class="form-error" role="alert">{{ loginError }}</p>
-              <button class="primary-button" type="submit" :disabled="loginBusy || !currentCode"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span>{{ loginBusy ? '正在验证…' : '验证并登录' }}</button>
+              <p class="login-fine">{{ $ui("优先级：") }}{{ factorLabels }}</p>
+              <p v-if="loginError" class="form-error" role="alert">{{ $ui(loginError) }}</p>
+              <button class="primary-button" type="submit" :disabled="loginBusy || !currentCode"><span v-if="loginBusy" class="btn-spinner" aria-hidden="true"></span>{{ loginBusy ? $ui("正在验证…") : $ui("验证并登录") }}</button>
               <div class="mfa-switch">
-                <button v-if="mfaMode === 'app' && loginFactors.includes('recovery')" class="back-link" type="button" @click="switchMfaMode('recovery')">改用恢复码</button>
-                <button v-if="mfaMode === 'recovery' && loginFactors.includes('totp')" class="back-link" type="button" @click="switchMfaMode('app')">‹ 返回动态码</button>
+                <button v-if="mfaMode === 'app' && loginFactors.includes('recovery')" class="back-link" type="button" @click="switchMfaMode('recovery')">{{ $ui("改用恢复码") }}</button>
+                <button v-if="mfaMode === 'recovery' && loginFactors.includes('totp')" class="back-link" type="button" @click="switchMfaMode('app')">{{ $ui("‹ 返回动态码") }}</button>
               </div>
-              <button class="back-link" type="button" @click="backToCreds">‹ 返回重输密码</button>
+              <button class="back-link" type="button" @click="backToCreds">{{ $ui("‹ 返回重输密码") }}</button>
             </form>
           </div>
         </Transition>
-        <p v-if="oauthError" class="form-error" role="alert">{{ oauthError }}</p>
+        <p v-if="oauthError" class="form-error" role="alert">{{ $ui(oauthError) }}</p>
       </div>
-      <nav class="login-footer" aria-label="页脚">
-        <router-link to="/download">下载</router-link>
-        <router-link to="/changelog">更新日志</router-link>
-        <router-link to="/legal/terms">服务条款</router-link>
-        <router-link to="/legal/privacy">隐私政策</router-link>
+      <nav class="login-footer" :aria-label="$ui('页脚')">
+        <router-link to="/download">{{ $ui("下载") }}</router-link>
+        <router-link to="/changelog">{{ $ui("更新日志") }}</router-link>
+        <router-link to="/legal/terms">{{ $ui("服务条款") }}</router-link>
+        <router-link to="/legal/privacy">{{ $ui("隐私政策") }}</router-link>
       </nav>
     </main>
   </div>
@@ -76,6 +76,8 @@ import { assertPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';
 import KoiIcon from '@/components/KoiIcon.vue';
 import ThemeControl from '@/components/ThemeControl.vue';
+import LanguageControl from '@/components/LanguageControl.vue';
+import { ui } from '@/languages/localize';
 import { applyPageSeo } from '@/utils/seo';
 
 const route = useRoute(), router = useRouter();
@@ -98,7 +100,7 @@ const currentCode = computed(() => mfaMode.value === 'app' ? appCode.value : rec
 const hasCodeFactor = computed(() => loginFactors.value.includes('totp') || loginFactors.value.includes('recovery'));
 const FACTOR_NAMES: Record<string, string> = { passkey: 'Passkey', totp: '验证器动态码', recovery: '恢复码' };
 const FACTOR_ORDER = ['passkey', 'totp', 'recovery'];
-const factorLabels = computed(() => [...loginFactors.value].sort((a, b) => FACTOR_ORDER.indexOf(a) - FACTOR_ORDER.indexOf(b)).map(f => FACTOR_NAMES[f] ?? f).join(' › ') || '—');
+const factorLabels = computed(() => [...loginFactors.value].sort((a, b) => FACTOR_ORDER.indexOf(a) - FACTOR_ORDER.indexOf(b)).map(f => ui(FACTOR_NAMES[f] ?? f)).join(' › ') || '—');
 async function submitLogin() {
   loginBusy.value = true; loginError.value = '';
   try {

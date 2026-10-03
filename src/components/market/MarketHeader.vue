@@ -2,7 +2,7 @@
   <header class="market-header">
     <div class="market-header-inner">
       <router-link class="brand" to="/"><strong>NexaCL</strong></router-link>
-      <nav aria-label="导航"><router-link to="/">主页</router-link><router-link to="/download">下载</router-link><router-link to="/store">商店</router-link><router-link to="/docs">文档</router-link></nav>
+      <nav :aria-label="$ui('导航')"><router-link to="/">{{ $ui("主页") }}</router-link><router-link to="/download">{{ $ui("下载") }}</router-link><router-link to="/store">{{ $ui("商店") }}</router-link><router-link to="/docs">{{ $ui("文档") }}</router-link></nav>
       <ThemeControl />
     </div>
   </header>

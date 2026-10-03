@@ -1,7 +1,7 @@
 <template>
   <section class="placeholder-view" :aria-labelledby="`placeholder-${eyebrow}`">
-    <p class="eyebrow">{{ eyebrow }}</p><h1 :id="`placeholder-${eyebrow}`">{{ title }}</h1>
-    <p v-if="description" class="hero-description">{{ description }}</p>
+    <p class="eyebrow">{{ $ui(eyebrow) }}</p><h1 :id="`placeholder-${eyebrow}`">{{ $ui(title) }}</h1>
+    <p v-if="description" class="hero-description">{{ $ui(description) }}</p>
   </section>
 </template>
 <script setup lang="ts">

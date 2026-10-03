@@ -1,183 +1,184 @@
 <template>
-  <p v-if="checking" class="empty-state" role="status">正在检查会话…</p>
+  <p v-if="checking" class="empty-state" role="status">{{ $ui("正在检查会话…") }}</p>
   <div v-else-if="session && !session.termsAccepted && !['privacy', 'delete', 'wallet'].includes(section)" class="account-panel">
     <section class="work-panel accept-panel">
-      <span class="status-pill">需要确认</span>
-      <h2>接受《Nexa Cloud 服务条款 v1.1》</h2>
-      <p>在继续使用账户功能前，请阅读并接受当前生效的服务条款。《<router-link to="/legal/privacy">隐私政策</router-link>》说明了数据处理方式，将随接受一并记录。</p>
-      <label class="accept-check"><input type="checkbox" v-model="acceptChecked" />我已阅读并接受《<router-link to="/legal/terms">Nexa Cloud 服务条款 v1.1</router-link>》，并知悉《隐私政策》的内容。</label>
-      <p v-if="error" class="form-error" role="alert">{{ error }}</p>
-      <button class="primary-button" :disabled="busy || !acceptChecked" @click="accept">接受并继续</button>
-      <p><router-link to="/account?section=privacy">隐私与数据</router-link> · <router-link to="/account?section=wallet">管理订阅</router-link> · <router-link to="/account/delete">注销账户</router-link></p>
+      <span class="status-pill">{{ $ui("需要确认") }}</span>
+      <h2>{{ $ui("接受《Nexa Cloud 服务条款 v1.1》") }}</h2>
+      <p>{{ $ui("在继续使用账户功能前，请阅读并接受当前生效的服务条款。《") }}<router-link to="/legal/privacy">{{ $ui("隐私政策") }}</router-link>{{ $ui("》说明了数据处理方式，将随接受一并记录。") }}</p>
+      <label class="accept-check"><input type="checkbox" v-model="acceptChecked" />{{ $ui("我已阅读并接受《") }}<router-link to="/legal/terms">{{ $ui("Nexa Cloud 服务条款 v1.1") }}</router-link>{{ $ui("》，并知悉《隐私政策》的内容。") }}</label>
+      <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
+      <button class="primary-button" :disabled="busy || !acceptChecked" @click="accept">{{ $ui("接受并继续") }}</button>
+      <p><router-link to="/account?section=privacy">{{ $ui("隐私与数据") }}</router-link> · <router-link to="/account?section=wallet">{{ $ui("管理订阅") }}</router-link> · <router-link to="/account/delete">{{ $ui("注销账户") }}</router-link></p>
     </section>
   </div>
   <div v-else-if="session" class="account-layout">
-    <nav class="account-nav" aria-label="账户分类">
-      <button v-for="item in navItems" :key="item.key" type="button" :class="{ active: section === item.key }" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span>{{ item.label }}</button>
+    <nav class="account-nav" :aria-label="$ui('账户分类')">
+      <button v-for="item in navItems" :key="item.key" type="button" :class="{ active: section === item.key }" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span>{{ $ui(item.label) }}</button>
     </nav>
     <div class="account-panel">
-      <p v-if="error" class="form-error" role="alert">{{ error }}</p>
+      <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
 
       <template v-if="section === 'overview'">
-        <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">ACCOUNT</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || '第三方身份账户' }}</p><span class="status-pill">已登录</span></div></div><div class="shortcut-grid"><button v-for="item in navItems.filter(i => i.key !== 'overview')" :key="item.key" type="button" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span><span>{{ item.label }}</span></button></div></section>
+        <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">{{ $ui("账户") }}</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || $ui("第三方身份账户") }}</p><span class="status-pill">{{ $ui("已登录") }}</span></div></div><div class="shortcut-grid"><button v-for="item in navItems.filter(i => i.key !== 'overview')" :key="item.key" type="button" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span><span>{{ $ui(item.label) }}</span></button></div></section>
         <AccountProgress :progression="progression" :busy="levelBusy" :error="levelError" @refresh="loadProgression" @select="selectDisplay" />
-        <section class="work-panel"><h2>会话</h2><p>登录状态 24 小时有效。</p><button class="danger-button" :disabled="busy" @click="logout">退出登录</button></section>
+        <section class="work-panel"><h2>{{ $ui("会话") }}</h2><p>{{ $ui("登录状态 24 小时有效。") }}</p><button class="danger-button" :disabled="busy" @click="logout">{{ $ui("退出登录") }}</button></section>
       </template>
 
       <template v-else-if="section === 'linked'">
-        <section class="work-panel"><h2>关联的账号</h2><p>GitHub、Google 和 Microsoft 用于登录 Nexa；至少保留一个登录方式。</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} · 已关联</small><small v-else>尚未关联</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">关联 {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">解除关联</button><span v-else class="status-pill">唯一登录方式</span></div></section>
+        <section class="work-panel"><h2>{{ $ui("关联的账号") }}</h2><p>{{ $ui("GitHub、Google 和 Microsoft 用于登录 Nexa；至少保留一个登录方式。") }}</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} {{ $ui("· 已关联") }}</small><small v-else>{{ $ui("尚未关联") }}</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">{{ $ui("关联") }} {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">{{ $ui("解除关联") }}</button><span v-else class="status-pill">{{ $ui("唯一登录方式") }}</span></div></section>
         <section v-if="bound('microsoft')" class="work-panel">
           <h2>Minecraft</h2>
-          <p>单独授权 Xbox / Minecraft 权限，同步游戏拥有状况与档案。所选游戏账户独立关联到当前 Nexa 账户。</p>
-          <p v-if="minecraftLoading" role="status">正在读取游戏档案…</p>
+          <p>{{ $ui("单独授权 Xbox / Minecraft 权限，同步游戏拥有状况与档案。所选游戏账户独立关联到当前 Nexa 账户。") }}</p>
+          <p v-if="minecraftLoading" role="status">{{ $ui("正在读取游戏档案…") }}</p>
           <p v-else>{{ minecraftText }}</p>
-          <p v-if="minecraftError" class="form-error" role="alert">{{ minecraftError }}</p>
-          <p v-if="minecraftMessage" class="form-success" role="status">{{ minecraftMessage }}</p>
-          <div class="actions"><button class="secondary-button" :disabled="busy || minecraftLoading || testMode" @click="authorizeMinecraft">授权 Minecraft</button><button v-if="minecraft?.xboxAuthorized || minecraft?.checkedAt" class="danger-button" :disabled="busy || minecraftLoading || testMode" @click="revokeMinecraftAuthorization">撤销游戏授权</button></div>
+          <p v-if="minecraftError" class="form-error" role="alert">{{ $ui(minecraftError) }}</p>
+          <p v-if="minecraftMessage" class="form-success" role="status">{{ $ui(minecraftMessage) }}</p>
+          <div class="actions"><button class="secondary-button" :disabled="busy || minecraftLoading || testMode" @click="authorizeMinecraft">{{ $ui("授权 Minecraft") }}</button><button v-if="minecraft?.xboxAuthorized || minecraft?.checkedAt" class="danger-button" :disabled="busy || minecraftLoading || testMode" @click="revokeMinecraftAuthorization">{{ $ui("撤销游戏授权") }}</button></div>
         </section>
-        <section class="work-panel"><h2>社区与赞助账户</h2><div v-for="connection in connections" :key="connection.provider" class="identity-row"><div class="meta"><h3>{{ connection.label }}</h3><small v-if="connection.account">{{ connection.account.name || connection.account.subject }} · 已绑定</small><small v-else>{{ connection.configured ? '尚未绑定' : '暂未开放' }}</small></div><button v-if="!connection.account" class="secondary-button" :disabled="busy || !connection.configured || testMode" @click="bindConnection(connection.provider)">绑定</button><button v-else class="danger-button" :disabled="busy" @click="removeConnection(connection.provider)">解除绑定</button></div><p v-if="connectionError" class="form-error" role="alert">{{ connectionError }}</p><p v-if="connectionMessage" class="form-success" role="status">{{ connectionMessage }}</p></section>
+        <section class="work-panel"><h2>{{ $ui("社区与赞助账户") }}</h2><div v-for="connection in connections" :key="connection.provider" class="identity-row"><div class="meta"><h3>{{ $ui(connection.label) }}</h3><small v-if="connection.account">{{ connection.account.name || connection.account.subject }} {{ $ui("· 已绑定") }}</small><small v-else>{{ connection.configured ? $ui("尚未绑定") : $ui("暂未开放") }}</small></div><button v-if="!connection.account" class="secondary-button" :disabled="busy || !connection.configured || testMode" @click="bindConnection(connection.provider)">{{ $ui("绑定") }}</button><button v-else class="danger-button" :disabled="busy" @click="removeConnection(connection.provider)">{{ $ui("解除绑定") }}</button></div><p v-if="connectionError" class="form-error" role="alert">{{ $ui(connectionError) }}</p><p v-if="connectionMessage" class="form-success" role="status">{{ $ui(connectionMessage) }}</p></section>
       </template>
 
       <template v-else-if="section === 'security'">
         <section class="work-panel">
-          <h2>安全性与登录</h2>
-          <div class="profile-row"><span>登录方式</span><strong>{{ factors?.passwordSet ? '第三方 OAuth + 用户 ID 密码（强制两步验证）' : '第三方 OAuth（GitHub / Google / Microsoft）' }}</strong></div>
-          <div class="profile-row"><span>登录密码</span><strong>{{ factors ? (factors.passwordSet ? '已设置' : '未设置') : '正在读取…' }}</strong><button v-if="!testMode && factors" class="secondary-button row-action" :disabled="pwDialog.busy" @click="openPasswordDialog">{{ factors.passwordSet ? '修改密码' : '设置密码' }}</button></div>
-          <div class="profile-row"><span>会话有效期</span><strong>24 小时</strong></div>
+          <h2>{{ $ui("安全性与登录") }}</h2>
+          <div class="profile-row"><span>{{ $ui("登录方式") }}</span><strong>{{ factors?.passwordSet ? $ui("第三方 OAuth + 用户 ID 密码（强制两步验证）") : $ui("第三方 OAuth（GitHub / Google / Microsoft）") }}</strong></div>
+          <div class="profile-row"><span>{{ $ui("登录密码") }}</span><strong>{{ factors ? (factors.passwordSet ? $ui("已设置") : $ui("未设置")) : $ui("正在读取…") }}</strong><button v-if="!testMode && factors" class="secondary-button row-action" :disabled="pwDialog.busy" @click="openPasswordDialog">{{ factors.passwordSet ? $ui("修改密码") : $ui("设置密码") }}</button></div>
+          <div class="profile-row"><span>{{ $ui("会话有效期") }}</span><strong>{{ $ui("24 小时") }}</strong></div>
           
-          <p v-if="securityMsg" class="form-success" role="status">{{ securityMsg }}</p>
+          <p v-if="securityMsg" class="form-success" role="status">{{ $ui(securityMsg) }}</p>
           
-          <button class="danger-button" :disabled="busy" @click="logout">退出所有设备</button>
+          <button class="danger-button" :disabled="busy" @click="logout">{{ $ui("退出所有设备") }}</button>
         </section>
-        <p v-if="testMode" class="test-mode-note">前端测试账户不连接真实认证服务。</p>
+        <p v-if="testMode" class="test-mode-note">{{ $ui("前端测试账户不连接真实认证服务。") }}</p>
         <section v-else class="work-panel">
-          <div class="section-heading"><div><h2>两步验证（2FA）</h2></div><button class="secondary-button" :disabled="factorsLoading" @click="refreshFactors">刷新</button></div>
-          <p>优先级：<strong>Passkey › 验证器应用 › 恢复码</strong>。</p>
-          <p v-if="factorsLoading && !factors">正在读取…</p>
+          <div class="section-heading"><div><h2>{{ $ui("两步验证（2FA）") }}</h2></div><button class="secondary-button" :disabled="factorsLoading" @click="refreshFactors">{{ $ui("刷新") }}</button></div>
+          <p>{{ $ui("优先级：") }}<strong>{{ $ui("Passkey › 验证器应用 › 恢复码") }}</strong>{{ $ui("。") }}</p>
+          <p v-if="factorsLoading && !factors">{{ $ui("正在读取…") }}</p>
           <template v-else-if="factors">
-            <h3 class="factor-title">Passkey（{{ factors.passkeys.length }}/10）</h3>
-            <p v-if="!factors.passkeys.length" class="factor-empty">推荐：指纹 / 面容 / 设备 PIN，无需记码。</p>
-            <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true"><KoiIcon name="key-square" /></span><div class="meta"><h3>{{ pk.name || '未命名 passkey' }}</h3><small>注册于 {{ new Date(pk.createdAt).toLocaleString() }}{{ pk.lastUsedAt ? ` · 最近使用 ${new Date(pk.lastUsedAt).toLocaleString()}` : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId, pk.name)">移除</button></div>
-            <div class="actions"><button class="primary-button" :disabled="mfaBusy || passkeyDialog.busy || factors.passkeys.length >= 10" @click="openPasskeyDialog">添加 passkey</button></div>
-            <h3 class="factor-title">验证器应用（TOTP · {{ confirmedTotpCount }}/10）</h3>
-            <p v-if="!factors.totp.length" class="factor-empty">用 Authenticator 应用生成 6 位动态码，可注册多台设备。</p>
-            <div v-for="device in factors.totp.filter(t => t.confirmed)" :key="device.id" class="identity-row"><span class="identity-icon" aria-hidden="true"><KoiIcon name="timer" /></span><div class="meta"><h3>{{ device.name || '未命名验证器' }}</h3><small>启用于 {{ device.confirmedAt ? new Date(device.confirmedAt).toLocaleString() : '—' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removeTotp(device.id, device.name)">停用</button></div>
-            <p v-if="factors.totp.some(t => !t.confirmed)" class="factor-empty">存在未确认的注册（15 分钟后自动清理），可重新发起。</p>
-            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || totpDialog.busy || factors.totp.length >= 10" @click="startTotp">添加验证器应用</button></div>
-            <h3 class="factor-title">恢复码（剩余 {{ factors.recovery.count }}）</h3>
-            <p class="factor-empty">应急登录用，一次性；重新生成作废旧码。</p>
-            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!confirmedTotpCount && !factors.passkeys.length)" @click="generateRecovery">生成 10 个恢复码</button><button v-if="factors.recovery.count" class="secondary-button" :disabled="mfaBusy" @click="revealRecovery">查看 / 打印</button></div>
-            <p v-if="mfaError" class="form-error" role="alert">{{ mfaError }}</p>
-            <p v-if="mfaMsg" class="form-success" role="status">{{ mfaMsg }}</p>
+            <h3 class="factor-title">{{ $ui("Passkey（") }}{{ factors.passkeys.length }}/10{{ $ui("）") }}</h3>
+            <p v-if="!factors.passkeys.length" class="factor-empty">{{ $ui("推荐：指纹 / 面容 / 设备 PIN，无需记码。") }}</p>
+            <div v-for="pk in factors.passkeys" :key="pk.credentialId" class="identity-row"><span class="identity-icon" aria-hidden="true"><KoiIcon name="key-square" /></span><div class="meta"><h3>{{ pk.name || $ui("未命名 passkey") }}</h3><small>{{ $ui("注册于") }} {{ new Date(pk.createdAt).toLocaleString($locale) }}{{ pk.lastUsedAt ? $ui(" · 最近使用 {0}", [new Date(pk.lastUsedAt).toLocaleString($locale)]) : '' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removePasskey(pk.credentialId, pk.name)">{{ $ui("移除") }}</button></div>
+            <div class="actions"><button class="primary-button" :disabled="mfaBusy || passkeyDialog.busy || factors.passkeys.length >= 10" @click="openPasskeyDialog">{{ $ui("添加 passkey") }}</button></div>
+            <h3 class="factor-title">{{ $ui("验证器应用（TOTP ·") }} {{ confirmedTotpCount }}/10）</h3>
+            <p v-if="!factors.totp.length" class="factor-empty">{{ $ui("用 Authenticator 应用生成 6 位动态码，可注册多台设备。") }}</p>
+            <div v-for="device in factors.totp.filter(t => t.confirmed)" :key="device.id" class="identity-row"><span class="identity-icon" aria-hidden="true"><KoiIcon name="timer" /></span><div class="meta"><h3>{{ device.name || $ui("未命名验证器") }}</h3><small>{{ $ui("启用于") }} {{ device.confirmedAt ? new Date(device.confirmedAt).toLocaleString($locale) : '—' }}</small></div><button class="danger-button" :disabled="mfaBusy" @click="removeTotp(device.id, device.name)">{{ $ui("停用") }}</button></div>
+            <p v-if="factors.totp.some(t => !t.confirmed)" class="factor-empty">{{ $ui("存在未确认的注册（15 分钟后自动清理），可重新发起。") }}</p>
+            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || totpDialog.busy || factors.totp.length >= 10" @click="startTotp">{{ $ui("添加验证器应用") }}</button></div>
+            <h3 class="factor-title">{{ $ui("恢复码（剩余") }} {{ factors.recovery.count }}）</h3>
+            <p class="factor-empty">{{ $ui("应急登录用，一次性；重新生成作废旧码。") }}</p>
+            <div class="actions"><button class="secondary-button" :disabled="mfaBusy || (!confirmedTotpCount && !factors.passkeys.length)" @click="generateRecovery">{{ $ui("生成 10 个恢复码") }}</button><button v-if="factors.recovery.count" class="secondary-button" :disabled="mfaBusy" @click="revealRecovery">{{ $ui("查看 / 打印") }}</button></div>
+            <p v-if="mfaError" class="form-error" role="alert">{{ $ui(mfaError) }}</p>
+            <p v-if="mfaMsg" class="form-success" role="status">{{ $ui(mfaMsg) }}</p>
           </template>
         </section>
       </template>
 
       <template v-else-if="section === 'privacy'">
-        <section class="work-panel"><h2>政策确认记录</h2><template v-if="policies.length"><div v-for="p in policies" :key="p.kind" class="profile-row"><span>{{ p.kind === 'terms' ? '服务条款' : '隐私政策' }} v{{ p.version }}</span><strong>{{ p.acceptedAt ? `${p.kind === 'privacy' ? '已知悉' : '已接受'} · ${new Date(p.acceptedAt).toLocaleString()}` : (p.kind === 'privacy' ? '未记录知悉' : '未接受') }}</strong></div><p class="legal-hashes">文档哈希（SHA-256）：{{ policies.map(p => `${p.kind}:${p.contentHash.slice(0, 16)}…`).join('　') }}</p></template><p v-else>正在读取…</p><p>历史版本见 <router-link to="/legal">法律文档索引</router-link>。</p></section>
-        <section class="work-panel"><h2>数据导出</h2><p>导出账户资料、关联身份、会话状态、政策接受与隐私请求记录（JSON，不含凭据与哈希）。</p><button class="primary-button" :disabled="busy" @click="exportData">下载我的数据</button></section>
-        <section class="work-panel"><h2>隐私请求</h2><p>根据《隐私政策》第 11 条，你可以在此提交查阅、更正、删除、可携带、限制或异议请求，我们会通过 privacy@pcln.top 处理。</p><label class="privacy-select">请求类型<select v-model="privacyType"><option value="access">查阅 / 复制</option><option value="correction">更正 / 补充</option><option value="portability">数据可携带副本</option><option value="objection">限制或异议</option><option value="other">其他</option></select></label><button class="secondary-button" :disabled="busy" @click="submitPrivacy">提交请求</button><div v-if="privacyList.length" class="privacy-list"><div v-for="r in privacyList" :key="r.id" class="profile-row"><span>{{ privacyLabel(r.type) }} · {{ new Date(r.createdAt).toLocaleDateString() }}</span><span class="status-pill">{{ privacyState(r.state) }}</span></div></div></section>
+        <section class="work-panel"><h2>{{ $ui("政策确认记录") }}</h2><template v-if="policies.length"><div v-for="p in policies" :key="p.kind" class="profile-row"><span>{{ p.kind === 'terms' ? $ui("服务条款") : $ui("隐私政策") }} v{{ p.version }}</span><strong>{{ p.acceptedAt ? `${p.kind === 'privacy' ? $ui("已知悉") : $ui("已接受")} · ${new Date(p.acceptedAt).toLocaleString($locale)}` : (p.kind === 'privacy' ? $ui("未记录知悉") : $ui("未接受")) }}</strong></div><p class="legal-hashes">{{ $ui("文档哈希（SHA-256）：") }}{{ policies.map(p => `${p.kind}:${p.contentHash.slice(0, 16)}…`).join('　') }}</p></template><p v-else>{{ $ui("正在读取…") }}</p><p>{{ $ui("历史版本见") }} <router-link to="/legal">{{ $ui("法律文档索引") }}</router-link>{{ $ui("。") }}</p></section>
+        <section class="work-panel"><h2>{{ $ui("数据导出") }}</h2><p>{{ $ui("导出账户资料、关联身份、会话状态、政策接受与隐私请求记录（JSON，不含凭据与哈希）。") }}</p><button class="primary-button" :disabled="busy" @click="exportData">{{ $ui("下载我的数据") }}</button></section>
+        <section class="work-panel"><h2>{{ $ui("隐私请求") }}</h2><p>{{ $ui("根据《隐私政策》第 11 条，你可以在此提交查阅、更正、删除、可携带、限制或异议请求，我们会通过 privacy@pcln.top 处理。") }}</p><label class="privacy-select">{{ $ui("请求类型") }}<select v-model="privacyType"><option value="access">{{ $ui("查阅 / 复制") }}</option><option value="correction">{{ $ui("更正 / 补充") }}</option><option value="portability">{{ $ui("数据可携带副本") }}</option><option value="objection">{{ $ui("限制或异议") }}</option><option value="other">{{ $ui("其他") }}</option></select></label><button class="secondary-button" :disabled="busy" @click="submitPrivacy">{{ $ui("提交请求") }}</button><div v-if="privacyList.length" class="privacy-list"><div v-for="r in privacyList" :key="r.id" class="profile-row"><span>{{ $ui(privacyLabel(r.type)) }} · {{ new Date(r.createdAt).toLocaleDateString($locale) }}</span><span class="status-pill">{{ $ui(privacyState(r.state)) }}</span></div></div></section>
       </template>
 
       <template v-else-if="section === 'delete'">
-        <section class="work-panel"><h2>删除账户</h2><template v-if="deletion && deletion.state === 'pending'"><span class="status-pill">注销已申请</span><p>注销将于 <strong>{{ new Date(deletion.executeAfter || 0).toLocaleString() }}</strong> 生效（7 天冷静期）。在此之前登录并撤销，即可取消注销。</p><button class="danger-button" :disabled="busy" @click="cancelDeletion">撤销注销申请</button></template><template v-else-if="deletion && deletion.state === 'finalized'"><span class="status-pill">已注销</span><p>该账户已完成注销，个人资料已删除或匿名化。此页面仅为记录。</p></template><template v-else><p>注销申请设有 <strong>7 天冷静期</strong>。生效后将撤销全部会话、解绑第三方身份、删除或匿名化账户资料；依法需要保留的记录将与普通账户分离受限保存。与组织或发布资源相关的关系将转移至不可登录的系统保管主体，资源立即下架。</p><label class="delete-confirm">输入账户名 <strong>{{ session.name }}</strong> 以确认<input v-model="deleteConfirm" :placeholder="session.name" /></label><p v-if="deleteError" class="form-error" role="alert">{{ deleteError }}</p><button class="danger-button" :disabled="busy || deleteConfirm !== session.name" @click="requestDeletion">申请删除账户</button></template></section>
+        <section class="work-panel"><h2>{{ $ui("删除账户") }}</h2><template v-if="deletion && deletion.state === 'pending'"><span class="status-pill">{{ $ui("注销已申请") }}</span><p>{{ $ui("注销将于") }} <strong>{{ new Date(deletion.executeAfter || 0).toLocaleString($locale) }}</strong> {{ $ui("生效（7 天冷静期）。在此之前登录并撤销，即可取消注销。") }}</p><button class="danger-button" :disabled="busy" @click="cancelDeletion">{{ $ui("撤销注销申请") }}</button></template><template v-else-if="deletion && deletion.state === 'finalized'"><span class="status-pill">{{ $ui("已注销") }}</span><p>{{ $ui("该账户已完成注销，个人资料已删除或匿名化。此页面仅为记录。") }}</p></template><template v-else><p>{{ $ui("注销申请设有") }} <strong>{{ $ui("7 天冷静期") }}</strong>{{ $ui("。生效后将撤销全部会话、解绑第三方身份、删除或匿名化账户资料；依法需要保留的记录将与普通账户分离受限保存。与组织或发布资源相关的关系将转移至不可登录的系统保管主体，资源立即下架。") }}</p><label class="delete-confirm">{{ $ui("输入账户名") }} <strong>{{ session.name }}</strong> {{ $ui("以确认") }}<input v-model="deleteConfirm" :placeholder="session.name" /></label><p v-if="deleteError" class="form-error" role="alert">{{ $ui(deleteError) }}</p><button class="danger-button" :disabled="busy || deleteConfirm !== session.name" @click="requestDeletion">{{ $ui("申请删除账户") }}</button></template></section>
       </template>
 
       <template v-else-if="section === 'tickets'">
-        <section class="work-panel"><div class="section-heading"><div><h2>支持工单</h2></div><button class="secondary-button" :disabled="busy" @click="loadTickets">刷新</button></div><div class="category-tabs"><button :class="{active: !showResolved}" @click="showResolved = false">待处理</button><button :class="{active: showResolved}" @click="showResolved = true">已解决</button></div><div v-if="ticketsLoaded && !visibleTickets.length" class="empty-state"><h3>{{ showResolved ? '还没有已解决的请求' : '暂无待办' }}</h3></div><article v-for="ticket in visibleTickets" :key="ticket.id" class="ticket-row"><div><small>{{ new Date(ticket.created_at).toLocaleString() }}</small><h3>{{ ticket.subject }}</h3><p>{{ ticket.body }}</p></div><span class="status-pill">{{ ticket.status === 'open' ? '待处理' : '已解决' }}</span></article><div class="pagination" v-if="total > 50"><button class="secondary-button" :disabled="offset === 0 || busy" @click="offset -= 50; loadTickets()">上一页</button><span>{{ offset + 1 }}–{{ Math.min(offset + 50, total) }} / {{ total }}</span><button class="secondary-button" :disabled="offset + 50 >= total || busy" @click="offset += 50; loadTickets()">下一页</button></div></section>
-        <form class="work-panel support-form" @submit.prevent="submit"><h2>新建工单</h2><label>标题<input v-model="subject" required maxlength="120" /></label><label>详细说明<textarea v-model="body" required maxlength="4000" rows="4" /></label><button class="primary-button" :disabled="busy">提交</button><span v-if="message" class="form-success" role="status">{{ message }}</span></form>
+        <section class="work-panel"><div class="section-heading"><div><h2>{{ $ui("支持工单") }}</h2></div><button class="secondary-button" :disabled="busy" @click="loadTickets">{{ $ui("刷新") }}</button></div><div class="category-tabs"><button :class="{active: !showResolved}" @click="showResolved = false">{{ $ui("待处理") }}</button><button :class="{active: showResolved}" @click="showResolved = true">{{ $ui("已解决") }}</button></div><div v-if="ticketsLoaded && !visibleTickets.length" class="empty-state"><h3>{{ showResolved ? $ui("还没有已解决的请求") : $ui("暂无待办") }}</h3></div><article v-for="ticket in visibleTickets" :key="ticket.id" class="ticket-row"><div><small>{{ new Date(ticket.created_at).toLocaleString($locale) }}</small><h3>{{ ticket.subject }}</h3><p>{{ ticket.body }}</p></div><span class="status-pill">{{ ticket.status === 'open' ? $ui("待处理") : $ui("已解决") }}</span></article><div class="pagination" v-if="total > 50"><button class="secondary-button" :disabled="offset === 0 || busy" @click="offset -= 50; loadTickets()">{{ $ui("上一页") }}</button><span>{{ offset + 1 }}–{{ Math.min(offset + 50, total) }} / {{ total }}</span><button class="secondary-button" :disabled="offset + 50 >= total || busy" @click="offset += 50; loadTickets()">{{ $ui("下一页") }}</button></div></section>
+        <form class="work-panel support-form" @submit.prevent="submit"><h2>{{ $ui("新建工单") }}</h2><label>{{ $ui("标题") }}<input v-model="subject" required maxlength="120" /></label><label>{{ $ui("详细说明") }}<textarea v-model="body" required maxlength="4000" rows="4" /></label><button class="primary-button" :disabled="busy">{{ $ui("提交") }}</button><span v-if="message" class="form-success" role="status">{{ $ui(message) }}</span></form>
       </template>
 
       <template v-else-if="section === 'profile'">
         <section class="work-panel">
-          <h2>个人信息</h2>
-          <div class="profile-row"><span>账户名</span><strong>{{ session.name }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="nameDialog.busy" @click="openNameDialog">修改</button></div>
-          <div class="profile-row"><span>用户 ID</span><strong>{{ session.handle ? '@' + session.handle : '未设置' }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="handleDialog.busy" @click="openHandleDialog">{{ session.handle ? '修改' : '设置' }}</button></div>
-          <div class="profile-row"><span>邮箱</span><strong>{{ session.email || '未提供' }}</strong></div>
-          <div class="profile-row"><span>账户 ID</span><strong>{{ session.id }}</strong></div>
-          <p>邮箱只读，来自第三方身份提供商。</p>
-          <p v-if="profileMsg" class="form-success" role="status">{{ profileMsg }}</p>
+          <h2>{{ $ui("个人信息") }}</h2>
+          <div class="profile-row"><span>{{ $ui("账户名") }}</span><strong>{{ session.name }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="nameDialog.busy" @click="openNameDialog">{{ $ui("修改") }}</button></div>
+          <div class="profile-row"><span>{{ $ui("用户 ID") }}</span><strong>{{ session.handle ? '@' + session.handle : $ui("未设置") }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="handleDialog.busy" @click="openHandleDialog">{{ session.handle ? $ui("修改") : $ui("设置") }}</button></div>
+          <div class="profile-row"><span>{{ $ui("邮箱") }}</span><strong>{{ session.email || $ui("未提供") }}</strong></div>
+          <div class="profile-row"><span>{{ $ui("账户 ID") }}</span><strong>{{ session.id }}</strong></div>
+          <p>{{ $ui("邮箱只读，来自第三方身份提供商。") }}</p>
+          <p v-if="profileMsg" class="form-success" role="status">{{ $ui(profileMsg) }}</p>
         </section>
-        <p v-if="testMode" class="test-mode-note">前端测试账户不连接真实认证服务。</p>
+        <p v-if="testMode" class="test-mode-note">{{ $ui("前端测试账户不连接真实认证服务。") }}</p>
       </template>
 
       <template v-else-if="section === 'wallet'">
-        <section class="work-panel"><h2>钱包与订阅</h2><div class="profile-row"><span>当前会员等级</span><strong>{{ entitlements?.membership.name || (portalError ? '读取失败' : '正在读取…') }}</strong></div><div v-if="entitlements?.cloudPlus" class="profile-row"><span>订阅状态</span><strong>{{ entitlements.membership.status === 'trialing' ? '试用中' : '已激活' }}{{ entitlements.membership.billingCycle === 'year' ? ' · 年付' : entitlements.membership.billingCycle === 'month' ? ' · 月付' : '' }}</strong></div><p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">订阅变更将在当前计费周期结束时生效。</p><div class="actions"><router-link class="primary-button" to="/pricing">查看套餐与价格</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">管理订阅</button></div><p v-if="portalError" class="form-error" role="alert">{{ portalError }}</p><p class="login-fine">支付方式、取消与发票在 Paddle 客户门户管理。<router-link to="/legal/refunds">退款政策</router-link></p></section>
+        <section class="work-panel"><h2>{{ $ui("钱包与订阅") }}</h2><div class="profile-row"><span>{{ $ui("当前会员等级") }}</span><strong>{{ $ui(entitlements?.membership.name || (portalError ? "读取失败" : "正在读取…")) }}</strong></div><div v-if="entitlements?.cloudPlus" class="profile-row"><span>{{ $ui("订阅状态") }}</span><strong>{{ entitlements.membership.status === 'trialing' ? $ui("试用中") : $ui("已激活") }}{{ entitlements.membership.billingCycle === 'year' ? $ui(" · 年付") : entitlements.membership.billingCycle === 'month' ? $ui(" · 月付") : '' }}</strong></div><p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">{{ $ui("订阅变更将在当前计费周期结束时生效。") }}</p><div class="actions"><router-link class="primary-button" to="/pricing">{{ $ui("查看套餐与价格") }}</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">{{ $ui("管理订阅") }}</button></div><p v-if="portalError" class="form-error" role="alert">{{ $ui(portalError) }}</p><p class="login-fine">{{ $ui("支付方式、取消与发票在 Paddle 客户门户管理。") }}<router-link to="/legal/refunds">{{ $ui("退款政策") }}</router-link></p></section>
       </template>
 
       <template v-else-if="section === 'developer'">
-        <section v-if="session.developer" class="work-panel"><span class="status-pill">已具备资格</span><h2>开发者管理控制台</h2><p>发布者工作空间、资源提交与管理功能正在接入，入口将在此开放。</p></section>
-        <section v-else class="work-panel"><h2>申请开发者资格</h2><p>获得资格后可以创建发布者组织并提交插件、界面资源与模板。审批流程即将开放，届时可直接在此提交申请。</p><button class="primary-button" disabled>申请入口即将开放</button></section>
+        <section v-if="session.developer" class="work-panel"><span class="status-pill">{{ $ui("已具备资格") }}</span><h2>{{ $ui("开发者管理控制台") }}</h2><p>{{ $ui("发布者工作空间、资源提交与管理功能正在接入，入口将在此开放。") }}</p></section>
+        <section v-else class="work-panel"><h2>{{ $ui("申请开发者资格") }}</h2><p>{{ $ui("获得资格后可以创建发布者组织并提交插件、界面资源与模板。审批流程即将开放，届时可直接在此提交申请。") }}</p><button class="primary-button" disabled>{{ $ui("申请入口即将开放") }}</button></section>
       </template>
 
       <template v-else-if="section === 'website'">
         <template v-if="session.staff">
           <section class="work-panel">
-            <div class="section-heading"><div><span class="status-pill">已具备资格</span><h2>网站后台管理</h2></div>
-              <div class="actions"><a class="primary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">进入后台 ↗</a><button class="secondary-button" :disabled="summaryLoading" @click="loadSummary">刷新摘要</button></div></div>
-            <p>完整控制台位于独立后台 <strong>manage.pcln.top</strong>（接线中）；此处为最近 7 天摘要{{ testMode ? '（测试账户为模拟数据）' : '' }}。</p>
+            <div class="section-heading"><div><span class="status-pill">{{ $ui("已具备资格") }}</span><h2>{{ $ui("网站后台管理") }}</h2></div>
+              <div class="actions"><a class="primary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">{{ $ui("进入后台 ↗") }}</a><button class="secondary-button" :disabled="summaryLoading" @click="loadSummary">{{ $ui("刷新摘要") }}</button></div></div>
+            <p>{{ $ui("完整控制台位于独立后台") }} <strong>manage.pcln.top</strong>{{ $ui("（接线中）；此处为最近 7 天摘要") }}{{ testMode ? $ui("（测试账户为模拟数据）") : '' }}{{ $ui("。") }}</p>
           </section>
           <section class="work-panel">
-            <div class="section-heading"><div><h2>遥测摘要</h2></div><span class="status-pill">最近 7 天</span></div>
-            <p v-if="summaryLoading && !summary" class="summary-note" role="status">正在读取摘要…</p>
-            <p v-else-if="summaryError" class="form-error" role="alert">{{ summaryError }}</p>
+            <div class="section-heading"><div><h2>{{ $ui("遥测摘要") }}</h2></div><span class="status-pill">{{ $ui("最近 7 天") }}</span></div>
+            <p v-if="summaryLoading && !summary" class="summary-note" role="status">{{ $ui("正在读取摘要…") }}</p>
+            <p v-else-if="summaryError" class="form-error" role="alert">{{ $ui(summaryError) }}</p>
             <template v-else-if="summary">
               <div class="summary-grid">
-                <div class="summary-cell"><b>{{ summary.starts.toLocaleString() }}</b><span>启动器启动</span></div>
-                <div class="summary-cell"><b>{{ summary.gameStarts.toLocaleString() }}</b><span>游戏启动</span></div>
-                <div class="summary-cell"><b>{{ summary.sessions.toLocaleString() }}</b><span>诊断会话</span></div>
-                <div class="summary-cell"><b>{{ summary.errors.toLocaleString() }}</b><span>错误样本</span></div>
+                <div class="summary-cell"><b>{{ summary.starts.toLocaleString($locale) }}</b><span>{{ $ui("启动器启动") }}</span></div>
+                <div class="summary-cell"><b>{{ summary.gameStarts.toLocaleString($locale) }}</b><span>{{ $ui("游戏启动") }}</span></div>
+                <div class="summary-cell"><b>{{ summary.sessions.toLocaleString($locale) }}</b><span>{{ $ui("诊断会话") }}</span></div>
+                <div class="summary-cell"><b>{{ summary.errors.toLocaleString($locale) }}</b><span>{{ $ui("错误样本") }}</span></div>
               </div>
               <div class="summary-cols">
-                <div class="summary-block"><h3>活跃版本</h3>
-                  <div v-for="v in summary.versions" :key="v.version" class="summary-line"><span>{{ v.version }}</span><div class="track"><i :style="{ width: barWidth(v.count, summary.versionMax) }" /></div><b>{{ v.count.toLocaleString() }}</b></div>
+                <div class="summary-block"><h3>{{ $ui("活跃版本") }}</h3>
+                  <div v-for="v in summary.versions" :key="v.version" class="summary-line"><span>{{ v.version }}</span><div class="track"><i :style="{ width: barWidth(v.count, summary.versionMax) }" /></div><b>{{ v.count.toLocaleString($locale) }}</b></div>
                 </div>
-                <div class="summary-block"><h3>平台分布</h3>
-                  <div v-for="p in summary.platforms" :key="p.os" class="summary-line"><span>{{ platformLabel(p.os) }}</span><div class="track"><i :style="{ width: barWidth(p.count, summary.platformTotal) }" /></div><b>{{ Math.round(p.count / summary.platformTotal * 100) }}%</b></div>
+                <div class="summary-block"><h3>{{ $ui("平台分布") }}</h3>
+                  <div v-for="p in summary.platforms" :key="p.os" class="summary-line"><span>{{ $ui(platformLabel(p.os)) }}</span><div class="track"><i :style="{ width: barWidth(p.count, summary.platformTotal) }" /></div><b>{{ Math.round(p.count / summary.platformTotal * 100) }}%</b></div>
                 </div>
               </div>
-              <p class="summary-note">数据生成于 {{ summary.generatedAt }}。</p>
+              <p class="summary-note">{{ $ui("数据生成于") }} {{ new Date(summary.generatedAt).toLocaleString($locale) }}{{ $ui("。") }}</p>
             </template>
           </section>
         </template>
-        <section v-else class="work-panel"><h2>申请网站管理员</h2><p>网站管理员负责处理支持工单、运营待办与平台诊断。申请通道即将开放，届时可直接在此提交申请。</p><button class="primary-button" disabled>申请入口即将开放</button></section>
+        <section v-else class="work-panel"><h2>{{ $ui("申请网站管理员") }}</h2><p>{{ $ui("网站管理员负责处理支持工单、运营待办与平台诊断。申请通道即将开放，届时可直接在此提交申请。") }}</p><button class="primary-button" disabled>{{ $ui("申请入口即将开放") }}</button></section>
       </template>
     </div>
 
     <!-- ===== 二级模态框：所有修改类操作统一入口 ===== -->
     <PasswordConfirmDialog v-model="pwDialog.visible" :mode="pwDialog.mode" :title="pwDialog.title" :description="pwDialog.description" :busy="pwDialog.busy" :error="pwDialog.error" @confirm="onPasswordConfirm" />
 
-    <FormDialog v-model="nameDialog.visible" title="修改用户名" description="1–60 个字符。" :busy="nameDialog.busy" :error="nameDialog.error" confirm-label="保存用户名" :can-confirm="Boolean(nameInput)" @confirm="saveName">
-      <label class="dialog-field">用户名<input v-model.trim="nameInput" minlength="1" maxlength="60" required /></label>
+    <FormDialog v-model="nameDialog.visible" :title="$ui('修改用户名')" :description="$ui('1–60 个字符。')" :busy="nameDialog.busy" :error="nameDialog.error" :confirm-label="$ui('保存用户名')" :can-confirm="Boolean(nameInput)" @confirm="saveName">
+      <label class="dialog-field">{{ $ui("用户名") }}<input v-model.trim="nameInput" minlength="1" maxlength="60" required /></label>
     </FormDialog>
 
-    <FormDialog v-model="handleDialog.visible" :title="session.handle ? '修改用户 ID' : '设置用户 ID'" description="6–20 位，字母开头，可含数字 / _ / -；每 30 天限改一次。" :busy="handleDialog.busy" :error="handleDialog.error" :hint="handleDialog.hint" :confirm-label="session.handle ? '修改用户 ID' : '设置用户 ID'" :can-confirm="handleValid" @confirm="saveHandle">
-      <label class="dialog-field">用户 ID<input v-model.trim="handleInput" minlength="6" maxlength="20" pattern="[A-Za-z][A-Za-z0-9_-]{5,19}" required placeholder="例如 player_one" @blur="checkHandle" /></label>
+    <FormDialog v-model="handleDialog.visible" :title="session.handle ? $ui('修改用户 ID') : $ui('设置用户 ID')" :description="$ui('6–20 位，字母开头，可含数字 / _ / -；每 30 天限改一次。')" :busy="handleDialog.busy" :error="handleDialog.error" :hint="handleDialog.hint" :confirm-label="session.handle ? $ui('修改用户 ID') : $ui('设置用户 ID')" :can-confirm="handleValid" @confirm="saveHandle">
+      <label class="dialog-field">{{ $ui("用户 ID") }}<input v-model.trim="handleInput" minlength="6" maxlength="20" pattern="[A-Za-z][A-Za-z0-9_-]{5,19}" required :placeholder="$ui('例如 player_one')" @blur="checkHandle" /></label>
     </FormDialog>
 
-    <FormDialog v-model="passkeyDialog.visible" title="添加 passkey" description="浏览器将弹出系统验证（指纹 / 面容 / PIN）。" :busy="passkeyDialog.busy" :error="passkeyDialog.error" busy-label="等待系统验证…" confirm-label="继续并验证" @confirm="runAddPasskey">
-      <label class="dialog-field">名称（可留空）<input v-model.trim="passkeyName" maxlength="60" placeholder="例如 我的 Windows 电脑" /></label>
+    <FormDialog v-model="passkeyDialog.visible" :title="$ui('添加 passkey')" :description="$ui('浏览器将弹出系统验证（指纹 / 面容 / PIN）。')" :busy="passkeyDialog.busy" :error="passkeyDialog.error" :busy-label="$ui('等待系统验证…')" :confirm-label="$ui('继续并验证')" @confirm="runAddPasskey">
+      <label class="dialog-field">{{ $ui("名称（可留空）") }}<input v-model.trim="passkeyName" maxlength="60" :placeholder="$ui('例如 我的 Windows 电脑')" /></label>
     </FormDialog>
 
-    <FormDialog v-model="totpDialog.visible" title="添加验证器应用" :description="totpEnroll ? '用验证器应用扫码或输入密钥，再填写 6 位动态码。' : '正在生成密钥…'" :busy="totpDialog.busy" :error="totpDialog.error" confirm-label="确认并启用" :can-confirm="Boolean(totpEnroll) && totpCode.length === 6" @confirm="confirmTotp">
+    <FormDialog v-model="totpDialog.visible" :title="$ui('添加验证器应用')" :description="totpEnroll ? $ui('用验证器应用扫码或输入密钥，再填写 6 位动态码。') : $ui('正在生成密钥…')" :busy="totpDialog.busy" :error="totpDialog.error" :confirm-label="$ui('确认并启用')" :can-confirm="Boolean(totpEnroll) && totpCode.length === 6" @confirm="confirmTotp">
       <template v-if="totpEnroll">
-        <label class="dialog-field">设备名称（可留空）<input v-model.trim="totpDeviceName" maxlength="60" placeholder="例如 我的手机" /></label>
-        <p class="secret-box"><code>{{ totpEnroll.secret }}</code><button class="secondary-button" type="button" @click="copyText(totpEnroll.secret)">复制</button></p>
+        <label class="dialog-field">{{ $ui("设备名称（可留空）") }}<input v-model.trim="totpDeviceName" maxlength="60" :placeholder="$ui('例如 我的手机')" /></label>
+        <p class="secret-box"><code>{{ totpEnroll.secret }}</code><button class="secondary-button" type="button" @click="copyText(totpEnroll.secret)">{{ $ui("复制") }}</button></p>
         <p class="login-fine break-all">{{ totpEnroll.otpauthUrl }}</p>
-        <span class="seg-label">6 位动态码</span>
-        <SegmentedCode v-model="totpCode" :length="6" charset="digits" label="验证器动态码" :disabled="totpDialog.busy" />
+        <span class="seg-label">{{ $ui("6 位动态码") }}</span>
+        <SegmentedCode v-model="totpCode" :length="6" charset="digits" :label="$ui('验证器动态码')" :disabled="totpDialog.busy" />
       </template>
     </FormDialog>
 
-    <FormDialog v-model="recoveryDialog.visible" :title="recoveryDialog.title" :description="recoveryDialog.title === '恢复码已生成' ? '一次性使用；建议打印或存入密码管理器。' : '查看操作已记入审计。'" confirm-label="我已妥善保存" @confirm="recoveryDialog.visible = false">
-      <p v-if="recoveryMissing" class="login-fine">有 {{ recoveryMissing }} 个旧恢复码不支持在线查看；重新生成一批即可查看全部。</p>
+    <FormDialog v-model="recoveryDialog.visible" :title="recoveryDialog.title" :description="recoveryDialog.title === '恢复码已生成' ? $ui('一次性使用；建议打印或存入密码管理器。') : $ui('查看操作已记入审计。')" :confirm-label="$ui('我已妥善保存')" @confirm="recoveryDialog.visible = false">
+      <p v-if="recoveryMissing" class="login-fine">{{ $ui("有") }} {{ recoveryMissing }} {{ $ui("个旧恢复码不支持在线查看；重新生成一批即可查看全部。") }}</p>
       <div class="recovery-grid"><code v-for="code in recoveryCodes" :key="code">{{ code }}</code></div>
-      <div class="actions"><button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">复制全部</button><button class="secondary-button" type="button" @click="printCodes">打印</button></div>
+      <div class="actions"><button class="secondary-button" type="button" @click="copyText(recoveryCodes.join('\n'))">{{ $ui("复制全部") }}</button><button class="secondary-button" type="button" @click="printCodes">{{ $ui("打印") }}</button></div>
     </FormDialog>
   </div>
-  <p v-else class="empty-state" role="status">正在前往登录页…</p>
+  <p v-else class="empty-state" role="status">{{ $ui("正在前往登录页…") }}</p>
 </template>
 <script setup lang="ts">
+import { ui, uiLocale } from '@/languages/localize';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors, type MinecraftProfile } from '@/api/platform';
@@ -246,7 +247,7 @@ async function loadSummary() {
       versions, versionMax: Math.max(1, ...versions.map(v => v.count)),
       platforms: [...platformTotals].map(([os, count]) => ({ os, count })).sort((a, b) => b.count - a.count),
       platformTotal: Math.max(1, [...platformTotals.values()].reduce((n, c) => n + c, 0)),
-      generatedAt: new Date(tele.generatedAt).toLocaleString()
+      generatedAt: tele.generatedAt
     };
   } catch { summaryError.value = '暂时无法读取遥测摘要，请稍后重试。'; }
   finally { summaryLoading.value = false; }
@@ -265,7 +266,7 @@ const PROVIDER_SVG: Record<string, string> = {
 };
 const identities = ref<LinkedIdentity[]>();
 const bound = (id: LinkedIdentity['provider']) => Boolean(identities.value?.some(i => i.provider === id));
-const identityMail = (id: LinkedIdentity['provider']) => identities.value?.find(i => i.provider === id)?.email || '已关联';
+const identityMail = (id: LinkedIdentity['provider']) => identities.value?.find(i => i.provider === id)?.email || ui('已关联');
 async function loadIdentities(){ try { identities.value = (await platform.identities()).identities; } catch (e) { error.value = e instanceof Error ? e.message : '暂时无法读取已关联的账号。'; } }
 // 网站登录身份与游戏授权分开；读取的游戏档案来自当前 Nexa 账户的独立授权。
 const minecraft = ref<MinecraftProfile | null>(null);
@@ -273,11 +274,11 @@ const minecraftLoading = ref(false), minecraftError = ref(statusMessage(route.qu
 const minecraftMessage = ref(!minecraftError.value && typeof route.query.minecraft_success === 'string' ? 'Minecraft 授权成功' : '');
 const minecraftText = computed(() => {
   const m = minecraft.value;
-  if (!m) return '尚未读取游戏档案';
-  if (!m.xboxAuthorized) return m.checkedAt ? '需要重新授权 Minecraft' : '尚未授权 Minecraft';
-  if (m.owned === 1) return `Minecraft 已拥有${m.profileName ? ` · ${m.profileName}` : ''}${m.profileId ? ` · ${m.profileId.slice(0, 8)}…` : ''}`;
-  if (m.owned === 0) return 'Minecraft 未拥有';
-  return m.error ? `Minecraft 核查未完成（${statusMessage(m.error)}）` : m.checkedAt ? 'Minecraft 尚未核查' : '尚未授权 Minecraft';
+  if (!m) return ui("尚未读取游戏档案");
+  if (!m.xboxAuthorized) return m.checkedAt ? ui("需要重新授权 Minecraft") : ui("尚未授权 Minecraft");
+  if (m.owned === 1) return ui("Minecraft 已拥有{0}{1}", [m.profileName ? ` · ${m.profileName}` : '', m.profileId ? ` · ${m.profileId.slice(0, 8)}…` : '']);
+  if (m.owned === 0) return ui("Minecraft 未拥有");
+  return m.error ? ui("Minecraft 核查未完成（{0}）", [statusMessage(m.error)]) : m.checkedAt ? ui("Minecraft 尚未核查") : ui("尚未授权 Minecraft");
 });
 async function loadMinecraft(){ minecraftLoading.value = true; try { minecraft.value = await platform.minecraftProfile(); } catch (e) { minecraft.value = null; minecraftError.value = e instanceof ApiError ? e.message : '暂时无法读取 Minecraft 档案，请稍后重试。'; } finally { minecraftLoading.value = false; } }
 async function authorizeMinecraft(){ busy.value = true; minecraftError.value = ''; minecraftMessage.value = ''; try { await platform.authorizeMinecraft(); } catch (e) { minecraftError.value = e instanceof ApiError ? e.message : '无法开始 Minecraft 授权，请稍后重试。'; } finally { busy.value = false; } }
@@ -364,7 +365,7 @@ async function saveHandle() {
     const result = await platform.updateHandle(handleInput.value);
     session.value = { ...session.value!, handle: result.handle };
     handleInput.value = result.handle;
-    profileMsg.value = `用户 ID 已更新，下次可修改时间：${new Date(result.nextChangeAt).toLocaleDateString()}。`;
+    profileMsg.value = `用户 ID 已更新，下次可修改时间：${new Date(result.nextChangeAt).toLocaleDateString(uiLocale.value)}。`;
     handleDialog.visible = false;
   } catch (e) { handleDialog.error = e instanceof Error ? e.message : '修改失败，请重试。'; }
   finally { handleDialog.busy = false; }
@@ -451,12 +452,7 @@ function printCodes() {
   const win = window.open('', '_blank');
   if (!win) { mfaMsg.value = '浏览器阻止了弹窗，请允许后重试，或使用「复制全部」。'; return; }
   const account = session.value ? `${session.value.name}${session.value.handle ? ' (@' + session.value.handle + ')' : ''}` : '';
-  win.document.write(`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>Nexa Cloud 恢复码</title></head><body style="font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;max-width:640px;margin:40px auto;padding:0 24px;color:#1f2733">
-<h1 style="font-size:22px;margin:0 0 6px">Nexa Cloud · 两步验证恢复码</h1>
-<p style="font-size:13px;color:#66738a;margin:0 0 18px">账户：${escapeHtml(account)}　·　打印时间：${new Date().toLocaleString()}</p>
-<p style="font-size:13px;line-height:1.8">每个恢复码仅可使用一次，用后作废；重新生成会使整批旧码失效。请离线保存此页，不要截图上传或存入云端笔记。</p>
-<ol style="font-family:ui-monospace,Consolas,monospace;font-size:16px;line-height:2.3;letter-spacing:.1em;padding-left:28px">${recoveryCodes.value.map(code => `<li>${escapeHtml(code)}</li>`).join('')}</ol>
-</body></html>`);
+  win.document.write(ui("<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><title>Nexa Cloud 恢复码</title></head><body style=\"font-family:system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;max-width:640px;margin:40px auto;padding:0 24px;color:#1f2733\">\n<h1 style=\"font-size:22px;margin:0 0 6px\">Nexa Cloud · 两步验证恢复码</h1>\n<p style=\"font-size:13px;color:#66738a;margin:0 0 18px\">账户：{0}　·　打印时间：{1}</p>\n<p style=\"font-size:13px;line-height:1.8\">每个恢复码仅可使用一次，用后作废；重新生成会使整批旧码失效。请离线保存此页，不要截图上传或存入云端笔记。</p>\n<ol style=\"font-family:ui-monospace,Consolas,monospace;font-size:16px;line-height:2.3;letter-spacing:.1em;padding-left:28px\">{2}</ol>\n</body></html>", [escapeHtml(account), new Date().toLocaleString(uiLocale.value), recoveryCodes.value.map(code => `<li>${escapeHtml(code)}</li>`).join('')]));
   win.document.close();
   win.focus();
   win.print();

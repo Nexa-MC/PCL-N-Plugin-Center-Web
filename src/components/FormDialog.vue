@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :model-value="modelValue"
-    :title="title"
+    :title="$ui(title)"
     :width="width"
     :close-on-click-modal="!busy"
     :close-on-press-escape="!busy"
@@ -11,15 +11,15 @@
     @update:model-value="(value: boolean) => { if (!busy) emit('update:modelValue', value); }"
   >
     <div ref="bodyRef" class="dialog-body">
-      <p v-if="description" class="dialog-desc">{{ description }}</p>
+      <p v-if="description" class="dialog-desc">{{ $ui(description) }}</p>
       <slot />
-      <p v-if="error" class="form-error" role="alert">{{ error }}</p>
-      <p v-if="hint" class="login-fine">{{ hint }}</p>
+      <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
+      <p v-if="hint" class="login-fine">{{ $ui(hint) }}</p>
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <button class="secondary-button" type="button" :disabled="busy" @click="emit('update:modelValue', false)">{{ cancelLabel }}</button>
-        <button class="primary-button" type="button" :disabled="busy || !canConfirm" @click="emit('confirm')">{{ busy ? busyLabel : confirmLabel }}</button>
+        <button class="secondary-button" type="button" :disabled="busy" @click="emit('update:modelValue', false)">{{ $ui(cancelLabel) }}</button>
+        <button class="primary-button" type="button" :disabled="busy || !canConfirm" @click="emit('confirm')">{{ $ui(busy ? busyLabel : confirmLabel) }}</button>
       </div>
     </template>
   </el-dialog>

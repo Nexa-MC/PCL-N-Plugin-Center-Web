@@ -12,10 +12,10 @@
     @confirm="submit"
   >
     <form class="stack-form" @submit.prevent="submit">
-      <label v-if="requireCurrent">当前密码<input v-model="current" type="password" autocomplete="current-password" required placeholder="用于身份复核" /></label>
-      <label v-if="mode !== 'reauth'">新密码<input v-model="next" type="password" autocomplete="new-password" minlength="14" maxlength="256" required /></label>
+      <label v-if="requireCurrent">{{ $ui("当前密码") }}<input v-model="current" type="password" autocomplete="current-password" required :placeholder="$ui('用于身份复核')" /></label>
+      <label v-if="mode !== 'reauth'">{{ $ui("新密码") }}<input v-model="next" type="password" autocomplete="new-password" minlength="14" maxlength="256" required /></label>
     </form>
-    <p v-if="mode !== 'reauth'" class="login-fine">密码 14–256 位；密码登录强制两步验证。</p>
+    <p v-if="mode !== 'reauth'" class="login-fine">{{ $ui("密码 14–256 位；密码登录强制两步验证。") }}</p>
   </FormDialog>
 </template>
 <script setup lang="ts">

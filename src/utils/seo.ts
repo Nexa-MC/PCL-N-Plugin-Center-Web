@@ -1,3 +1,5 @@
+import { ui } from '@/languages/localize';
+
 type PageSeo = {
   title: string;
   description: string;
@@ -17,6 +19,8 @@ const setMeta = (selector: string, attribute: "name" | "property", key: string, 
 };
 
 export const applyPageSeo = ({ title, description, path }: PageSeo) => {
+  title = ui(title);
+  description = ui(description);
   const canonicalUrl = new URL(path, siteOrigin).toString();
   document.title = title;
   setMeta('meta[name="description"]', "name", "description", description);

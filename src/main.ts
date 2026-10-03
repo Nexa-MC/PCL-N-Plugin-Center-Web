@@ -6,6 +6,7 @@ import './utils/theme';
 import App from './App.vue';
 import router from './routers';
 import i18n from './languages';
+import { ui, uiLocale } from './languages/localize';
 import { testLogin, testLogout } from './api/platform';
 import './styles/cloud.css';
 import './styles/theme.css';
@@ -18,8 +19,11 @@ declare global {
 }
 window.test_login = testLogin;
 window.test_logout = testLogout;
-console.info('提示：控制台输入 test_login() 进入全权限前端测试账户（本地持久，test_logout() 退出）。');
+if (import.meta.env.DEV) console.info(ui('提示：控制台输入 test_login() 进入全权限前端测试账户（本地持久，test_logout() 退出）。'));
 
-createApp(App).use(i18n).use(ElementPlus).use(router).mount('#app');
+const app = createApp(App).use(i18n).use(ElementPlus).use(router);
+app.config.globalProperties.$ui = ui;
+Object.defineProperty(app.config.globalProperties, '$locale', { get: () => uiLocale.value });
+app.mount('#app');
 // 首屏引导进度条交接给路由进度条
 document.getElementById('boot-progress')?.remove();

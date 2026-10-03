@@ -1,18 +1,18 @@
 <template>
   <section class="work-panel progression-panel">
-    <div class="section-heading"><h2>等级与经验</h2><button class="secondary-button" :disabled="busy" @click="$emit('refresh')">刷新</button></div>
-    <p v-if="error" class="form-error" role="alert">{{ error }}</p>
-    <p v-if="!progression && !error" role="status">正在读取…</p>
+    <div class="section-heading"><h2>{{ $ui("等级与经验") }}</h2><button class="secondary-button" :disabled="busy" @click="$emit('refresh')">{{ $ui("刷新") }}</button></div>
+    <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
+    <p v-if="!progression && !error" role="status">{{ $ui("正在读取…") }}</p>
     <template v-if="progression">
-      <div class="level-line"><strong>{{ progression.display.label }}</strong><span v-if="progression.display.kind === 'badge'">账户 Lv{{ progression.level }}</span><span>{{ progression.xp.toLocaleString() }} Exp<template v-if="progression.next?.threshold"> / {{ progression.next.threshold.toLocaleString() }}</template></span></div>
-      <progress :value="percent" max="100" aria-label="账户升级进度" />
-      <p class="level-hint">{{ progression.level === 0 ? '使用登录当前账户的启动器启动一次游戏，解锁 Lv1。' : progression.next ? `距离 Lv${progression.next.level} 还需 ${progression.next.remaining?.toLocaleString()} Exp` : '已达到 Lv7' }}</p>
-      <div class="activity-line"><span>今日 {{ progression.activity.todayXp }} / {{ progression.rewards.dailyCap }} Exp</span><span>MC {{ (progression.activity.gameSeconds / 3600).toFixed(1) }}h</span><span>连续启动 {{ progression.activity.currentStreak }} 天</span></div>
-      <details class="badge-details"><summary>铭牌 <span>{{ progression.badges.filter(b => b.earned).length }} / {{ progression.badges.length }}</span></summary>
-        <button v-if="progression.display.badgeId" class="secondary-button" :disabled="busy" @click="$emit('select', null)">显示 Lv{{ progression.level }}</button>
-        <div class="badge-grid"><article v-for="badge in progression.badges" :key="badge.id" :class="{ earned: badge.earned }"><div><strong>{{ badge.name }}</strong><span v-if="badge.earned" class="status-pill">已获得</span></div><p>{{ badge.requirement }}</p><small>{{ badge.progress }}</small><button v-if="badge.earned && badge.replacesLevel" class="secondary-button" :disabled="busy || progression.display.badgeId === badge.id" :aria-pressed="progression.display.badgeId === badge.id" @click="$emit('select', badge.id)">{{ progression.display.badgeId === badge.id ? '正在展示' : '替代等级展示' }}</button></article></div>
+      <div class="level-line"><strong>{{ $ui(progression.display.label) }}</strong><span v-if="progression.display.kind === 'badge'">{{ $ui("账户 Lv") }}{{ progression.level }}</span><span>{{ progression.xp.toLocaleString($locale) }} Exp<template v-if="progression.next?.threshold"> / {{ progression.next.threshold.toLocaleString($locale) }}</template></span></div>
+      <progress :value="percent" max="100" :aria-label="$ui('账户升级进度')" />
+      <p class="level-hint">{{ progression.level === 0 ? $ui("使用登录当前账户的启动器启动一次游戏，解锁 Lv1。") : progression.next ? $ui("距离 Lv{0} 还需 {1} Exp", [progression.next.level, progression.next.remaining?.toLocaleString($locale)]) : $ui("已达到 Lv7") }}</p>
+      <div class="activity-line"><span>{{ $ui("今日") }} {{ progression.activity.todayXp }} / {{ progression.rewards.dailyCap }} Exp</span><span>MC {{ (progression.activity.gameSeconds / 3600).toFixed(1) }}h</span><span>{{ $ui("连续启动") }} {{ progression.activity.currentStreak }} {{ $ui("天") }}</span></div>
+      <details class="badge-details"><summary>{{ $ui("铭牌") }} <span>{{ progression.badges.filter(b => b.earned).length }} / {{ progression.badges.length }}</span></summary>
+        <button v-if="progression.display.badgeId" class="secondary-button" :disabled="busy" @click="$emit('select', null)">{{ $ui("显示 Lv") }}{{ progression.level }}</button>
+        <div class="badge-grid"><article v-for="badge in progression.badges" :key="badge.id" :class="{ earned: badge.earned }"><div><strong>{{ $ui(badge.name) }}</strong><span v-if="badge.earned" class="status-pill">{{ $ui("已获得") }}</span></div><p>{{ $ui(badge.requirement) }}</p><small>{{ $ui(badge.progress) }}</small><button v-if="badge.earned && badge.replacesLevel" class="secondary-button" :disabled="busy || progression.display.badgeId === badge.id" :aria-pressed="progression.display.badgeId === badge.id" @click="$emit('select', badge.id)">{{ progression.display.badgeId === badge.id ? $ui("正在展示") : $ui("替代等级展示") }}</button></article></div>
       </details>
-      <details class="reward-details"><summary>经验规则</summary><p>每日登录启动器 +{{ progression.rewards.launcherLogin }} · 每日首次启动游戏 +{{ progression.rewards.firstGameStart }}<br>游戏在线每分钟 +1 · 启动器在线每 {{ progression.rewards.launcherMinutes }} 分钟 +1<br>每日上限 {{ progression.rewards.dailyCap }} Exp，按北京时间计算。</p></details>
+      <details class="reward-details"><summary>{{ $ui("经验规则") }}</summary><p>{{ $ui("每日登录启动器 +") }}{{ progression.rewards.launcherLogin }} {{ $ui("· 每日首次启动游戏 +") }}{{ progression.rewards.firstGameStart }}<br>{{ $ui("游戏在线每分钟 +1 · 启动器在线每") }} {{ progression.rewards.launcherMinutes }} {{ $ui("分钟 +1") }}<br>{{ $ui("每日上限") }} {{ progression.rewards.dailyCap }} {{ $ui("Exp，按北京时间计算。") }}</p></details>
     </template>
   </section>
 </template>

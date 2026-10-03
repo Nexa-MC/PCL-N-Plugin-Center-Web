@@ -1,4 +1,4 @@
-<template><label class="theme-control"><span class="sr-only">界面主题</span><select :value="themePreference" aria-label="界面主题" @change="change"><option value="system">跟随系统</option><option value="light">浅色</option><option value="dark">暗色</option></select></label></template>
+<template><label class="theme-control"><span class="sr-only">{{ $ui("界面主题") }}</span><select :value="themePreference" :aria-label="$ui('界面主题')" @change="change"><option value="system">{{ $ui("跟随系统") }}</option><option value="light">{{ $ui("浅色") }}</option><option value="dark">{{ $ui("暗色") }}</option></select></label></template>
 <script setup lang="ts">
 import { themePreference, setTheme, type ThemePreference } from '@/utils/theme';
 function change(event: Event) { setTheme((event.target as HTMLSelectElement).value as ThemePreference); }

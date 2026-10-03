@@ -8,7 +8,7 @@
         :disabled="disabled"
         :inputmode="charset === 'digits' ? 'numeric' : 'text'"
         :autocomplete="i === 1 ? 'one-time-code' : 'off'"
-        :aria-label="`${label} 第 ${i} 位`"
+        :aria-label="$ui('{0} 第 {1} 位', [label, i])"
         maxlength="1"
         :class="{ filled: Boolean(chars[i - 1]) }"
         @input="onInput(i - 1, $event)"

@@ -1,12 +1,12 @@
 <template>
   <div class="cloud-shell">
-    <a class="skip-link" href="#cloud-content">{{ en ? 'Skip to content' : '跳至内容' }}</a>
+    <a class="skip-link" href="#cloud-content">{{ en ? 'Skip to content' : $ui("跳至内容") }}</a>
     <header class="cloud-header">
       <router-link class="cloud-brand" to="/"><strong>NexaCL</strong></router-link>
-      <nav :aria-label="en ? 'Site navigation' : '平台入口'"><router-link to="/" :class="{active: route.path === '/'}">{{ en ? 'Home' : '主页' }}</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">{{ en ? 'Download' : '下载' }}</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">{{ en ? 'Store' : '商店' }}</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">{{ en ? 'Docs' : '文档' }}</router-link></nav>
+      <nav :aria-label="en ? 'Site navigation' : $ui('平台入口')"><router-link to="/" :class="{active: route.path === '/'}">{{ en ? 'Home' : $ui("主页") }}</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">{{ en ? 'Download' : $ui("下载") }}</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">{{ en ? 'Store' : $ui("商店") }}</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">{{ en ? 'Docs' : $ui("文档") }}</router-link></nav>
       <div class="account-menu">
         <button class="account-status" type="button" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span>{{ accountLabel }}</button>
-        <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">{{ en ? 'My account' : '我的账户' }}</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">{{ en ? 'Developer console' : '开发者控制台' }}</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">{{ en ? 'Website management' : '网站管理' }}</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">{{ en ? 'Sign out' : '退出登录' }}</button></div>
+        <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">{{ en ? 'My account' : $ui("我的账户") }}</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">{{ en ? 'Developer console' : $ui("开发者控制台") }}</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">{{ en ? 'Website management' : $ui("网站管理") }}</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">{{ en ? 'Sign out' : $ui("退出登录") }}</button></div>
       </div>
       <LanguageControl />
       <ThemeControl />

@@ -1,35 +1,36 @@
 <template>
   <section class="model-panel" :aria-busy="loading">
-    <header><div><h2>预检模型</h2><p>查看模型状态与历史验证结果。</p></div><button :disabled="loading" @click="load">{{ loading ? '正在读取…' : '刷新模型' }}</button></header>
-    <p v-if="error" class="notice" role="status">{{ error }}</p>
+    <header><div><h2>{{ $ui("预检模型") }}</h2><p>{{ $ui("查看模型状态与历史验证结果。") }}</p></div><button :disabled="loading" @click="load">{{ loading ? $ui("正在读取…") : $ui("刷新模型") }}</button></header>
+    <p v-if="error" class="notice" role="status">{{ $ui(error) }}</p>
     <template v-if="model">
       <div class="model-summary">
-        <div><span>发布状态</span><strong>旧模型已停用</strong></div>
-        <div><span>历史分组</span><strong>{{ model.models.length }}<small> 个</small></strong></div>
-        <div><span>历史运行</span><strong>{{ sessions }}<small> 次</small></strong></div>
+        <div><span>{{ $ui("发布状态") }}</span><strong>{{ $ui("旧模型已停用") }}</strong></div>
+        <div><span>{{ $ui("历史分组") }}</span><strong>{{ model.models.length }}<small> {{ $ui("个") }}</small></strong></div>
+        <div><span>{{ $ui("历史运行") }}</span><strong>{{ sessions }}<small> {{ $ui("次") }}</small></strong></div>
       </div>
-      <p class="updated">生成于 {{ date(model.generatedAt) }} · 有效至 {{ date(model.expiresAt) }}</p>
+      <p class="updated">{{ $ui("生成于") }} {{ date(model.generatedAt) }} {{ $ui("· 有效至") }} {{ date(model.expiresAt) }}</p>
       <div v-if="model.models.length" class="cohorts">
         <article v-for="item in model.models" :key="`${item.os}/${item.loader}`">
-          <div class="cohort-title"><h3>{{ platform(item.os) }} <span>／ {{ item.loader === 'Vanilla' ? '原版 Minecraft' : item.loader }}</span></h3><span class="status">{{ expired ? '历史结果 · 已过期' : '历史结果 · 已停用' }}</span></div>
+          <div class="cohort-title"><h3>{{ platform(item.os) }} <span>／ {{ item.loader === 'Vanilla' ? $ui("原版 Minecraft") : item.loader }}</span></h3><span class="status">{{ expired ? $ui("历史结果 · 已过期") : $ui("历史结果 · 已停用") }}</span></div>
           <dl>
-            <div><dt>训练 / 验证运行</dt><dd>{{ item.samples }} / {{ item.validationSamples }} 次</dd></div>
-            <div><dt>验证覆盖率</dt><dd>{{ (item.coverage * 100).toFixed(0) }}%</dd></div>
-            <div><dt>分位损失 / 基线</dt><dd>{{ item.validationLossMiB.toFixed(1) }} / {{ item.baselineLossMiB.toFixed(1) }} MiB</dd></div>
-            <div><dt>训练堆范围</dt><dd>{{ range(item.featureMin[1] * 4, item.featureMax[1] * 4) }} GiB</dd></div>
-            <div><dt>类路径条目</dt><dd>{{ range(item.featureMin[2] * 256, item.featureMax[2] * 256) }}</dd></div>
-            <div><dt>渲染距离</dt><dd>{{ range(Math.sqrt(item.featureMin[3] * 256), Math.sqrt(item.featureMax[3] * 256)) }} 区块</dd></div>
+            <div><dt>{{ $ui("训练 / 验证运行") }}</dt><dd>{{ item.samples }} / {{ item.validationSamples }} {{ $ui("次") }}</dd></div>
+            <div><dt>{{ $ui("验证覆盖率") }}</dt><dd>{{ (item.coverage * 100).toFixed(0) }}%</dd></div>
+            <div><dt>{{ $ui("分位损失 / 基线") }}</dt><dd>{{ item.validationLossMiB.toFixed(1) }} / {{ item.baselineLossMiB.toFixed(1) }} MiB</dd></div>
+            <div><dt>{{ $ui("训练堆范围") }}</dt><dd>{{ range(item.featureMin[1] * 4, item.featureMax[1] * 4) }} GiB</dd></div>
+            <div><dt>{{ $ui("类路径条目") }}</dt><dd>{{ range(item.featureMin[2] * 256, item.featureMax[2] * 256) }}</dd></div>
+            <div><dt>{{ $ui("渲染距离") }}</dt><dd>{{ range(Math.sqrt(item.featureMin[3] * 256), Math.sqrt(item.featureMax[3] * 256)) }} {{ $ui("区块") }}</dd></div>
           </dl>
         </article>
       </div>
-      <div v-else class="empty"><h3>等待新的模型验证</h3><p>旧模型未区分模组组合与游戏场景，已停止用于预检。遥测继续采集，新模型通过验证前使用本地估算。</p></div>
+      <div v-else class="empty"><h3>{{ $ui("等待新的模型验证") }}</h3><p>{{ $ui("旧模型未区分模组组合与游戏场景，已停止用于预检。遥测继续采集，新模型通过验证前使用本地估算。") }}</p></div>
     </template>
-    <div v-else-if="!loading" class="empty"><h3>尚无可展示的模型</h3><p>模型不可用时，启动器继续使用本地估算。</p></div>
-    <aside><h3>这些数据说明什么</h3><p>模型估算游戏进程的工作集峰值。运行次数不是用户人数；覆盖率是验证样本中，实际峰值未超过预测值的比例。分位损失越低越好，但不是普通平均误差。</p><p>旧模型的权重已停止发布，历史验证结果不代表对具体整合包有效。新模型需要匹配模组版本、组合和游戏场景；它仍处于开发阶段。这些数据不是 JVM 堆或原生内存的实测值，也不能据此强制阻止启动。</p></aside>
+    <div v-else-if="!loading" class="empty"><h3>{{ $ui("尚无可展示的模型") }}</h3><p>{{ $ui("模型不可用时，启动器继续使用本地估算。") }}</p></div>
+    <aside><h3>{{ $ui("这些数据说明什么") }}</h3><p>{{ $ui("模型估算游戏进程的工作集峰值。运行次数不是用户人数；覆盖率是验证样本中，实际峰值未超过预测值的比例。分位损失越低越好，但不是普通平均误差。") }}</p><p>{{ $ui("旧模型的权重已停止发布，历史验证结果不代表对具体整合包有效。新模型需要匹配模组版本、组合和游戏场景；它仍处于开发阶段。这些数据不是 JVM 堆或原生内存的实测值，也不能据此强制阻止启动。") }}</p></aside>
   </section>
 </template>
 
 <script setup lang="ts">
+import { uiLocale } from '@/languages/localize';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { isTestSession } from '@/api/platform';
 type Cohort = { os: string; loader: string; samples: number; validationSamples: number; coverage: number; validationLossMiB: number; baselineLossMiB: number; featureMin: number[]; featureMax: number[] };
@@ -40,7 +41,7 @@ const error = ref('');
 const now = ref(Date.now());
 const expired = computed(() => !!model.value && Date.parse(model.value.expiresAt) <= now.value);
 const sessions = computed(() => model.value?.models.reduce((sum, item) => sum + item.samples + item.validationSamples, 0) ?? 0);
-const date = (value: string) => new Date(value).toLocaleString();
+const date = (value: string) => new Date(value).toLocaleString(uiLocale.value);
 const platform = (value: string) => ({ windows: 'Windows', linux: 'Linux', macos: 'macOS' })[value] ?? value;
 const range = (low: number, high: number) => low === high ? `${+low.toFixed(2)}` : `${+low.toFixed(2)}–${+high.toFixed(2)}`;
 let request: AbortController | undefined;

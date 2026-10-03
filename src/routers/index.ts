@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { startProgress, doneProgress } from '@/utils/progressBar';
 import CloudShell from '@/views/cloud/CloudShell.vue';
+import { watch } from 'vue';
+import { ui, uiLocale } from '@/languages/localize';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), scrollBehavior: () => ({ top: 0 }),
   routes: [
@@ -51,5 +53,6 @@ function titleFor(path: string): string {
 router.beforeEach(() => { startProgress(); });
 router.afterEach(() => { doneProgress(); });
 router.onError(() => { doneProgress(); });
-router.afterEach(to => { document.title = titleFor(to.path); });
+router.afterEach(to => { document.title = ui(titleFor(to.path)); });
+watch(uiLocale, () => { document.title = ui(titleFor(router.currentRoute.value.path)); });
 export default router;

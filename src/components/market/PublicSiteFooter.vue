@@ -13,7 +13,7 @@
       <a href="https://docs.pcln.top/" target="_blank" rel="noreferrer">{{ t("market.header.docs") }}</a>
       <a href="https://github.com/PCL-N-Edition/PCL-N" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
-    <p>© {{ year }} PCL N contributors · Apache-2.0</p>
+    <p>© {{ year }} {{ $ui("PCL N 贡献者 · Apache-2.0") }}</p>
   </footer>
 </template>
 
