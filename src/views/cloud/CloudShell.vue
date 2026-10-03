@@ -1,13 +1,14 @@
 <template>
   <div class="cloud-shell">
-    <a class="skip-link" href="#cloud-content">跳至内容</a>
+    <a class="skip-link" href="#cloud-content">{{ en ? 'Skip to content' : '跳至内容' }}</a>
     <header class="cloud-header">
       <router-link class="cloud-brand" to="/"><strong>NexaCL</strong></router-link>
-      <nav aria-label="平台入口"><router-link to="/" :class="{active: route.path === '/'}">主页</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">下载</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">商店</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">文档</router-link></nav>
+      <nav :aria-label="en ? 'Site navigation' : '平台入口'"><router-link to="/" :class="{active: route.path === '/'}">{{ en ? 'Home' : '主页' }}</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">{{ en ? 'Download' : '下载' }}</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">{{ en ? 'Store' : '商店' }}</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">{{ en ? 'Docs' : '文档' }}</router-link></nav>
       <div class="account-menu">
         <button class="account-status" type="button" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span>{{ accountLabel }}</button>
-        <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">我的账户</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">开发者控制台</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">网站管理</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">退出登录</button></div>
+        <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">{{ en ? 'My account' : '我的账户' }}</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">{{ en ? 'Developer console' : '开发者控制台' }}</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">{{ en ? 'Website management' : '网站管理' }}</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">{{ en ? 'Sign out' : '退出登录' }}</button></div>
       </div>
+      <LanguageControl />
       <ThemeControl />
     </header>
     <div class="cloud-body">
@@ -19,10 +20,14 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, SESSION_EVENT, type Session } from '@/api/platform';
+import { useI18n } from 'vue-i18n';
+import LanguageControl from '@/components/LanguageControl.vue';
 import ThemeControl from '@/components/ThemeControl.vue';
 const route = useRoute(), router = useRouter();
+const { locale } = useI18n();
+const en = computed(() => locale.value !== 'zh');
 const session = ref<Session>(), menuOpen = ref(false);
-const accountLabel = computed(() => session.value ? (session.value.name || '账户管理') : '登录 / 注册');
+const accountLabel = computed(() => session.value ? (session.value.name || (en.value ? 'Manage account' : '账户管理')) : (en.value ? 'Sign in' : '登录 / 注册'));
 async function loadSession() { session.value = await platform.session(); if (session.value && session.value.setupRequired) { void router.push('/register?setup=1'); return; } if (session.value && !session.value.termsAccepted && route.path !== '/account') void router.push('/account'); }
 function openAccount() { if (!session.value) { menuOpen.value = false; void router.push({ path: '/login', query: { return: route.fullPath } }); return; } menuOpen.value = !menuOpen.value; }
 async function logout() { menuOpen.value = false; if (!session.value) return router.push({ path: '/login', query: { return: route.fullPath } }); await platform.logout(); session.value = undefined; await router.push({ path: '/login', query: { return: route.fullPath } }); }

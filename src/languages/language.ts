@@ -23,3 +23,27 @@ export const getBrowserLanguage = (): SupportedLanguage => {
 
 export const getDocumentLanguage = (language: SupportedLanguage): "zh-CN" | "en-US" =>
   language === "zh" ? "zh-CN" : "en-US";
+
+const STORAGE_KEY = "nexa:lang";
+
+/** The language the visitor chose on a previous visit, if any. */
+export const getStoredLanguage = (): SupportedLanguage | undefined => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored === "zh" || stored === "en" ? stored : undefined;
+  } catch {
+    return undefined; // Storage can be disabled; the browser language still applies.
+  }
+};
+
+/** A saved choice wins over the browser language. */
+export const getInitialLanguage = (): SupportedLanguage =>
+  getStoredLanguage() ?? getBrowserLanguage();
+
+export const persistLanguage = (language: SupportedLanguage): void => {
+  try {
+    localStorage.setItem(STORAGE_KEY, language);
+  } catch {
+    /* Private mode still allows switching for this visit. */
+  }
+};
