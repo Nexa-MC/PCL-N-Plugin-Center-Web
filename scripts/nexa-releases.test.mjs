@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { nexaChannel, releaseAssets, loadNexaCatalog } from '../src/utils/nexaReleases.ts';
+import { RELEASE_GITHUB, RELEASE_API, isReleaseAsset } from '../src/utils/releaseRepository.ts';
 
 test('Nexa dotted channels never label Alpha or CI as a stable release',()=>{
   for(const [tag,expected] of [['v2.0.0.alpha.1','alpha'],['2.0.0.beta.2','beta'],['2.0.0.ci.abcdef','ci'],['2.0.0','release'],['v1.3.20-beta',null],['2.0.0.alpha.0',null],['2.0.0-bogus',null]]) assert.equal(nexaChannel(tag),expected);
@@ -73,4 +74,38 @@ test('renamed artifacts take precedence without duplicating formats', () => {
     return { name, browser_download_url: `https://github.com/PCL-N-Edition/PCL-N/releases/download/${tag}/${name}`, size: 1 };
   });
   assert.deepEqual(releaseAssets({ tag_name: tag, assets }, 'win', 'x64'), [assets[1]]);
+});
+
+test('published Alpha 6 resolves all 18 packages after the repository transfer', () => {
+  const release = JSON.parse(readFileSync(new URL('../public/nexa-releases.json', import.meta.url))).releases.find(r => r.tag_name === 'v2.0.0.alpha.6');
+  assert.ok(release, 'the outage fallback must include the published Alpha 6');
+  assert.equal(release.html_url, `${RELEASE_GITHUB}/releases/tag/${release.tag_name}`);
+  const formats = { win: ['setup.exe', 'msi', 'portable.zip'], osx: ['dmg', 'portable.tar.gz'], linux: ['deb', 'rpm', 'AppImage', 'portable.tar.gz'] };
+  for (const [platform, extensions] of Object.entries(formats)) for (const architecture of ['x64', 'arm64']) {
+    const assets = releaseAssets(release, platform, architecture);
+    assert.deepEqual(assets.map(a => a.name), extensions.map(ext => `Nexa-2.0.0.alpha.6-${platform}-${architecture}.${ext}`));
+    for (const asset of assets) assert.equal(asset.browser_download_url, `${RELEASE_GITHUB}/releases/download/${release.tag_name}/${asset.name}`);
+  }
+  const sums = release.assets.find(a => a.name === 'SHA256SUMS');
+  assert.ok(sums && isReleaseAsset(sums.browser_download_url, release.tag_name, sums.name));
+  assert.equal(isReleaseAsset(sums.browser_download_url + '?redirect=bad', release.tag_name, sums.name), false);
+  assert.equal(isReleaseAsset(sums.browser_download_url.replace(release.tag_name, 'v2.0.0.alpha.5'), release.tag_name, sums.name), false);
+  assert.deepEqual(releaseAssets({ ...release, assets: release.assets.map(a => ({ ...a, browser_download_url: a.browser_download_url.replace('Nexa-MC', 'Other-Owner') })) }, 'win', 'x64'), []);
+});
+
+test('live catalogs accept the current and historical repository but reject lookalikes', async t => {
+  t.mock.method(Date, 'now', () => 3000000);
+  const makeRelease = (root, tag = 'v2.0.0.alpha.6') => ({ tag_name: tag, name: tag, published_at: '2026-10-11T01:27:12Z', html_url: `${root}/releases/tag/${tag}`, assets: [] });
+  t.mock.method(globalThis, 'fetch', async url => {
+    assert.ok(String(url) === '/api/v1/github/releases' || String(url) === RELEASE_API);
+    return Response.json([
+      makeRelease(RELEASE_GITHUB), makeRelease('https://github.com/PCL-N-Edition/PCL-N', 'v2.0.0.alpha.5'),
+      makeRelease(RELEASE_GITHUB + '-malicious'), makeRelease('https://github.com/Other-Owner/PCL-N'),
+      { ...makeRelease(RELEASE_GITHUB), html_url: `${RELEASE_GITHUB}/releases/tag/v2.0.0.alpha.5` },
+      { ...makeRelease(RELEASE_GITHUB), draft: true }
+    ]);
+  });
+  const catalog = await loadNexaCatalog();
+  assert.equal(catalog.source, 'github');
+  assert.deepEqual(catalog.releases.map(r => r.tag_name), ['v2.0.0.alpha.6', 'v2.0.0.alpha.5']);
 });

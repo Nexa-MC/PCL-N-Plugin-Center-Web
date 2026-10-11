@@ -4,7 +4,7 @@
          启动器将打开 /login?device=<flow>&user_code=<CODE>,在卡片区域渲染
          “确认设备登录”界面(待启动器侧就绪后实现),登录态与 return 机制已具备。 -->
     <header class="login-topbar">
-      <router-link class="login-brand" to="/"><strong>NexaCL</strong></router-link>
+      <router-link class="login-brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
       <div class="login-controls"><LanguageControl /><ThemeControl /></div>
     </header>
     <main class="login-hero">
@@ -69,6 +69,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import BrandIcon from '@/components/BrandIcon.vue';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, POLICY_VERSION } from '@/api/platform';

@@ -12,10 +12,10 @@
       <p class="hero-version hero-anim d5" v-if="latestVersion">{{ c.hero.build }} <code>{{ latestVersion }}</code> · {{ c.hero.platforms }}</p>
       <div class="product-stage hero-anim d6">
         <div class="product-window" role="img" :aria-label="c.window.aria">
-          <div class="window-caption"><span><img src="/pcln.png" alt="">NexaCL</span><span class="window-controls" aria-hidden="true">−　□　×</span></div>
+          <div class="window-caption"><span><BrandIcon dark />NexaCL</span><span class="window-controls" aria-hidden="true">−　□　×</span></div>
           <div class="window-body"><div class="window-rail" aria-hidden="true"><span class="active"><KoiIcon name="video-play" /></span><span><KoiIcon name="grid-equal" /></span><span><KoiIcon name="folder" /></span><span><KoiIcon name="setting" /></span></div>
             <div class="window-account"><div class="mock-label">{{ c.window.profile }}<span>＋</span></div><div class="player-mark" aria-hidden="true"><span></span><i></i></div><strong>Player</strong><small>{{ c.window.offline }}</small><div class="mock-chip">{{ c.window.switchProfile }}　⌄</div></div>
-            <div class="window-right"><div class="window-version"><div class="mock-label">{{ c.window.version }}<span>☷</span></div><div class="version-detail"><div class="grass-block" aria-hidden="true"><KoiIcon name="landscape" /></div><div><strong>1.21.1</strong><small>Minecraft Java Edition</small></div><span>›</span></div><div class="mock-launch">▷　{{ c.window.launch }}</div></div><div class="window-about"><span class="about-mark">N</span><div><strong>NexaCL</strong><p>{{ c.window.tagline }}</p></div></div></div>
+            <div class="window-right"><div class="window-version"><div class="mock-label">{{ c.window.version }}<span>☷</span></div><div class="version-detail"><div class="grass-block" aria-hidden="true"><KoiIcon name="landscape" /></div><div><strong>1.21.1</strong><small>Minecraft Java Edition</small></div><span>›</span></div><div class="mock-launch">▷　{{ c.window.launch }}</div></div><div class="window-about"><BrandIcon class="about-mark" /><div><strong>NexaCL</strong><p>{{ c.window.tagline }}</p></div></div></div>
           </div>
         </div>
         <p class="product-caption">{{ c.window.caption }}</p>
@@ -104,6 +104,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import BrandIcon from '@/components/BrandIcon.vue';
 import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { NEXA_GITHUB, loadNexaCatalog } from '@/utils/nexaReleases';

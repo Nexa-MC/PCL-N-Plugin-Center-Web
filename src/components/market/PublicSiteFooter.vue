@@ -1,7 +1,7 @@
 <template>
   <footer class="site-footer">
     <div class="footer-brand">
-      <img src="/pcln.png" alt="" />
+      <BrandIcon />
       <div>
         <strong>PCL N</strong>
         <span>{{ t("site.footer.tagline") }}</span>
@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+import BrandIcon from '@/components/BrandIcon.vue';
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();

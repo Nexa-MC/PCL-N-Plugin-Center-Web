@@ -1,13 +1,14 @@
 <template>
   <header class="market-header">
     <div class="market-header-inner">
-      <router-link class="brand" to="/"><strong>NexaCL</strong></router-link>
+      <router-link class="brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
       <nav :aria-label="$ui('导航')"><router-link to="/">{{ $ui("主页") }}</router-link><router-link to="/download">{{ $ui("下载") }}</router-link><router-link to="/store">{{ $ui("商店") }}</router-link><router-link to="/docs">{{ $ui("文档") }}</router-link></nav>
       <ThemeControl />
     </div>
   </header>
 </template>
-<script setup lang="ts">import ThemeControl from '@/components/ThemeControl.vue';</script>
+<script setup lang="ts">
+import BrandIcon from '@/components/BrandIcon.vue';import ThemeControl from '@/components/ThemeControl.vue';</script>
 <style scoped>
 .market-header{width:100%;border-bottom:1px solid var(--market-border);background:var(--market-surface)}
 .market-header-inner{width:min(1200px,calc(100% - 48px));min-height:72px;margin:0 auto;padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:20px}

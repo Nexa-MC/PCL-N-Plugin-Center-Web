@@ -32,6 +32,7 @@ import KoiIcon from '@/components/KoiIcon.vue';
 import LegacyDownloads from '@/components/market/LegacyDownloads.vue';
 import { useI18n } from 'vue-i18n';
 import { NEXA_GITHUB, loadNexaCatalog, releaseAssets, type NexaRelease } from '@/utils/nexaReleases';
+import { isReleaseAsset } from '@/utils/releaseRepository';
 import { watchReleaseUpdates } from '@/utils/githubReleases';
 import { applyPageSeo } from '@/utils/seo';
 const { locale } = useI18n(); const en = computed(() => locale.value !== 'zh');
@@ -46,7 +47,7 @@ let refreshing = false;
 const snapshot = ref(false);
 const selectedRelease = computed(() => releases.value.find(r=>r.tag_name===releaseTag.value));
 const assets = computed(() => selectedRelease.value ? releaseAssets(selectedRelease.value,platform.value,architecture.value) : []);
-const checksums = computed(() => selectedRelease.value?.assets.find(a=>a.name==='SHA256SUMS' && a.browser_download_url.startsWith(NEXA_GITHUB+'/releases/download/')));
+const checksums = computed(() => { const release = selectedRelease.value; return release?.assets.find(a => a.name === 'SHA256SUMS' && isReleaseAsset(a.browser_download_url, release.tag_name, a.name)); });
 function setPlatform(value: string) { platform.value=value; architecture.value=value==='osx'?'arm64':'x64'; }
 function platformKey(event: KeyboardEvent,index: number) { let next=index; if(event.key==='ArrowRight') next=(index+1)%3; else if(event.key==='ArrowLeft') next=(index+2)%3; else if(event.key==='Home') next=0; else if(event.key==='End') next=2; else return; event.preventDefault(); setPlatform(platforms[next].id); document.getElementById(`platform-${platforms[next].id}`)?.focus(); }
 function packageLabel(name: string) { if(name.includes('.portable.')) return en.value?'Portable archive':'便携包'; if(name.endsWith('.setup.exe')) return en.value?'Windows installer':'Windows 安装包'; if(name.endsWith('.msi')) return en.value?'MSI installer':'MSI 安装包'; if(name.endsWith('.dmg')) return en.value?'macOS installer':'macOS 安装包'; if(name.endsWith('.deb')) return 'DEB · Debian / Ubuntu'; if(name.endsWith('.rpm')) return 'RPM · Fedora / openSUSE'; return 'AppImage'; }

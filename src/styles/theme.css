@@ -147,3 +147,6 @@ html.dark .progress-list b.wip { color: #f4c667; }
   .account-menu { margin-left: auto; }
   .cloud-content { padding: 24px 16px 44px; }
 }
+
+.login-brand { display: inline-flex; align-items: center; gap: 10px; }
+.cloud-brand { gap: 10px; }

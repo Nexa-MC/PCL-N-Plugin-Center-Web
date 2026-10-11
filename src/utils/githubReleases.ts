@@ -1,8 +1,9 @@
+import { RELEASE_API, isReleasePage } from './releaseRepository.ts';
 export interface GithubRelease {
   tag_name: string; name: string; body: string; published_at: string; html_url: string; draft?: boolean;
   assets: { name: string; browser_download_url: string; size: number }[];
 }
-const api = "https://api.github.com/repos/PCL-N-Edition/PCL-N/releases?per_page=100";
+const api = RELEASE_API;
 // 同源 Worker 代理优先：规避本地 DNS 污染（api.github.com 被解析到 loopback 时，
 // 浏览器会以私有网络访问为由直接拦截）与未认证限流；代理不可用再直连 GitHub。
 const proxyApi = "/api/v1/github/releases";
@@ -27,7 +28,7 @@ export async function loadGithubReleases(signal?: AbortSignal): Promise<GithubRe
     if (!Array.isArray(payload)) throw new Error("Invalid GitHub release catalog");
     const releases = payload.filter((r): r is GithubRelease => r && typeof r.tag_name === "string"
       && !r.draft && typeof r.published_at === "string" && Array.isArray(r.assets)
-      && r.html_url === `https://github.com/PCL-N-Edition/PCL-N/releases/tag/${r.tag_name}`);
+      && isReleasePage(r.html_url, r.tag_name));
     cached = releases.map(r => ({ ...r, name: r.name || r.tag_name, body: r.body || "", assets: r.assets.filter(a => a && typeof a.name === "string" && typeof a.browser_download_url === "string" && Number.isFinite(a.size)) }));
     checkedAt = Date.now(); return cached;
   })().finally(() => { pending = undefined; });

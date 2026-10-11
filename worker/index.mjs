@@ -1,5 +1,5 @@
 // Web has no business tables or authentication implementation. Bindings target separately deployed projects.
-const GITHUB_RELEASES_UPSTREAM = 'https://api.github.com/repos/PCL-N-Edition/PCL-N/releases?per_page=100';
+const GITHUB_RELEASES_UPSTREAM = 'https://api.github.com/repos/Nexa-MC/PCL-N/releases?per_page=100';
 
 // 只信任 Cloudflare TLS 握手结果，客户端提供的证书请求头没有认证效力。
 export function verifiedLauncherCertificate(request, env) {
@@ -14,7 +14,7 @@ export function verifiedLauncherCertificate(request, env) {
 // 由边缘代为请求并缓存 5 分钟；上游失败时返回 502，前端自动回退直连与本地快照。
 async function githubReleases() {
   const cache = caches.default;
-  const cacheKey = new Request('https://pcln.top/api/v1/github/releases', { method: 'GET' });
+  const cacheKey = new Request('https://pcln.top/api/v1/github/releases?repository=Nexa-MC%2FPCL-N', { method: 'GET' });
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
   let upstream;

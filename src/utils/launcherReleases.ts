@@ -1,4 +1,5 @@
 import { loadGithubReleases } from './githubReleases.ts';
+import { isReleaseAsset } from './releaseRepository.ts';
 /** Launcher downloads use GitHub with a same-origin saved catalog fallback. */
 
 export type ReleaseChannel = "release" | "beta" | "ci";
@@ -29,7 +30,7 @@ export interface AtomReleaseEntry {
 }
 
 /** Align with production release host (updater defaults may redirect here). */
-export const DEFAULT_OWNER = "PCL-N-Edition";
+export const DEFAULT_OWNER = "Nexa-MC";
 export const DEFAULT_REPO = "PCL-N";
 export const CI_ROLLING_TAG = "ci-latest";
 
@@ -525,7 +526,7 @@ export async function fetchLauncherVersionsWithSource(
       .map(r => normalizeReleaseVersion({ id: r.tag_name, tag: r.tag_name, label: r.tag_name,
         channel: detectChannel(r.tag_name), packaging: detectPackaging(r.tag_name), supportsPluginChoice: supportsPluginChoice(r.tag_name),
         publishedAt: r.published_at, packageAssets: r.assets.filter(a => typeof a.name === "string"
-          && a.browser_download_url === `${GH}/${DEFAULT_OWNER}/${DEFAULT_REPO}/releases/download/${r.tag_name}/${a.name}`) }));
+          && isReleaseAsset(a.browser_download_url, r.tag_name, a.name)) }));
     if (versions.length) return { versions: sortVersions(versions), source: "github", generatedAt: new Date().toISOString() };
   } catch { signal?.throwIfAborted(); }
 

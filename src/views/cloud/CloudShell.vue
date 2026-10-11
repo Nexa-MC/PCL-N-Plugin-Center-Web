@@ -2,7 +2,7 @@
   <div class="cloud-shell">
     <a class="skip-link" href="#cloud-content">{{ en ? 'Skip to content' : $ui("跳至内容") }}</a>
     <header class="cloud-header">
-      <router-link class="cloud-brand" to="/"><strong>NexaCL</strong></router-link>
+      <router-link class="cloud-brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
       <nav :aria-label="en ? 'Site navigation' : $ui('平台入口')"><router-link to="/" :class="{active: route.path === '/'}">{{ en ? 'Home' : $ui("主页") }}</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">{{ en ? 'Download' : $ui("下载") }}</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">{{ en ? 'Store' : $ui("商店") }}</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">{{ en ? 'Docs' : $ui("文档") }}</router-link></nav>
       <div class="account-menu">
         <button class="account-status" type="button" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span>{{ accountLabel }}</button>
@@ -17,6 +17,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import BrandIcon from '@/components/BrandIcon.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, SESSION_EVENT, type Session } from '@/api/platform';

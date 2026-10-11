@@ -9,10 +9,10 @@
         <p class="hero-status"><span class="alpha-badge">Alpha</span>{{ en ? 'An early preview. Some features are still being migrated.' : $ui("早期测试版本。部分功能仍在迁移中。") }}</p>
         <div class="product-stage">
           <div class="product-window" role="img" :aria-label="en ? 'Illustration of the Nexa launcher layout' : $ui('Nexa 启动器布局示意')">
-            <div class="window-caption"><span><img src="/pcln.png" alt="">PCL Nexa</span><span class="window-controls" aria-hidden="true">−　□　×</span></div>
+            <div class="window-caption"><span><BrandIcon dark />PCL Nexa</span><span class="window-controls" aria-hidden="true">−　□　×</span></div>
             <div class="window-body"><div class="window-rail" aria-hidden="true"><span class="active">▷</span><span>▧</span><span>▦</span><span>⚙</span></div>
               <div class="window-account"><div class="mock-label">{{ en ? 'Profile' : $ui("档案") }}<span>＋</span></div><div class="player-mark" aria-hidden="true"><span></span><i></i></div><strong>Player</strong><small>{{ en ? 'Offline profile' : $ui("离线档案") }}</small><div class="mock-chip">{{ en ? 'Switch profile' : $ui("切换档案") }}　⌄</div></div>
-              <div class="window-right"><div class="window-version"><div class="mock-label">{{ en ? 'Version' : $ui("版本") }}<span>☷</span></div><div class="version-detail"><div class="grass-block" aria-hidden="true">▧</div><div><strong>1.21.1</strong><small>Minecraft Java Edition</small></div><span>›</span></div><div class="mock-launch">▷　{{ en ? 'Launch game' : $ui("启动游戏") }}</div></div><div class="window-about"><span class="about-mark">N</span><div><strong>PCL Nexa</strong><p>{{ en ? 'Your next game starts here.' : $ui("下一次游戏，从这里开始。") }}</p></div></div></div>
+              <div class="window-right"><div class="window-version"><div class="mock-label">{{ en ? 'Version' : $ui("版本") }}<span>☷</span></div><div class="version-detail"><div class="grass-block" aria-hidden="true">▧</div><div><strong>1.21.1</strong><small>Minecraft Java Edition</small></div><span>›</span></div><div class="mock-launch">▷　{{ en ? 'Launch game' : $ui("启动游戏") }}</div></div><div class="window-about"><BrandIcon class="about-mark" /><div><strong>PCL Nexa</strong><p>{{ en ? 'Your next game starts here.' : $ui("下一次游戏，从这里开始。") }}</p></div></div></div>
             </div>
           </div>
           <p class="product-caption">{{ en ? 'Interface illustration. The Alpha interface may change.' : $ui("界面示意。Alpha 版本的界面仍会调整。") }}</p>
@@ -28,6 +28,7 @@
   </NexaLayout>
 </template>
 <script setup lang="ts">
+import BrandIcon from '@/components/BrandIcon.vue';
 import { computed, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import NexaLayout from '@/components/market/NexaLayout.vue';

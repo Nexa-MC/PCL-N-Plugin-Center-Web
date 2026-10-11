@@ -1,7 +1,7 @@
 import { writeFileSync, readFileSync } from "node:fs";
 const target = new URL("../public/nexa-releases.json", import.meta.url);
 try {
-  const response = await fetch("https://api.github.com/repos/PCL-N-Edition/PCL-N/releases?per_page=100", {
+  const response = await fetch("https://api.github.com/repos/Nexa-MC/PCL-N/releases?per_page=100", {
     headers: { Accept: "application/vnd.github+json" }, signal: AbortSignal.timeout(15000)
   });
   if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);

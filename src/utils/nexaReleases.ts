@@ -1,5 +1,6 @@
 import { loadGithubReleases } from "./githubReleases.ts";
-export const NEXA_GITHUB = "https://github.com/PCL-N-Edition/PCL-N";
+import { RELEASE_GITHUB, isReleasePage, isReleaseAsset } from './releaseRepository.ts';
+export const NEXA_GITHUB = RELEASE_GITHUB;
 export interface NexaAsset { name: string; browser_download_url: string; size: number }
 export interface NexaRelease { tag_name: string; name: string; body: string; published_at: string; html_url: string; assets: NexaAsset[] }
 export function nexaChannel(tag: string): "alpha" | "beta" | "ci" | "release" | null {
@@ -14,7 +15,7 @@ export function releaseAssets(release: NexaRelease, platform: string, architectu
   return (formats[platform] || []).flatMap(format => {
     for (const prefix of prefixes) {
       const asset = release.assets.find(a => a.name === prefix + format
-        && a.browser_download_url === `${NEXA_GITHUB}/releases/download/${release.tag_name}/${a.name}`);
+        && isReleaseAsset(a.browser_download_url, release.tag_name, a.name));
       if (asset) return [asset];
     }
     return [];
@@ -31,7 +32,7 @@ export async function loadNexaCatalog(signal?: AbortSignal): Promise<{ releases:
     const data = await response.json();
     if (!Array.isArray(data.releases)) throw new Error("Invalid release catalog");
     return { source: "snapshot", releases: data.releases.filter((r: NexaRelease) => nexaChannel(r.tag_name) !== null && Array.isArray(r.assets)
-      && r.html_url === `${NEXA_GITHUB}/releases/tag/${r.tag_name}`) };
+      && isReleasePage(r.html_url, r.tag_name)) };
   }
 }
 export async function loadNexaReleases(signal?: AbortSignal): Promise<NexaRelease[]> { return (await loadNexaCatalog(signal)).releases; }

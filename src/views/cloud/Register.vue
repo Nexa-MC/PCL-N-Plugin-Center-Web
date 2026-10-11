@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <header class="login-topbar">
-      <router-link class="login-brand" to="/"><strong>NexaCL</strong></router-link>
+      <router-link class="login-brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
       <div class="login-controls"><LanguageControl /><ThemeControl /></div>
     </header>
     <main class="login-hero">
@@ -61,6 +61,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import BrandIcon from '@/components/BrandIcon.vue';
 import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { platform, POLICY_VERSION, type Session } from '@/api/platform';
