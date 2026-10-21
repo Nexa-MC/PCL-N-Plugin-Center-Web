@@ -1,6 +1,405 @@
 {
-  "generatedAt": "2026-10-21T06:10:38.410Z",
+  "generatedAt": "2026-10-21T10:33:28.383Z",
   "releases": [
+    {
+      "tag_name": "v2.0.0.alpha.9",
+      "name": "NexaCL Firefly 2.0.0.alpha.9",
+      "body": "# NexaCL Firefly Alpha 9 · v2.0.0.alpha.9\n\n本版本以 Alpha 8 为基线，继续 Alpha 预览阶段。\n\n- 重排 Java 与基岩版下载引导页，统一产品卡片、主要操作和平台说明的层次与间距。\n- 按用途整理全局设置的分类、分组和顺序；动画与显示兼容选项归入外观，工作入口前置，规划项集中展示。\n- 资源列表加载时保留搜索与筛选控件，仅在结果区域显示加载动画；追加加载继续保留已有条目。\n- 修复更新检查误报失败：独立更新源正常返回、但已是最新版、目录为空或没有所选通道时，正常显示检查结果，不再继续请求旧接口并提示“暂时无法检查更新”。实际网络错误和无效更新信息仍会报告失败。\n- 中国大陆 Java 版下载页改为官方启动器引导，提供前往 Microsoft Store 获取 Minecraft Launcher 的入口；已有完整本地游戏仍可导入和启动。Store 中的官方启动器适用于 Windows，macOS / Linux 用户可继续使用完整本地版本。\n- 补齐跨新旧仓库的签名差分发布流程，自动查找兼容的历史完整包；完整包发布后可追加已签名差分扩展，保留原有构件和签名，并支持失败重试与完整包回退。\n\nWindows、macOS、Linux 均提供 x64 / arm64 的 NativeAOT 构建。下载、更新和签名分发继续使用独立更新源 [NexaCL-Update](https://github.com/Nexa-MC/NexaCL-Update/releases/tag/v2.0.0.alpha.9)，源码与反馈入口为 [NexaCL](https://github.com/Nexa-MC/NexaCL)。\n\n安装包与便携包按系统和架构选择一个即可；差分文件由启动器自动选择。发布包、更新清单和差分包均使用既有发布者签名，完整包可作为差分不可用时的回退。\n\n本版本保留全球正版资格围栏及中国大陆 Minecraft 本体下载限制。地区政策独立于界面语言与显示格式，沿用现有部署国家/系统地区判定。\n\n\n源码与构建记录：https://github.com/Nexa-MC/NexaCL/releases/tag/v2.0.0.alpha.9\n",
+      "published_at": "2026-10-21T10:32:32Z",
+      "html_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/tag/v2.0.0.alpha.9",
+      "assets": [
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.AppImage",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.AppImage",
+          "size": 33430024
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.AppImage.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.AppImage.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.deb",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.deb",
+          "size": 36200848
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.deb.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.deb.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.6.delta.zip",
+          "size": 30699134
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.7.delta.zip",
+          "size": 29532663
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.8.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.8.delta.zip",
+          "size": 26492553
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.8.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.from-2.0.0.alpha.8.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.portable.tar.gz",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.portable.tar.gz",
+          "size": 36036645
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.rpm",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.rpm",
+          "size": 36186561
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-arm64.rpm.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-arm64.rpm.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.AppImage",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.AppImage",
+          "size": 35584504
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.AppImage.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.AppImage.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.deb",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.deb",
+          "size": 38295688
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.deb.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.deb.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.6.delta.zip",
+          "size": 32586769
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.7.delta.zip",
+          "size": 31608887
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.8.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.8.delta.zip",
+          "size": 28073715
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.8.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.from-2.0.0.alpha.8.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.portable.tar.gz",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.portable.tar.gz",
+          "size": 38163428
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.rpm",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.rpm",
+          "size": 38312707
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-linux-x64.rpm.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-linux-x64.rpm.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.dmg",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.dmg",
+          "size": 41868898
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.dmg.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.dmg.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.6.delta.zip",
+          "size": 28281039
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.7.delta.zip",
+          "size": 27266000
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.8.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.8.delta.zip",
+          "size": 24916356
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.8.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.from-2.0.0.alpha.8.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.portable.tar.gz",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.portable.tar.gz",
+          "size": 38085937
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-arm64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-arm64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.dmg",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.dmg",
+          "size": 45198673
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.dmg.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.dmg.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.6.delta.zip",
+          "size": 31237747
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.7.delta.zip",
+          "size": 30384739
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.8.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.8.delta.zip",
+          "size": 27861145
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.8.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.from-2.0.0.alpha.8.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.portable.tar.gz",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.portable.tar.gz",
+          "size": 40978025
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-osx-x64.portable.tar.gz.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-osx-x64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.6.delta.zip",
+          "size": 28223061
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.7.delta.zip",
+          "size": 27353005
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.8.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.8.delta.zip",
+          "size": 25235592
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.8.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.from-2.0.0.alpha.8.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.msi",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.msi",
+          "size": 29101362
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.msi.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.msi.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.portable.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.portable.zip",
+          "size": 35574447
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.portable.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.portable.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.setup.exe",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.setup.exe",
+          "size": 26065651
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-arm64.setup.exe.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-arm64.setup.exe.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.6.delta.zip",
+          "size": 29567741
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.7.delta.zip",
+          "size": 28842867
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.8.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.8.delta.zip",
+          "size": 26592678
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.8.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.from-2.0.0.alpha.8.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.msi",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.msi",
+          "size": 31690034
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.msi.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.msi.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.portable.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.portable.zip",
+          "size": 37472603
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.portable.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.portable.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.setup.exe",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.setup.exe",
+          "size": 27472655
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.9-win-x64.setup.exe.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-2.0.0.alpha.9-win-x64.setup.exe.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-Delta.json",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-Delta.json",
+          "size": 5373
+        },
+        {
+          "name": "Nexa-Delta.json.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-Delta.json.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-Release.json",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-Release.json",
+          "size": 3378
+        },
+        {
+          "name": "Nexa-Release.json.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/Nexa-Release.json.asc",
+          "size": 228
+        },
+        {
+          "name": "SHA256SUMS",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/SHA256SUMS",
+          "size": 4176
+        },
+        {
+          "name": "SHA256SUMS.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.9/SHA256SUMS.asc",
+          "size": 228
+        }
+      ]
+    },
     {
       "tag_name": "v2.0.0.alpha.8",
       "name": "NexaCL Firefly 2.0.0.alpha.8",
@@ -26,6 +425,26 @@
         {
           "name": "Nexa-2.0.0.alpha.8-linux-arm64.deb.asc",
           "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-arm64.deb.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.6.delta.zip",
+          "size": 30694268
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.7.delta.zip",
+          "size": 29518708
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-arm64.from-2.0.0.alpha.7.delta.zip.asc",
           "size": 228
         },
         {
@@ -69,6 +488,26 @@
           "size": 228
         },
         {
+          "name": "Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.6.delta.zip",
+          "size": 32585583
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.7.delta.zip",
+          "size": 31601716
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
           "name": "Nexa-2.0.0.alpha.8-linux-x64.portable.tar.gz",
           "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-linux-x64.portable.tar.gz",
           "size": 38162572
@@ -99,6 +538,26 @@
           "size": 228
         },
         {
+          "name": "Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.6.delta.zip",
+          "size": 28275763
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.7.delta.zip",
+          "size": 27254696
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
           "name": "Nexa-2.0.0.alpha.8-osx-arm64.portable.tar.gz",
           "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-arm64.portable.tar.gz",
           "size": 38081232
@@ -119,6 +578,26 @@
           "size": 228
         },
         {
+          "name": "Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.6.delta.zip",
+          "size": 31230319
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.7.delta.zip",
+          "size": 30372984
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
           "name": "Nexa-2.0.0.alpha.8-osx-x64.portable.tar.gz",
           "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-x64.portable.tar.gz",
           "size": 40975855
@@ -126,6 +605,26 @@
         {
           "name": "Nexa-2.0.0.alpha.8-osx-x64.portable.tar.gz.asc",
           "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-osx-x64.portable.tar.gz.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.6.delta.zip",
+          "size": 28212293
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.7.delta.zip",
+          "size": 27343226
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-arm64.from-2.0.0.alpha.7.delta.zip.asc",
           "size": 228
         },
         {
@@ -159,6 +658,26 @@
           "size": 228
         },
         {
+          "name": "Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.6.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.6.delta.zip",
+          "size": 29564424
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.6.delta.zip.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.7.delta.zip",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.7.delta.zip",
+          "size": 28831295
+        },
+        {
+          "name": "Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-x64.from-2.0.0.alpha.7.delta.zip.asc",
+          "size": 228
+        },
+        {
           "name": "Nexa-2.0.0.alpha.8-win-x64.msi",
           "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-x64.msi",
           "size": 31710303
@@ -186,6 +705,16 @@
         {
           "name": "Nexa-2.0.0.alpha.8-win-x64.setup.exe.asc",
           "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-2.0.0.alpha.8-win-x64.setup.exe.asc",
+          "size": 228
+        },
+        {
+          "name": "Nexa-Delta.json",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-Delta.json",
+          "size": 3631
+        },
+        {
+          "name": "Nexa-Delta.json.asc",
+          "browser_download_url": "https://github.com/Nexa-MC/NexaCL-Update/releases/download/v2.0.0.alpha.8/Nexa-Delta.json.asc",
           "size": 228
         },
         {
