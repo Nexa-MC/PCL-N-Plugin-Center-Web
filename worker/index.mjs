@@ -1,5 +1,5 @@
 // Web has no business tables or authentication implementation. Bindings target separately deployed projects.
-const GITHUB_RELEASES_UPSTREAM = 'https://api.github.com/repos/Nexa-MC/PCL-N/releases?per_page=100';
+import { fetchReleaseCatalogs } from '../src/utils/releaseCatalog.ts';
 
 // 只信任 Cloudflare TLS 握手结果，客户端提供的证书请求头没有认证效力。
 export function verifiedLauncherCertificate(request, env) {
@@ -14,22 +14,15 @@ export function verifiedLauncherCertificate(request, env) {
 // 由边缘代为请求并缓存 5 分钟；上游失败时返回 502，前端自动回退直连与本地快照。
 async function githubReleases() {
   const cache = caches.default;
-  const cacheKey = new Request('https://pcln.top/api/v1/github/releases?repository=Nexa-MC%2FPCL-N', { method: 'GET' });
+  const cacheKey = new Request('https://pcln.top/api/v1/github/releases?catalog=nexacl-source-update-history-v1', { method: 'GET' });
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
-  let upstream;
-  try {
-    upstream = await fetch(GITHUB_RELEASES_UPSTREAM, {
-      headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'nexa-web-worker', 'X-GitHub-Api-Version': '2022-11-28' }
-    });
-  } catch {
-    upstream = null;
-  }
-  if (!upstream || !upstream.ok) {
+  let releases;
+  try { releases = await fetchReleaseCatalogs(fetch, 'nexa-web-worker'); }
+  catch {
     return Response.json({ type: 'about:blank', title: 'Bad Gateway', status: 502, detail: 'GitHub 目录暂不可用' }, { status: 502, headers: { 'content-type': 'application/problem+json', 'cache-control': 'no-store' } });
   }
-  const body = await upstream.text();
-  const response = new Response(body, { headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, s-maxage=300, max-age=0' } });
+  const response = Response.json(releases, { headers: { 'cache-control': 'public, s-maxage=300, max-age=0' } });
   try { await cache.put(cacheKey, response.clone()); } catch { /* 缓存写入失败不影响本次响应 */ }
   return response;
 }

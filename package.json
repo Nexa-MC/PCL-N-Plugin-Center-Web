@@ -5,7 +5,7 @@
   "type": "module",
   "author": {
     "name": "PCL.N contributors",
-    "url": "https://github.com/MuXue1230-owo/PCL-N-Plugin-Center-Web"
+    "url": "https://github.com/Nexa-MC/PCL-N-Plugin-Center-Web"
   },
   "scripts": {
     "dev": "vite",

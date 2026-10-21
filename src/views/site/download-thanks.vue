@@ -13,7 +13,7 @@
         </div>
 
         <div class="actions">
-          <a class="primary" :href="downloadUrl" rel="noreferrer" @click="manualDownload">
+          <a v-if="downloadUrl" class="primary" :href="downloadUrl" rel="noreferrer" @click="manualDownload">
             {{ t("site.download.thanks.manualLink") }}
             <span v-if="assetName" class="asset">{{ assetName }}</span>
           </a>
@@ -33,7 +33,7 @@
 
         <div class="footer-nav">
           <router-link to="/download">{{ t("site.download.thanks.back") }}</router-link>
-          <a href="https://github.com/PCL-N-Edition/PCL-N/releases" target="_blank" rel="noreferrer">
+          <a :href="RELEASE_GITHUB + '/releases'" target="_blank" rel="noreferrer">
             {{ t("site.download.thanks.allReleases") }} ↗
           </a>
         </div>
@@ -49,6 +49,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import MarketHeader from "@/components/market/MarketHeader.vue";
 import PublicSiteFooter from "@/components/market/PublicSiteFooter.vue";
+import { releaseAssetIdentity, releaseSignatureUrl, RELEASE_GITHUB } from "@/utils/releaseRepository";
 import { applyPageSeo } from "@/utils/seo";
 
 const { t, locale } = useI18n();
@@ -56,37 +57,16 @@ const route = useRoute();
 
 const status = ref<"starting" | "started" | "blocked">("starting");
 
-const downloadUrl = computed(() => {
-  const raw = String(route.query.url ?? "");
-  try {
-    const u = new URL(raw);
-    if (u.protocol !== "https:") return "";
-    // Only allow GitHub release downloads for this product.
-    if (u.hostname !== "github.com" && u.hostname !== "objects.githubusercontent.com") return "";
-    if (u.hostname === "github.com" && !u.pathname.includes("/PCL-N-Edition/PCL-N/")) return "";
-    return u.toString();
-  } catch {
-    return "";
-  }
-});
+const downloadAsset = computed(() => releaseAssetIdentity(String(route.query.url ?? "")));
+const downloadUrl = computed(() => downloadAsset.value?.url || "");
+const assetName = computed(() => downloadAsset.value?.name || "");
+const signatureUrl = computed(() => releaseSignatureUrl(downloadUrl.value, String(route.query.sig ?? "")));
 
-const signatureUrl = computed(() => {
-  const raw = String(route.query.sig ?? "");
-  if (!raw) return downloadUrl.value ? `${downloadUrl.value}.asc` : "";
-  try {
-    const u = new URL(raw);
-    return u.protocol === "https:" ? u.toString() : "";
-  } catch {
-    return "";
-  }
-});
-
-const assetName = computed(() => String(route.query.name ?? "").trim());
 const isAppImage = computed(
   () => assetName.value.toLowerCase().endsWith(".appimage") || downloadUrl.value.toLowerCase().includes(".appimage")
 );
 const appImageHintText = computed(() =>
-  t("site.download.thanks.appImageChmod", { name: assetName.value || "PCL_N_….AppImage" })
+  t("site.download.thanks.appImageChmod", { name: assetName.value || "Nexa-….AppImage" })
 );
 
 const statusText = computed(() => {

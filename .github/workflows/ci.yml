@@ -29,3 +29,5 @@ jobs:
         run: pnpm test
       - name: Build
         run: pnpm build:prod
+      - name: Validate Worker bundle and bindings
+        run: pnpm worker:check

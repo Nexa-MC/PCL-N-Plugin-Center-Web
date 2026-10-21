@@ -1,14 +1,14 @@
 <template>
   <div ref="root" class="product-switch" role="group" :aria-label="label">
     <span class="selection" :style="{transform:`translateX(${position}px)`}" aria-hidden="true" />
-    <button v-for="(item,index) in options" :key="item.id" :aria-pressed="modelValue === item.id" @click="$emit('update:modelValue',item.id)" @keydown="navigate($event,index)">{{ item.label }}<small v-if="index === 0">Alpha</small></button>
+    <button v-for="(item,index) in options" :key="item.id" :aria-pressed="modelValue === item.id" @click="$emit('update:modelValue',item.id)" @keydown="navigate($event,index)">{{ item.label }}</button>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 const props = defineProps<{modelValue:string;label:string}>();
 const emit = defineEmits<{ 'update:modelValue':[value:string] }>();
-const options=[{id:'nexa',label:'NexaCL 2.0'},{id:'legacy',label:'PCL N 1.x'}];
+const options=[{id:'nexa',label:'NexaCL Firefly'},{id:'legacy',label:'PCL N 1.x'}];
 const root=ref<HTMLElement>(); const position=ref(0);
 let target=0, velocity=0, frame=0, last=0, observer:ResizeObserver;
 let reduced:MediaQueryList;

@@ -1095,5 +1095,12 @@
   "该档位尚未配置月付价格。": "A monthly price has not been configured for this plan.",
   "该档位尚未配置年付价格。": "A yearly price has not been configured for this plan.",
   "已保存第 {0} 版规则。停用或过期的更新规则会暂停推送；删除更新规则会恢复全量推送。功能规则停用后使用默认行为。": "Rule version {0} saved. Disabled or expired update rules pause delivery; deleting an update rule restores delivery to everyone. Disabled feature rules use the default behavior.",
-  " · 最新同步失败": " · Latest sync failed"
+  " · 最新同步失败": " · Latest sync failed",
+  "体验 NexaCL Firefly，或浏览 PCL N 1.x 历史版本。": "Explore NexaCL Firefly, or browse historical PCL N 1.x releases.",
+  "Firefly 为预发布版本，请先备份游戏数据。首次迁移请安装新版，再导入已有游戏文件夹。": "Firefly is a preview release. Back up your game data before trying it. For your first migration, install the new package and import your existing game folders.",
+  "下载启动器无需网站账号": "No website account required to download",
+  "Firefly 版支持哪些功能？": "What can I do with Firefly?",
+  "支持账号管理、启动已安装游戏、迁移游戏文件夹，以及安装和更新模组与整合包。测试预发布版本前请备份存档。": "Manage accounts, launch installed games, import game folders, and install or update mods and modpacks. Back up your saves before testing a preview release.",
+  "全球范围内，添加或导入非 Microsoft 账号前需通过正版 Java 版校验。中国大陆不提供 Minecraft 本体下载服务，仍可导入和启动完整的本地游戏。": "Worldwide, adding or importing a non-Microsoft account requires verified Java Edition ownership. Minecraft base-game downloads are unavailable in mainland China; complete local games can still be imported and launched.",
+  "NexaCL 贡献者 · Apache-2.0": "NexaCL contributors · Apache-2.0"
 }

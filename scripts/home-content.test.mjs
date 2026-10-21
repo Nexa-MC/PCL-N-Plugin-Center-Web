@@ -6,7 +6,7 @@ import { normalizeLanguage, getInitialLanguage, getStoredLanguage, persistLangua
 
 const CJK = /[\u3400-\u9fff]/;
 // Technical names and product labels that are the same in both languages.
-const SHARED_LATIN = new Set(['NexaCL 2.0 Alpha', 'MRPACK', 'CurseForge ZIP', 'Forge / NeoForge / OptiFine', 'Alpha', 'PCL N 1.4.x']);
+const SHARED_LATIN = new Set(['NexaCL Firefly', 'MRPACK', 'CurseForge ZIP', 'Forge / NeoForge / OptiFine', 'Alpha', 'PCL N 1.4.x']);
 // Names of internal building blocks. They mean nothing to players and must not reach the homepage.
 const INTERNAL_TERMS = /\b(XSR|NativeAOT|Native AOT|PXML|UI\.Next|Sidecar|Avalonia|\.NET|JVM|P\/Invoke|keyring)\b/i;
 

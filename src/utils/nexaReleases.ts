@@ -1,6 +1,8 @@
+import { normalizeReleaseCatalog } from './releaseCatalog.ts';
 import { loadGithubReleases } from "./githubReleases.ts";
-import { RELEASE_GITHUB, isReleasePage, isReleaseAsset } from './releaseRepository.ts';
-export const NEXA_GITHUB = RELEASE_GITHUB;
+import { SOURCE_GITHUB, RELEASE_GITHUB, isReleaseAsset } from './releaseRepository.ts';
+export const NEXA_GITHUB = SOURCE_GITHUB;
+export const NEXA_RELEASES = `${RELEASE_GITHUB}/releases`;
 export interface NexaAsset { name: string; browser_download_url: string; size: number }
 export interface NexaRelease { tag_name: string; name: string; body: string; published_at: string; html_url: string; assets: NexaAsset[] }
 export function nexaChannel(tag: string): "alpha" | "beta" | "ci" | "release" | null {
@@ -21,9 +23,22 @@ export function releaseAssets(release: NexaRelease, platform: string, architectu
     return [];
   });
 }
+/** Canonical version order, independent of repository order or publication timestamps. */
+export function compareNexaReleases(left: NexaRelease, right: NexaRelease): number {
+  const parts = (r: NexaRelease) => {
+    const [major, minor, patch, stage, sequence] = r.tag_name.replace(/^v/, '').split('.');
+    return [Number(major), Number(minor), Number(patch),
+      stage === 'alpha' ? 1 : stage === 'beta' ? 2 : stage === 'ci' ? 0 : 3,
+      stage === 'alpha' || stage === 'beta' ? Number(sequence) : 0];
+  };
+  const a = parts(left); const b = parts(right);
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return b[i] - a[i];
+  return Date.parse(right.published_at) - Date.parse(left.published_at);
+}
 export async function loadNexaCatalog(signal?: AbortSignal): Promise<{ releases: NexaRelease[]; source: "github" | "snapshot" }> {
   try {
-    const releases = (await loadGithubReleases(signal)).filter(r => nexaChannel(r.tag_name) !== null);
+    const releases = (await loadGithubReleases(signal)).filter(r => nexaChannel(r.tag_name) !== null).sort(compareNexaReleases);
+    if (!releases.length) throw new Error("No published Nexa releases in the available sources");
     return { releases, source: "github" };
   } catch (error) {
     signal?.throwIfAborted();
@@ -31,8 +46,7 @@ export async function loadNexaCatalog(signal?: AbortSignal): Promise<{ releases:
     if (!response.ok) throw error;
     const data = await response.json();
     if (!Array.isArray(data.releases)) throw new Error("Invalid release catalog");
-    return { source: "snapshot", releases: data.releases.filter((r: NexaRelease) => nexaChannel(r.tag_name) !== null && Array.isArray(r.assets)
-      && isReleasePage(r.html_url, r.tag_name)) };
+    return { source: "snapshot", releases: normalizeReleaseCatalog(data.releases).filter(r => nexaChannel(r.tag_name) !== null).sort(compareNexaReleases) };
   }
 }
 export async function loadNexaReleases(signal?: AbortSignal): Promise<NexaRelease[]> { return (await loadNexaCatalog(signal)).releases; }

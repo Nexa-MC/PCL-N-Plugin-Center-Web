@@ -3,7 +3,7 @@
     <div class="footer-brand">
       <BrandIcon />
       <div>
-        <strong>PCL N</strong>
+        <strong>NexaCL</strong>
         <span>{{ t("site.footer.tagline") }}</span>
       </div>
     </div>
@@ -11,13 +11,14 @@
       <router-link to="/download">{{ t("market.header.download") }}</router-link>
       <router-link to="/market">{{ t("market.header.plugins") }}</router-link>
       <a href="https://docs.pcln.top/" target="_blank" rel="noreferrer">{{ t("market.header.docs") }}</a>
-      <a href="https://github.com/PCL-N-Edition/PCL-N" target="_blank" rel="noreferrer">GitHub</a>
+      <a :href="SOURCE_GITHUB" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
-    <p>© {{ year }} {{ $ui("PCL N 贡献者 · Apache-2.0") }}</p>
+    <p>© {{ year }} {{ $ui("NexaCL 贡献者 · Apache-2.0") }}</p>
   </footer>
 </template>
 
 <script setup lang="ts">
+import { SOURCE_GITHUB } from '@/utils/releaseRepository';
 import BrandIcon from '@/components/BrandIcon.vue';
 import { useI18n } from "vue-i18n";
 

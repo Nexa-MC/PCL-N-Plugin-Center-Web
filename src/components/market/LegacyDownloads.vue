@@ -1,6 +1,6 @@
 <template>
   <section class="legacy-picker">
-    <header><div><h2>PCL N 1.x</h2><p>{{ t('site.download.versionHistoryHint') }}</p></div><a href="https://github.com/PCL-N-Edition/PCL-N/releases" target="_blank" rel="noreferrer">GitHub ↗</a></header>
+    <header><div><h2>PCL N 1.x</h2><p>{{ t('site.download.versionHistoryHint') }}</p></div><a :href="LEGACY_GITHUB + '/releases'" target="_blank" rel="noreferrer">GitHub ↗</a></header>
     <div class="legacy-platforms" :aria-label="t('site.download.platformLabel')">
       <button v-for="item in platforms" :key="item.id" :aria-pressed="selectedPlatformId === item.id" @click="openDownload(item.id)">{{ item.name }}</button>
     </div>
@@ -22,6 +22,7 @@
   </section>
 </template>
 <script setup lang="ts">
+import { LEGACY_GITHUB } from '@/utils/releaseRepository';
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { watchReleaseUpdates } from "@/utils/githubReleases";

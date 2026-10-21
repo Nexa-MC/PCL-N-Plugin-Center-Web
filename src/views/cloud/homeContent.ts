@@ -31,13 +31,13 @@ export interface HomeCopy {
 export const en: HomeCopy = {
   seo: {
     title: 'NexaCL — The Minecraft launcher that asks less from you',
-    description: 'NexaCL (formerly PCL N) is the next-generation community Minecraft launcher for Windows, macOS and Linux. Java, downloads, updates, accounts and recovery are handled for you. Try the 2.0 Alpha or stay on 1.4.x.',
+    description: 'NexaCL (formerly PCL N) is the next-generation community Minecraft launcher for Windows, macOS and Linux. Java, downloads, updates, accounts and recovery are handled for you. Try Firefly or browse the historical 1.4.x releases.',
   },
   hero: {
-    badge: 'NexaCL 2.0 Alpha',
+    badge: 'NexaCL Firefly',
     title: 'The Minecraft launcher that asks less from you.',
     sub: 'Pick a profile, pick a version, press Launch. NexaCL finds the right Java, downloads what’s missing and keeps itself up to date, so you can get on with playing.',
-    download: 'Download 2.0 Alpha',
+    download: 'Download Firefly',
     changelog: 'What’s new',
     build: 'Current build',
     platforms: 'Windows, macOS and Linux · x64 and ARM64',
@@ -50,7 +50,7 @@ export const en: HomeCopy = {
     version: 'Version',
     launch: 'Launch game',
     tagline: 'Your next game starts here.',
-    caption: 'Interface illustration. The Alpha interface may change.',
+    caption: 'Interface illustration. The preview interface may change.',
   },
   stats: {
     aria: 'NexaCL at a glance',
@@ -58,7 +58,7 @@ export const en: HomeCopy = {
       { value: 3, label: 'platforms: Windows, macOS and Linux' },
       { value: 2, label: 'processor types: x64 and ARM64' },
       { value: 4, label: 'Java versions matched for you (8, 17, 21, 25)' },
-      { value: 1, label: 'click to upgrade from 1.4.x to 2.0' },
+      { value: 18, label: 'packages across all supported platforms' },
     ],
   },
   features: {
@@ -80,11 +80,11 @@ export const en: HomeCopy = {
     },
     updates: {
       title: 'Updates, minus the fuss.',
-      body: 'NexaCL chooses a full package or a smaller patch for you and checks every file before installing it. From 1.4.x you can upgrade straight to 2.0.',
+      body: 'NexaCL chooses a full package or a smaller patch for you and checks every file before installing it. For your first migration from PCL N, install Firefly and import your game folders.',
     },
     accounts: {
       title: 'Accounts and looks.',
-      body: 'Sign in with Microsoft, Yggdrasil or LittleSkin. Skins and capes are being added, and your sign-in details stay in your system’s secure storage.',
+      body: 'Sign in with Microsoft, Yggdrasil or LittleSkin. Worldwide, non-Microsoft accounts require verified Java Edition ownership before they can be added or imported. Your credentials stay in your system’s secure storage.',
     },
     install: {
       title: 'Drop it in. Done.',
@@ -118,12 +118,12 @@ export const en: HomeCopy = {
     ],
   },
   status: {
-    badge: 'Alpha',
+    badge: 'Preview',
     title: 'Usable, not finished.',
-    body: 'NexaCL 2.0 is in Alpha. You can try it today, but some pages are still being built and things can change. Back up your saves before you start.',
+    body: 'NexaCL Firefly is a preview. Core game, account, mod and modpack workflows are available; future features remain planned. Back up your saves before you start.',
     rows: [
       { label: 'Downloads, updates and accounts', state: 'done', text: 'Mostly complete' },
-      { label: 'Installing and launching games', state: 'wip', text: 'Being polished' },
+      { label: 'Installing and launching games', state: 'done', text: 'Available' },
       { label: 'Instance, mod and world tools', state: 'wip', text: 'In progress' },
       { label: 'Plugins', state: 'later', text: 'Up next' },
     ],
@@ -132,26 +132,26 @@ export const en: HomeCopy = {
   legacy: {
     tag: 'PCL N 1.4.x',
     title: 'Just want to play?',
-    body: '1.4.x stays the stable version during the Alpha, so there’s no need to switch. NexaCL 2.0 takes over once it’s finished and has passed the final checks.',
+    body: 'Historical PCL N 1.4.x downloads remain available. Firefly continues in the new NexaCL repository; keep a backup when migrating.',
     link: 'Download PCL N 1.4.x',
   },
   faq: {
     eyebrow: 'FAQ',
     title: 'Straight answers.',
     items: [
-      { q: 'Is NexaCL the same as PCL N?', a: 'NexaCL is the next generation of PCL N. PCL N 1.x is the earlier stable version. Some early Alpha download files still have “Nexa” in their names; that will be made consistent later.' },
-      { q: 'Should I use the Alpha now?', a: 'If you want an early look at 2.0 and don’t mind pages and behavior still changing, give it a try. If you just want to play without surprises, stay on 1.4.x.' },
-      { q: 'Has NexaCL 2.0 replaced PCL N 1.4.x?', a: 'Not yet. 1.4.x stays the stable version during the Alpha. NexaCL 2.0 takes over only after it is finished and has passed the final checks.' },
-      { q: 'Can I upgrade from 1.4.x?', a: 'Yes. The updater moves 1.4.x straight to 2.0. Once you are on 2.0 it does not offer a downgrade, so back up your data first.' },
+      { q: 'Is NexaCL the same as PCL N?', a: 'NexaCL is the next generation of PCL N. PCL N 1.x is the earlier stable version. Download packages retain the “Nexa” filename prefix to preserve update and signature compatibility.' },
+      { q: 'Should I use Firefly now?', a: 'If you want an early look at 2.0 and don’t mind pages and behavior still changing, give Firefly a try. If you just want to play without surprises, stay on 1.4.x.' },
+      { q: 'Has NexaCL 2.0 replaced PCL N 1.4.x?', a: 'Firefly is a preview in the new repository. Historical 1.4.x downloads remain available. Minecraft base-game downloads are unavailable in mainland China; complete local games can still be imported and launched.' },
+      { q: 'Can I upgrade from 1.4.x?', a: 'Install Firefly from the new download page, then import your existing launcher or complete game folders. Older builds use a fixed update address and need this first manual migration. Back up your data first.' },
       { q: 'Which systems does it run on?', a: 'Windows, macOS and Linux, on both x64 and ARM64 processors. Pick an installer or a portable archive on the download page.' },
       { q: 'Is NexaCL open source?', a: 'Yes. It is built by the community under the Apache-2.0 license, and the source code is public on GitHub.' },
     ],
   },
   cta: {
-    eyebrow: 'NexaCL 2.0 Alpha',
+    eyebrow: 'NexaCL Firefly',
     title: 'Ready to try NexaCL?',
-    body: 'The Alpha moves fast, and every piece of feedback shapes the next build.',
-    download: 'Download NexaCL 2.0 Alpha',
+    body: 'Firefly moves fast, and every piece of feedback shapes the next build.',
+    download: 'Download NexaCL Firefly',
     legacy: 'Stay on PCL N 1.4.x',
     fine: 'Built by the community',
   },
@@ -160,13 +160,13 @@ export const en: HomeCopy = {
 export const zh: HomeCopy = {
   seo: {
     title: 'NexaCL — 一个更省心的 Minecraft 启动器',
-    description: 'NexaCL（原 PCL N）是新一代社区 Minecraft 启动器，支持 Windows、macOS 和 Linux。Java、下载、更新、账号与崩溃恢复都替你处理。体验 2.0 Alpha，或继续使用 1.4.x 稳定版。',
+    description: 'NexaCL（原 PCL N）是新一代社区 Minecraft 启动器，支持 Windows、macOS 和 Linux。Java、下载、更新、账号与崩溃恢复都替你处理。体验 Firefly，或浏览 1.4.x 历史版本。',
   },
   hero: {
-    badge: 'NexaCL 2.0 Alpha',
+    badge: 'NexaCL Firefly',
     title: '一个更省心的 Minecraft 启动器。',
     sub: '选好档案和版本，点一下启动。合适的 Java、缺少的文件，以及启动器自身的更新，都由 NexaCL 替你处理，你只管玩。',
-    download: '下载 2.0 Alpha',
+    download: '下载 Firefly',
     changelog: '看看新在哪',
     build: '当前测试版本',
     platforms: 'Windows / macOS / Linux · x64 与 ARM64',
@@ -179,7 +179,7 @@ export const zh: HomeCopy = {
     version: '版本',
     launch: '启动游戏',
     tagline: '下一次游戏，从这里开始。',
-    caption: '界面示意。Alpha 版本的界面仍会调整。',
+    caption: '界面示意。预发布版本的界面仍会调整。',
   },
   stats: {
     aria: 'NexaCL 数字一览',
@@ -187,7 +187,7 @@ export const zh: HomeCopy = {
       { value: 3, label: '个平台 · Windows / macOS / Linux' },
       { value: 2, label: '种处理器 · x64 与 ARM64' },
       { value: 4, label: '个 Java 版本自动匹配（8 / 17 / 21 / 25）' },
-      { value: 1, label: '键升级 · 从 1.4.x 到 2.0' },
+      { value: 18, label: '种安装包与便携包 · 覆盖所有平台' },
     ],
   },
   features: {
@@ -209,11 +209,11 @@ export const zh: HomeCopy = {
     },
     updates: {
       title: '更新，少折腾。',
-      body: '完整包还是小补丁，由 NexaCL 替你决定；每个文件安装前都会先验证。1.4.x 可以直接升级到 2.0。',
+      body: '完整包还是小补丁，由 NexaCL 替你决定；每个文件安装前都会先验证。首次从 PCL N 迁移时，请安装 Firefly 并导入游戏文件夹。',
     },
     accounts: {
       title: '账号和外观。',
-      body: '支持 Microsoft、Yggdrasil 和 LittleSkin 登录，皮肤与披风功能正在补齐，登录凭据保存在系统的安全存储中。',
+      body: '支持 Microsoft、Yggdrasil 和 LittleSkin 登录。全球范围内，添加或导入非 Microsoft 账号前需验证 Java 版所有权；登录凭据保存在系统的安全存储中。',
     },
     install: {
       title: '拖进来，就能装。',
@@ -247,12 +247,12 @@ export const zh: HomeCopy = {
     ],
   },
   status: {
-    badge: 'Alpha',
+    badge: '预发布',
     title: '能用了，但还没做完。',
-    body: 'NexaCL 2.0 目前处于 Alpha 阶段，现在就可以体验，但部分页面仍在开发，功能也可能变化。开始之前，请先备份存档。',
+    body: 'NexaCL Firefly 目前为预发布版本，已提供游戏、账号、模组与整合包的主要流程，规划功能仍待开发。开始之前，请先备份存档。',
     rows: [
       { label: '下载、更新和账号', state: 'done', text: '主要部分已完成' },
-      { label: '安装与启动游戏', state: 'wip', text: '正在打磨' },
+      { label: '安装与启动游戏', state: 'done', text: '已提供' },
       { label: '实例、模组和存档工具', state: 'wip', text: '正在做' },
       { label: '插件', state: 'later', text: '后面再做' },
     ],
@@ -261,26 +261,26 @@ export const zh: HomeCopy = {
   legacy: {
     tag: 'PCL N 1.4.x',
     title: '只想稳定玩游戏？',
-    body: 'Alpha 期间，PCL N 1.4.x 仍然是稳定版本，不必急着更换。等 NexaCL 2.0 做完并通过最终检查后，才会正式接替它。',
+    body: 'PCL N 1.4.x 历史版本仍可下载。Firefly 已在新的 NexaCL 仓库继续开发；迁移时请保留备份。',
     link: '下载 PCL N 1.4.x',
   },
   faq: {
     eyebrow: '常见问题',
     title: '先把问题说清楚。',
     items: [
-      { q: 'NexaCL 和 PCL N 是同一个启动器吗？', a: 'NexaCL 是 PCL N 的下一代，PCL N 1.x 是前身稳定版。部分早期测试包的文件名仍带有“Nexa”字样，后续会统一。' },
-      { q: '我现在适合用 Alpha 吗？', a: '想提前体验 2.0、能接受页面和功能还会变化，可以试试 Alpha；只想稳稳当当玩游戏，继续用 1.4.x 更合适。' },
-      { q: 'NexaCL 2.0 已经取代 PCL N 1.4.x 了吗？', a: '还没有。Alpha 期间 1.4.x 仍是稳定版本；等 2.0 做完并通过最终检查后，才会正式接替。' },
-      { q: '1.4.x 能直接升级吗？', a: '可以。更新功能支持从 1.4.x 直接升级到 2.0；升级到 2.0 后不提供降级，请先备份数据。' },
+      { q: 'NexaCL 和 PCL N 是同一个启动器吗？', a: 'NexaCL 是 PCL N 的下一代，PCL N 1.x 是前身稳定版。安装包保留“Nexa”文件名前缀，以兼容既有更新与签名校验。' },
+      { q: '我现在适合用 Firefly 吗？', a: '想提前体验 2.0、能接受页面和功能还会变化，可以试试 Firefly；只想稳稳当当玩游戏，继续用 1.4.x 更合适。' },
+      { q: 'NexaCL 2.0 已经取代 PCL N 1.4.x 了吗？', a: 'Firefly 是新仓库中的预发布版本，仍保留 1.4.x 历史下载。中国大陆不提供 Minecraft 本体下载服务；完整本地游戏仍可导入和启动。' },
+      { q: '1.4.x 能直接升级吗？', a: '请从新的下载页安装 Firefly，再导入其他启动器或完整游戏文件夹。旧版本的更新地址固定，首次需要手动迁移；请先备份数据。' },
       { q: '支持哪些系统？', a: '支持 Windows、macOS 和 Linux，x64 与 ARM64 处理器均可。在下载页选择安装包或便携包即可。' },
       { q: 'NexaCL 是开源的吗？', a: '是的。NexaCL 由社区开发，采用 Apache-2.0 许可，源代码在 GitHub 公开。' },
     ],
   },
   cta: {
-    eyebrow: 'NexaCL 2.0 Alpha',
+    eyebrow: 'NexaCL Firefly',
     title: '准备好试试 NexaCL 了吗？',
-    body: 'Alpha 正在快速迭代，你的每一条反馈都会影响下一个版本。',
-    download: '下载 NexaCL 2.0 Alpha',
+    body: 'Firefly 正在快速迭代，你的每一条反馈都会影响下一个版本。',
+    download: '下载 NexaCL Firefly',
     legacy: '继续用 PCL N 1.4.x',
     fine: '由社区开发',
   },
