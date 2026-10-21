@@ -10,3 +10,5 @@
 验证：多源优先级与去重、源故障与旧版本兼容、伪造链接拒绝、请求缓存和取消、Worker 路由/缓存，以及生产类型检查、静态构建和 Worker dry-run。
 
 生产发布使用 `Deploy NexaCL Web Worker` 手动工作流，输入已验证的 `master` 完整提交 SHA，复用现有 `cloudflare-pages` 环境中的 Cloudflare 凭据，同时部署静态资源与同源发布代理。历史 Pages 自动构建不能替代 `nexa-web` Worker 部署；不需要改动 Auth/API 或数据库。
+
+诊断关联的上游契约已核对：Server 的 `nexa/telemetry/launcher-diagnostic-issues.mjs` 当前读取 `PCL-N-Edition/PCL-N` 的历史 Issue，响应只包含编号，没有仓库来源。Web 因而继续使用对应的历史地址；新仓库的同号 Issue 不是同一个对象。后续改变诊断同步仓库时，Server 必须同时明确返回来源，不能直接替换 Web 的地址前缀。商店获取仍遵循现有后端开放状态。
