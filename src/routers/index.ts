@@ -40,6 +40,7 @@ const router = createRouter({
     { path: '/market/plugins/:id', redirect: to => `/store/${encodeURIComponent(String(to.params.id))}` },
     { path: '/admin/telemetry', redirect: '/account?section=website' },
     { path: '/developer', redirect: '/account?section=developer' },
+    { path: '/creator', redirect: '/account?section=creator' },
     { path: '/website-management', redirect: '/account?section=website' },
     { path: '/home', redirect: '/' },
     { path: '/login', component: () => import('@/views/cloud/Login.vue') },

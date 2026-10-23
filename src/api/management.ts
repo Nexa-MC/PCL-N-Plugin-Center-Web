@@ -2,7 +2,7 @@ import { managementAuthRequest, request, type Page, type Ticket, type StoreItem,
 
 export interface ManagedUser {
   id: string; name: string; handle: string | null; email: string | null;
-  staff: number; developer: number; trustedDeveloper: number; disabled: number; createdAt: string | null;
+  staff: number; creator?: number; developer: number; trustedDeveloper: number; disabled: number; createdAt: string | null;
 }
 export interface ManagedResource extends StoreItem { published: number; revision: number }
 export interface AuditEntry { id: number; actor: string; action: string; created_at: string; detail?: string | null; object_id?: string }

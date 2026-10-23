@@ -1440,5 +1440,20 @@
   "开发者核验需要登录后关联GitHub": "Sign in and link GitHub to verify developer conditions",
   "GitHub核验过于频繁，请稍后重试": "Too many GitHub verification requests. Try again later",
   "申请条件已更新，请按新条件重新申请": "Application conditions have changed. Apply again using the new criteria",
-  "资格已由新申请授予": "Status has been granted through a new application"
+  "资格已由新申请授予": "Status has been granted through a new application",
+  "创作者控制台": "Creator console",
+  "创作者": "Creator",
+  "已开通": "Active",
+  "创作者资格已开通。": "Your creator status is active.",
+  "查看创作指南，开始准备你的作品。": "Explore the creation guides and start preparing your work.",
+  "创作指南": "Creation guides",
+  "浏览商店": "Browse the store",
+  "完成注册并接受服务条款后，即可申请创作者资格。提交申请后自动开通，无需等待人工审核。": "Complete registration and accept the terms to apply for creator status. Your application is approved automatically, without waiting for manual review.",
+  "申请并开通创作者资格": "Apply and activate creator status",
+  "正在开通…": "Activating…",
+  "创作者申请失败，请重试": "Unable to activate creator status. Try again",
+  "测试账户不提交真实申请": "Test accounts do not submit real applications",
+  "创作者申请仅接受kind字段": "Creator applications accept only the kind field",
+  "申请操作过于频繁，请稍后重试": "Too many application requests. Try again later",
+  "账户状态已改变，请刷新后重试": "Your account changed. Refresh and try again"
 }

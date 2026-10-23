@@ -93,3 +93,18 @@ test('frontend fixture accounts never request a real Minecraft authorization', a
     assert.deepEqual(redirects, []);
   } finally { testLogout(); }
 });
+
+test('creator activation submits only its application kind and refreshes the server role', async t => {
+  const requests=[];let active=false;
+  t.mock.method(globalThis,'fetch',async(url,init)=>{
+    requests.push({url,init});
+    if(url==='https://auth.pcln.top/auth/v1/tokens')return Response.json({token:'fixture-token',user:{id:'creator-user',name:'Creator',creator:Number(active),scope:'console'}});
+    assert.equal(url,'https://auth.pcln.top/auth/v1/applications');
+    assert.equal(init.method,'POST');assert.deepEqual(JSON.parse(init.body),{kind:'creator'});
+    assert.equal(init.headers.Authorization,'Bearer fixture-token');assert.equal(init.credentials,'include');
+    active=true;return Response.json({kind:'creator',state:'approved',creator:true,created:true},{status:201});
+  });
+  const {platform}=await loadPlatform(t);await platform.session();
+  assert.equal((await platform.applyCreator()).state,'approved');
+  assert.equal((await platform.refreshSession()).creator,1);assert.equal(requests.length,3);
+});

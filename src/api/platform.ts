@@ -1,6 +1,6 @@
 import type { RegisterOptions, AssertOptions, CreatedPasskey, PasskeyAssertion } from '../utils/webauthnClient';
 
-export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; trustedDeveloper?: 0 | 1; termsAccepted?: number; handle?: string | null; setupRequired?: 0 | 1; scope: 'console' | 'operations' }
+export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; creator?: 0 | 1; developer?: 0 | 1; trustedDeveloper?: 0 | 1; termsAccepted?: number; handle?: string | null; setupRequired?: 0 | 1; scope: 'console' | 'operations' }
 export type DeveloperKind = 'developer' | 'trusted_developer';
 export interface DeveloperEligibility { required: number; verifiedCount: number; githubLinked: boolean; githubFresh: boolean; githubCheckedAt: string | null; conditions: { id: string; label: string; met: boolean; value: string | number | null; available?: boolean }[] }
 export interface LinkedIdentity { provider: 'github' | 'microsoft' | 'google'; email?: string | null; created_at: string }
@@ -66,7 +66,7 @@ export interface Page<T> { data: T[]; pagination: { limit: number; offset: numbe
 async function mintToken(): Promise<Session | undefined> {
   const response = await authFetch('/auth/v1/tokens', { method: 'POST', body: '{}' });
   if (!response.ok) return undefined;
-  const data = await response.json() as { token: string; user: { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; termsAccepted?: number } };
+  const data = await response.json() as { token: string; user: Omit<Session, 'scope'> };
   if (!data.token || !data.user?.id) return undefined;
   accessToken = data.token;
   currentUser = { ...data.user, scope: 'console' };
@@ -211,6 +211,10 @@ export const platform = {
     return restoring;
   },
   refreshSession: () => isTest() ? Promise.resolve(testSession) : mintToken(),
+  applyCreator: async () => {
+    if(isTest()) throw new ApiError('测试账户不提交真实申请',403);
+    return authJson<{kind:'creator';state:'approved';creator:true;created:boolean}>(authFetch('/auth/v1/applications',{method:'POST',body:JSON.stringify({kind:'creator'})}),'创作者申请失败，请重试');
+  },
   developerEligibility: async () => {
     if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
     return authJson<{developer:DeveloperEligibility;trustedDeveloper:DeveloperEligibility;applications:{kind:DeveloperKind;state:string}[];roles:{developer:boolean;trustedDeveloper:boolean}}>(authFetch('/auth/v1/account/developer-eligibility'), '暂时无法读取申请条件');

@@ -29,4 +29,4 @@ export function useManagement<T>(loader: () => Promise<T>) {
 
 export const formatDate = (value: string | null | undefined) => value ? new Date(value).toLocaleString(uiLocale.value, { timeZone: 'Asia/Shanghai', hour12: false }) : '—';
 export const formatNumber = (value: number) => value.toLocaleString(uiLocale.value);
-export const applicationLabel = (kind: string) => ui({ developer: '开发者', trusted_developer: '受信任开发者', admin: '网站管理员' }[kind] || kind);
+export const applicationLabel = (kind: string) => ui({ creator: '创作者', developer: '开发者', trusted_developer: '受信任开发者', admin: '网站管理员' }[kind] || kind);

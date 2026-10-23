@@ -105,6 +105,24 @@
         <section class="work-panel"><h2>{{ $ui("钱包与订阅") }}</h2><div class="profile-row"><span>{{ $ui("当前会员等级") }}</span><strong>{{ $ui(entitlements?.membership.name || (portalError ? "读取失败" : "正在读取…")) }}</strong></div><div v-if="entitlements?.cloudPlus" class="profile-row"><span>{{ $ui("订阅状态") }}</span><strong>{{ entitlements.membership.status === 'trialing' ? $ui("试用中") : $ui("已激活") }}{{ entitlements.membership.billingCycle === 'year' ? $ui(" · 年付") : entitlements.membership.billingCycle === 'month' ? $ui(" · 月付") : '' }}</strong></div><p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">{{ $ui("订阅变更将在当前计费周期结束时生效。") }}</p><div class="actions"><router-link class="primary-button" to="/pricing">{{ $ui("查看套餐与价格") }}</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">{{ $ui("管理订阅") }}</button></div><p v-if="portalError" class="form-error" role="alert">{{ $ui(portalError) }}</p><p class="login-fine">{{ $ui("支付方式、取消与发票在 Paddle 客户门户管理。") }}<router-link to="/legal/refunds">{{ $ui("退款政策") }}</router-link></p></section>
       </template>
 
+      <template v-else-if="section === 'creator'">
+        <section class="work-panel">
+          <div class="section-heading"><h2>{{ $ui('创作者控制台') }}</h2><span v-if="session.creator" class="status-pill">{{ $ui('已开通') }}</span></div>
+          <template v-if="session.creator">
+            <p>{{ $ui('创作者资格已开通。') }}</p>
+            <div class="profile-row"><span>{{ $ui('创作者') }}</span><strong>{{ session.handle ? '@' + session.handle : session.name }}</strong></div>
+            <p>{{ $ui('查看创作指南，开始准备你的作品。') }}</p>
+            <div class="actions"><router-link class="primary-button" to="/docs">{{ $ui('创作指南') }}</router-link><router-link class="secondary-button" to="/store">{{ $ui('浏览商店') }}</router-link></div>
+          </template>
+          <template v-else>
+            <p>{{ $ui('完成注册并接受服务条款后，即可申请创作者资格。提交申请后自动开通，无需等待人工审核。') }}</p>
+            <button class="primary-button" :disabled="creatorBusy || testMode" @click="applyCreator">{{ $ui(creatorBusy ? '正在开通…' : '申请并开通创作者资格') }}</button>
+          </template>
+          <p v-if="creatorError" class="form-error" role="alert">{{ $ui(creatorError) }}</p>
+          <p v-if="testMode" class="test-mode-note">{{ $ui('前端测试账户不连接真实认证服务。') }}</p>
+        </section>
+      </template>
+
       <template v-else-if="section === 'developer'">
         <section v-if="session.developer" class="work-panel"><span class="status-pill">{{ $ui("已具备资格") }}</span><h2>{{ $ui("开发者管理控制台") }}</h2><p>{{ $ui("发布者工作空间、资源提交与管理功能正在接入，入口将在此开放。") }}</p></section>
         <DeveloperApplication v-if="!session.developer" key="developer" kind="developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
@@ -213,6 +231,7 @@ const navItems = [
   { key: 'privacy', label: '隐私与数据', icon: 'lock-circle', color: '#00897b' },
   { key: 'wallet', label: '钱包与订阅', icon: 'card', color: '#c5221f' },
   { key: 'tickets', label: '支持工单', icon: 'conversation-box', color: '#12a5af' },
+  { key: 'creator', label: '创作者控制台', icon: 'picture', color: '#a142f4' },
   { key: 'developer', label: '开发者控制台', icon: 'console', color: '#3f51b5' },
   { key: 'website', label: '网站管理', icon: 'setting', color: '#e8546e' },
   { key: 'delete', label: '删除账户', icon: 'trash-square', color: '#5f6368' }
@@ -307,6 +326,8 @@ async function openPortal(){ busy.value = true; portalError.value = ''; try { aw
 const progression = ref<AccountProgression>(), levelBusy = ref(false), levelError = ref('');
 async function loadProgression(){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.accountProgression(); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '暂时无法读取等级与经验'; } finally { levelBusy.value = false; } }
 async function refreshRoles(){ session.value=await platform.refreshSession(); await loadProgression(); }
+const creatorBusy=ref(false),creatorError=ref('');
+async function applyCreator(){if(creatorBusy.value)return;creatorBusy.value=true;creatorError.value='';try{await platform.applyCreator();await refreshRoles();}catch(e){creatorError.value=e instanceof Error?e.message:'创作者申请失败，请重试';}finally{creatorBusy.value=false;}}
 async function selectDisplay(badgeId: string | null){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.selectLevelDisplay(badgeId); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '更换等级展示失败'; } finally { levelBusy.value = false; } }
 const connections = ref<AccountConnection[]>([]), connectionError = ref(String(route.query.connection_error || '').slice(0, 200)), connectionMessage = ref(route.query.connection_success ? '绑定成功' : '');
 async function loadConnections(){ try { connections.value = (await platform.connections()).connections; } catch (e) { connectionError.value = e instanceof ApiError ? e.message : '读取社区账户失败'; } }
