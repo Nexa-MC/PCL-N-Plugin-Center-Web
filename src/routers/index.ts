@@ -51,7 +51,7 @@ const router = createRouter({
 // 带 applyPageSeo 的页面（主页/下载/更新日志/登录/注册）会在挂载时用各自的 SEO 标题覆写。
 const ROUTE_TITLES: Record<string, string> = { '/login': '登录', '/register': '创建账户', '/account': '账户', '/store': '商店', '/download': '下载', '/changelog': '更新日志', '/pricing': 'Cloud+ 订阅', '/docs': '文档', '/welcome': '欢迎' };
 function titleFor(path: string): string {
-  if (path === '/manage' || path.startsWith('/manage/')) return `${String(router.currentRoute.value.meta.title || '网站管理')} · NexaCL 管理后台`;
+  if (path === '/manage' || path.startsWith('/manage/')) return ui('{0} · NexaCL 管理后台', [ui(router.currentRoute.value.meta.title || '网站管理')]);
   if (path === '/') return 'NexaCL — 一个更省心的 Minecraft 启动器';
   if (ROUTE_TITLES[path]) return `${ROUTE_TITLES[path]} · NexaCL`;
   if (path.startsWith('/legal')) return '法律文档 · NexaCL';

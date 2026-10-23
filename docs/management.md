@@ -70,6 +70,8 @@ pnpm exec wrangler deploy --config wrangler.manage.jsonc
 
 Web 仓库的 `Deploy NexaCL Web Worker` 工作流也支持 `target=manage`，仍须填完整已审阅 master SHA；
 它仅发布选定的前端 Worker，不替代前面的 Auth/API 发布和 D1 迁移。
+后台页面、共享语言和管理配置的 `master` 推送会自动选择 `target=manage`，运行检查后发布管理 Worker；
+手动运行仍可选择 `web` 或 `manage`，并验证填写的完整提交 SHA。
 工作流使用已有 `cloudflare-pages` 环境中的 `CLOUDFLARE_API_TOKEN` 与 `CLOUDFLARE_ACCOUNT_ID`。
 GitHub PAT 不能替代 Cloudflare 部署凭据；不要把任何令牌写入仓库、前端构建或聊天。
 

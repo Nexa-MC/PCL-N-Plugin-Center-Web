@@ -1,5 +1,6 @@
 import { onMounted, ref, shallowRef } from 'vue';
 import { ApiError, SESSION_EVENT } from '@/api/platform';
+import { ui, uiLocale } from '@/languages/localize';
 
 export function useManagement<T>(loader: () => Promise<T>) {
   const data = shallowRef<T>(), loading = ref(false), busy = ref(false), error = ref(''), success = ref('');
@@ -26,5 +27,6 @@ export function useManagement<T>(loader: () => Promise<T>) {
   return { data, loading, busy, error, success, load, perform };
 }
 
-export const formatDate = (value: string | null | undefined) => value ? new Date(value).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }) : '—';
-export const applicationLabel = (kind: string) => ({ developer: '开发者', trusted_developer: '受信任开发者', admin: '网站管理员' }[kind] || kind);
+export const formatDate = (value: string | null | undefined) => value ? new Date(value).toLocaleString(uiLocale.value, { timeZone: 'Asia/Shanghai', hour12: false }) : '—';
+export const formatNumber = (value: number) => value.toLocaleString(uiLocale.value);
+export const applicationLabel = (kind: string) => ui({ developer: '开发者', trusted_developer: '受信任开发者', admin: '网站管理员' }[kind] || kind);

@@ -78,6 +78,47 @@ test('every static Chinese template message is localized and has a catalog entry
   assert.deepEqual(failures, []);
 });
 
+test('management dynamic labels, fallback messages and stored notices have translations', async () => {
+  const failures = [];
+  const directory = fileURLToPath(new URL('src/views/manage/', root));
+  function inspect(source, file, display = false) {
+    const tree = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
+    function visit(node, translated = false) {
+      const insideTranslation = translated || (ts.isCallExpression(node) && ['$ui', 'ui'].includes(node.expression.getText(tree)));
+      if (ts.isStringLiteralLike(node) && han.test(node.text)) {
+        if (messages[node.text] === undefined) failures.push(`${file}: missing dynamic message ${node.text}`);
+        if (display && !insideTranslation) failures.push(`${file}: untranslated display expression ${node.text}`);
+      }
+      ts.forEachChild(node, child => visit(child, insideTranslation));
+    }
+    visit(tree);
+  }
+  for (const file of (await files(directory)).filter(file => /\.(vue|ts)$/.test(file))) {
+    const source = await readFile(file, 'utf8');
+    if (file.endsWith('.ts')) { inspect(source, file); continue; }
+    const { descriptor } = parse(source);
+    if (descriptor.scriptSetup) inspect(descriptor.scriptSetup.content, file);
+    function visit(node) {
+      if (node.type === 5) inspect(`(${node.content.content})`, file, true);
+      if (node.type === 1) for (const prop of node.props) {
+        if (prop.type === 7 && prop.exp) inspect(`(${prop.exp.content})`, file, true);
+      }
+      for (const child of node.children ?? []) visit(child);
+    }
+    visit(descriptor.template.ast);
+  }
+  assert.deepEqual(failures, []);
+});
+
+test('management notices translate as whole messages while user content stays intact', () => {
+  assert.equal(translateUi('第 {0}–{1} 条，共 {2} 条', 'en', [1, 25, '1,248']), '1–25 of 1,248');
+  assert.equal(translateUi('{0} · NexaCL 管理后台', 'en', ['Overview']), 'Overview · NexaCL Management');
+  assert.equal(translateUi('{0} 申请成为{1}。', 'en', ['中文用户名', 'Developer']), '中文用户名 applied for the Developer role.');
+  assert.equal(translateUi('确认已处理完「{0}」？工单将移入已解决列表。', 'en', ['中文工单标题']), 'Have you finished handling “中文工单标题”? The ticket will move to the resolved list.');
+  assert.equal(translateUi('账户状态已变化，请刷新后重试', 'en'), 'Account status has changed. Refresh and try again.');
+  assert.equal(translateUi('资源已保存。', 'en'), 'Resource saved.');
+});
+
 test('current English legal translations retain section identifiers and key published limits', async () => {
   for (const doc of ['terms', 'privacy', 'publisher', 'refunds']) {
     const chinese = await readFile(new URL(`public/legal/current/${doc}.zh-CN.md`, root), 'utf8');
