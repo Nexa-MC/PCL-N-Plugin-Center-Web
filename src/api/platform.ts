@@ -1,13 +1,15 @@
 import type { RegisterOptions, AssertOptions, CreatedPasskey, PasskeyAssertion } from '../utils/webauthnClient';
 
-export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; termsAccepted?: number; handle?: string | null; setupRequired?: 0 | 1; scope: 'console' | 'operations' }
+export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; developer?: 0 | 1; trustedDeveloper?: 0 | 1; termsAccepted?: number; handle?: string | null; setupRequired?: 0 | 1; scope: 'console' | 'operations' }
+export type DeveloperKind = 'developer' | 'trusted_developer';
+export interface DeveloperEligibility { required: number; verifiedCount: number; githubLinked: boolean; githubFresh: boolean; githubCheckedAt: string | null; conditions: { id: string; label: string; met: boolean; value: string | number | null; available?: boolean }[] }
 export interface LinkedIdentity { provider: 'github' | 'microsoft' | 'google'; email?: string | null; created_at: string }
 export interface PolicyStatus { kind: string; version: string; effectiveAt: string; contentHash: string; acceptedAt: string | null }
 export interface DeletionRequest { id: string; state: 'pending' | 'cancelled' | 'finalized'; requestedAt: string; executeAfter?: number; cancelledAt: string | null; finalizedAt: string | null }
 export interface PrivacyRequest { id: string; type: string; state: string; createdAt: string; updatedAt: string }
 export interface Membership { id: string; name: string; rank: number; billingCycle: 'month' | 'year' | null; status: string }
 export interface Entitlements { cloudPlus: boolean; membership: Membership; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
-export interface AccountBadge { id: string; name: string; replacesLevel: boolean; earned: boolean; requirement: string; progress: string }
+export interface AccountBadge { id: string; name: string; replacesLevel: boolean; earned: boolean; requirement: string; progress: string; checkedAt?: string | null }
 export interface AccountProgression {
   level: number; xp: number; launched: boolean;
   next: { level: number; threshold: number | null; remaining: number | null; requirement: string } | null;
@@ -104,8 +106,9 @@ const testProgression: AccountProgression = {
     { id: 'infinity', name: 'Lv∞', replacesLevel: true, earned: false, requirement: 'Lv7 · MC 100h · 通过∞答题', progress: '4/7 · 10/100h · 题库未开放' },
     { id: 'administrator', name: 'Lv-1', replacesLevel: true, earned: true, requirement: '成为网站管理员', progress: '已达成' },
     { id: 'mc-streak', name: 'LvMC', replacesLevel: true, earned: false, requirement: '连续100天启动MC', progress: '12/100天' },
-    { id: 'bilibili-level', name: 'b站来的', replacesLevel: false, earned: true, requirement: 'B站达到Lv6', progress: '已核验' },
-    { id: 'bilibili-million', name: '小黄标', replacesLevel: false, earned: false, requirement: 'B站粉丝达到100w+', progress: '待核验' },
+    { id: 'bilibili-level', name: 'b站来的', replacesLevel: false, earned: true, requirement: '绑定B站账户，公开等级达到Lv6', progress: 'B站公开等级：Lv6 / Lv6' },
+    { id: 'bilibili-million', name: '小黄标', replacesLevel: false, earned: false, requirement: '绑定B站账户，公开粉丝数达到100万', progress: 'B站公开粉丝：123 / 1000000' },
+    { id: 'nexacl-contributor', name: '走向明天', replacesLevel: false, earned: false, requirement: '绑定GitHub账户，成为Nexa-MC/NexaCL公开贡献者', progress: 'NexaCL 公开贡献提交：0' },
     { id: 'donor', name: '我喜欢你', replacesLevel: false, earned: false, requirement: '绑定爱发电账户，累计有效发电超过1000元（不含电铺）', progress: '请先绑定爱发电账户' }
   ]
 };
@@ -207,6 +210,22 @@ export const platform = {
     restoring ??= mintToken().catch(() => undefined).finally(() => { restoring = undefined; });
     return restoring;
   },
+  refreshSession: () => isTest() ? Promise.resolve(testSession) : mintToken(),
+  developerEligibility: async () => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    return authJson<{developer:DeveloperEligibility;trustedDeveloper:DeveloperEligibility;applications:{kind:DeveloperKind;state:string}[];roles:{developer:boolean;trustedDeveloper:boolean}}>(authFetch('/auth/v1/account/developer-eligibility'), '暂时无法读取申请条件');
+  },
+  authorizeDeveloperGithub: () => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    const target = new URL('/auth/v1/oauth/github/start', AUTH_BASE || window.location.origin);
+    target.searchParams.set('mode','link'); target.searchParams.set('scope','console'); target.searchParams.set('intent','developer');
+    target.searchParams.set('return_to','/account?section=developer');
+    window.location.assign(target.toString());
+  },
+  applyDeveloper: async (kind: DeveloperKind, coreContributor: boolean) => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    return authJson<{state:'approved'|'pending'}>(authFetch('/auth/v1/applications',{method:'POST',body:JSON.stringify({kind,coreContributor})}), '申请提交失败，请重试');
+  },
   acceptPolicies: async () => {
     if (isTest()) { if (testSession) testSession.termsAccepted = 1; return { terms: { acceptedAt: testNow() } }; }
     const result = await authJson<{ terms: { acceptedAt: string } }>(await authFetch('/auth/v1/policies/accept', { method: 'POST', body: JSON.stringify({ termsVersion: POLICY_VERSION, privacyVersion: POLICY_VERSION }) }), '接受条款失败，请重试。');
@@ -268,7 +287,7 @@ export const platform = {
   },
   accountProgression: async () => {
     if (isTest()) return structuredClone(testProgression);
-    return authJson<AccountProgression>(authFetch('/auth/v1/account/level'), '暂时无法读取等级与经验');
+    return authJson<AccountProgression>(authFetch('/auth/v1/account/level', { signal: AbortSignal.timeout(35000) }), '暂时无法读取等级与经验');
   },
   selectLevelDisplay: async (badgeId: string | null) => {
     if (isTest()) { const badge = testProgression.badges.find(b => b.id === badgeId && b.earned && b.replacesLevel); testProgression.display = badge ? { kind: 'badge', label: badge.name, badgeId } : { kind: 'level', label: 'Lv' + testProgression.level, badgeId: null }; return structuredClone(testProgression); }

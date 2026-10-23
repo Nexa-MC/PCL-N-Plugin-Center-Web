@@ -145,3 +145,12 @@ test('current English legal translations retain section identifiers and key publ
   const privacy = await readFile(new URL('public/legal/current/privacy.en.md', root), 'utf8');
   for (const required of ['30 days', '180 days', '396 days', '500 Exp', 'Asia/Shanghai', 'SESSDATA', 'AES-GCM']) assert.ok(privacy.includes(required), required);
 });
+
+
+test('community badge facts and failed-refresh states translate in full', () => {
+  assert.equal(translateUi('走向明天', 'en'), 'Towards Tomorrow');
+  assert.equal(translateUi('B站公开等级：Lv6 / Lv6', 'en'), 'Public Bilibili level: Lv6 / Lv6');
+  assert.equal(translateUi('B站公开粉丝：999999 / 1000000', 'en'), 'Public Bilibili followers: 999999 / 1,000,000');
+  assert.equal(translateUi('B站公开等级：Lv6 / Lv6 · 上次同步失败，显示上次核验资料', 'en'), 'Public Bilibili level: Lv6 / Lv6 · Sync failed; showing the last verified profile');
+  assert.equal(translateUi('NexaCL 公开贡献提交：2 · GitHub同步失败，请稍后刷新', 'en'), 'Public NexaCL contribution commits: 2 · GitHub sync failed; refresh later');
+});

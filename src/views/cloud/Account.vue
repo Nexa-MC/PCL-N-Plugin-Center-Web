@@ -107,7 +107,9 @@
 
       <template v-else-if="section === 'developer'">
         <section v-if="session.developer" class="work-panel"><span class="status-pill">{{ $ui("已具备资格") }}</span><h2>{{ $ui("开发者管理控制台") }}</h2><p>{{ $ui("发布者工作空间、资源提交与管理功能正在接入，入口将在此开放。") }}</p></section>
-        <section v-else class="work-panel"><h2>{{ $ui("申请开发者资格") }}</h2><p>{{ $ui("获得资格后可以创建发布者组织并提交插件、界面资源与模板。审批流程即将开放，届时可直接在此提交申请。") }}</p><button class="primary-button" disabled>{{ $ui("申请入口即将开放") }}</button></section>
+        <DeveloperApplication v-if="!session.developer" key="developer" kind="developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
+        <DeveloperApplication v-else-if="!session.trustedDeveloper" key="trusted" kind="trusted_developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
+        <section v-else class="work-panel"><span class="status-pill">{{ $ui('已具备资格') }}</span><h2>{{ $ui('受信任开发者') }}</h2></section>
       </template>
 
       <template v-else-if="section === 'website'">
@@ -192,6 +194,7 @@ import KoiIcon from '@/components/KoiIcon.vue';
 import FormDialog from '@/components/FormDialog.vue';
 import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
 import BilibiliBinding from '@/components/BilibiliBinding.vue';
+import DeveloperApplication from '@/components/DeveloperApplication.vue';
 const route = useRoute();
 const router = useRouter();
 function statusMessage(value: unknown): string { return typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 200) : ''; }
@@ -286,7 +289,7 @@ async function loadMinecraft(){ minecraftLoading.value = true; try { minecraft.v
 async function authorizeMinecraft(){ busy.value = true; minecraftError.value = ''; minecraftMessage.value = ''; try { await platform.authorizeMinecraft(); } catch (e) { minecraftError.value = e instanceof ApiError ? e.message : '无法开始 Minecraft 授权，请稍后重试。'; } finally { busy.value = false; } }
 async function revokeMinecraftAuthorization(){ busy.value = true; minecraftError.value = ''; minecraftMessage.value = ''; try { await platform.revokeMinecraftAuthorization(); minecraftMessage.value = 'Minecraft 授权已撤销'; await loadMinecraft(); } catch (e) { minecraftError.value = e instanceof ApiError ? e.message : '撤销 Minecraft 授权失败，请稍后重试。'; } finally { busy.value = false; } }
 async function bind(id: LinkedIdentity['provider']){ busy.value = true; platform.oauthStart(id, '/account?section=linked', 'link'); }
-async function unbind(id: LinkedIdentity['provider']){ busy.value = true; error.value = ''; try { await platform.unbind(id); await loadIdentities(); if (id === 'microsoft') { minecraft.value = null; minecraftError.value = ''; minecraftMessage.value = ''; } } catch (e) { error.value = e instanceof ApiError ? e.message : '解绑失败，请重试。'; } finally { busy.value = false; } }
+async function unbind(id: LinkedIdentity['provider']){ busy.value = true; error.value = ''; try { await platform.unbind(id); await Promise.all([loadIdentities(), loadProgression()]); if (id === 'microsoft') { minecraft.value = null; minecraftError.value = ''; minecraftMessage.value = ''; } } catch (e) { error.value = e instanceof ApiError ? e.message : '解绑失败，请重试。'; } finally { busy.value = false; } }
 
 const policies = ref<PolicyStatus[]>([]);
 async function loadPolicies(){ try { policies.value = (await platform.policiesStatus()).policies; } catch (e) { error.value = e instanceof ApiError ? e.message : '暂时无法读取政策状态'; } }
@@ -303,13 +306,14 @@ async function loadEntitlements(){ portalError.value = ''; try { entitlements.va
 async function openPortal(){ busy.value = true; portalError.value = ''; try { await platform.billingPortal(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法打开订阅管理，请稍后重试。'; } finally { busy.value = false; } }
 const progression = ref<AccountProgression>(), levelBusy = ref(false), levelError = ref('');
 async function loadProgression(){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.accountProgression(); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '暂时无法读取等级与经验'; } finally { levelBusy.value = false; } }
+async function refreshRoles(){ session.value=await platform.refreshSession(); await loadProgression(); }
 async function selectDisplay(badgeId: string | null){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.selectLevelDisplay(badgeId); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '更换等级展示失败'; } finally { levelBusy.value = false; } }
 const connections = ref<AccountConnection[]>([]), connectionError = ref(String(route.query.connection_error || '').slice(0, 200)), connectionMessage = ref(route.query.connection_success ? '绑定成功' : '');
 async function loadConnections(){ try { connections.value = (await platform.connections()).connections; } catch (e) { connectionError.value = e instanceof ApiError ? e.message : '读取社区账户失败'; } }
 const bilibiliBindingOpen = ref(false);
-async function bilibiliLinked(){ connectionMessage.value = 'B站账户已通过签名核验并绑定。'; await loadConnections(); }
+async function bilibiliLinked(){ connectionMessage.value = 'B站账户已通过签名核验并绑定。'; await Promise.all([loadConnections(), loadProgression()]); }
 async function bindConnection(provider: ConnectionProvider){ if (provider === 'bilibili') { bilibiliBindingOpen.value = true; return; } busy.value = true; connectionError.value = ''; try { await platform.authorizeConnection(provider); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '无法开始授权'; } finally { busy.value = false; } }
-async function removeConnection(provider: ConnectionProvider){ busy.value = true; connectionError.value = ''; try { await platform.unlinkConnection(provider); await loadConnections(); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '解除绑定失败'; } finally { busy.value = false; } }
+async function removeConnection(provider: ConnectionProvider){ busy.value = true; connectionError.value = ''; try { await platform.unlinkConnection(provider); await Promise.all([loadConnections(), loadProgression()]); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '解除绑定失败'; } finally { busy.value = false; } }
 async function loadDeletion(){ try { deletion.value = (await platform.deletionStatus()).request; } catch { /* 忽略 */ } }
 async function requestDeletion(){ busy.value = true; deleteError.value = ''; try { deletion.value = (await platform.requestDeletion()).request; deleteConfirm.value = ''; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '申请失败，请重试。'; } finally { busy.value = false; } }
 async function cancelDeletion(){ busy.value = true; deleteError.value = ''; try { await platform.cancelDeletion(); deletion.value = null; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '撤销失败，请重试。'; } finally { busy.value = false; } }

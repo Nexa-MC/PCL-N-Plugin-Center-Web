@@ -1,4 +1,4 @@
-import { managementAuthRequest, request, type Page, type Ticket, type StoreItem } from './platform';
+import { managementAuthRequest, request, type Page, type Ticket, type StoreItem, type DeveloperEligibility } from './platform';
 
 export interface ManagedUser {
   id: string; name: string; handle: string | null; email: string | null;
@@ -6,7 +6,7 @@ export interface ManagedUser {
 }
 export interface ManagedResource extends StoreItem { published: number; revision: number }
 export interface AuditEntry { id: number; actor: string; action: string; created_at: string; detail?: string | null; object_id?: string }
-export interface Application { id: string; kind: string; createdAt: string; level: number; user: { id: string; name: string; handle: string | null } }
+export interface Application { id: string; kind: string; createdAt: string; level: number; coreContributorClaimed?:boolean; eligibility?:DeveloperEligibility|null; user: { id: string; name: string; handle: string | null } }
 export interface PlatformSummary { resources: number; publishedResources: number; openTickets: number; resolvedTickets: number }
 export interface IdentitySummary { users: number; disabledUsers: number; pendingApplications: number }
 export type ResourceInput = Omit<StoreItem, 'id'> & { published: boolean };
@@ -22,6 +22,6 @@ export const management = {
   tickets: (offset = 0, status = 'open') => request<Page<Ticket & { user_id: string }>>(`/manage/tickets?${pageQuery(offset)}&status=${encodeURIComponent(status)}`),
   resolve: (ticket: Ticket) => request('/tickets/' + encodeURIComponent(ticket.id), { method: 'PATCH', headers: { 'If-Match': `"${ticket.version}"` }, body: JSON.stringify({ status: 'resolved' }) }),
   applications: () => managementAuthRequest<{ applications: Application[] }>('/applications/pending'),
-  review: (application: Application, decision: 'approved' | 'rejected', note: string) => managementAuthRequest('/applications/' + encodeURIComponent(application.id) + '/review', { method: 'POST', body: JSON.stringify({ decision, note }) }),
+  review: (application: Application, decision: 'approved' | 'rejected', note: string, coreContributorConfirmed=false) => managementAuthRequest('/applications/' + encodeURIComponent(application.id) + '/review', { method: 'POST', body: JSON.stringify({ decision, note, coreContributorConfirmed }) }),
   audit: (source: string, offset = 0) => source === 'identity' ? managementAuthRequest<Page<AuditEntry>>('/manage/audit?' + pageQuery(offset)) : request<Page<AuditEntry>>('/manage/audit?' + pageQuery(offset))
 };
