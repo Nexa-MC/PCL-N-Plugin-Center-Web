@@ -16,6 +16,7 @@ export interface AccountProgression {
   rewards: { launcherLogin: number; firstGameStart: number; gameMinutes: number; launcherMinutes: number; dailyCap: number; timeZone: string };
 }
 export type ConnectionProvider = 'bilibili' | 'afdian';
+export interface BilibiliChallenge { id: string; uid: string; signature: string; accountLabel: string; expiresAt: number; maxAttempts: number }
 export interface AccountConnection { provider: ConnectionProvider; label: string; configured: boolean; account: { subject: string; name: string | null; followers: number | null; connectedAt: string; checkedAt: string } | null }
 export interface LoginChallenge { challenge: string; factors: string[]; user: { name: string } }
 export interface MfaPasskey { credentialId: string; name: string | null; createdAt: string; lastUsedAt: string | null }
@@ -280,6 +281,19 @@ export const platform = {
     if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
     const result = await authJson<{ url: string }>(authFetch(`/auth/v1/connections/${provider}/authorizations`, { method: 'POST' }), '无法开始关联授权');
     window.location.assign(result.url);
+  },
+  createBilibiliChallenge: async (uid: string, signal?: AbortSignal) => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    return authJson<BilibiliChallenge>(authFetch('/auth/v1/connections/bilibili/challenges', { method: 'POST', body: JSON.stringify({ uid }), signal }), '无法创建B站签名挑战');
+  },
+  verifyBilibiliChallenge: async (id: string, signal?: AbortSignal) => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    return authJson<{ verified: boolean; uid: string }>(authFetch(`/auth/v1/connections/bilibili/challenges/${encodeURIComponent(id)}/verify`, { method: 'POST', body: '{}', signal: signal ?? AbortSignal.timeout(35000) }), '暂时无法核验B站签名，请稍后重试');
+  },
+  cancelBilibiliChallenge: async (id: string) => {
+    if (isTest()) return;
+    const response = await authFetch(`/auth/v1/connections/bilibili/challenges/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (!response.ok) await authJson(response, '无法取消B站签名挑战');
   },
   unlinkConnection: async (provider: ConnectionProvider) => {
     if (isTest()) return;

@@ -42,6 +42,12 @@ test('donor badge explains account binding and excludes shop purchases in both l
   assert.equal(translateUi('累计有效发电 ¥1000.01（不含电铺）', 'zh'), '累计有效发电 ¥1000.01（不含电铺）');
 });
 
+test('Bilibili binding identifies the destination account and translates verification errors', () => {
+  assert.equal(translateUi('将B站UID {0} 关联到Nexa @{1}', 'en', ['123', 'my_handle']), 'Link Bilibili UID 123 to Nexa @my_handle');
+  assert.equal(translateUi('B站签名尚未匹配，请检查修改后稍后重试', 'en'), 'Your Bilibili signature does not match yet. Check the change and try again shortly.');
+  assert.equal(translateUi('Nexa @my_handle bind 0123456789abcdef', 'en'), 'Nexa @my_handle bind 0123456789abcdef');
+});
+
 test('authorization errors retain diagnostics and accurately describe a rejected connection', () => {
   const id = 'af1ed424-0d0f-4694-a770-68c5bc77763a';
   assert.equal(translateUi(`Minecraft 服务登录未完成，请稍后重试（HTTP 403；诊断号 ${id}）`, 'en'), `Minecraft service sign-in was not completed. Try again later (HTTP 403; Reference ${id})`);

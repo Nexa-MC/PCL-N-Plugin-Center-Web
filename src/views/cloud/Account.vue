@@ -145,6 +145,7 @@
     </div>
 
     <!-- ===== 二级模态框：所有修改类操作统一入口 ===== -->
+    <BilibiliBinding v-model="bilibiliBindingOpen" :account-label="session.handle || session.name" @linked="bilibiliLinked" />
     <PasswordConfirmDialog v-model="pwDialog.visible" :mode="pwDialog.mode" :title="pwDialog.title" :description="pwDialog.description" :busy="pwDialog.busy" :error="pwDialog.error" @confirm="onPasswordConfirm" />
 
     <FormDialog v-model="nameDialog.visible" :title="$ui('修改用户名')" :description="$ui('1–60 个字符。')" :busy="nameDialog.busy" :error="nameDialog.error" :confirm-label="$ui('保存用户名')" :can-confirm="Boolean(nameInput)" @confirm="saveName">
@@ -190,6 +191,7 @@ import SegmentedCode from '@/components/SegmentedCode.vue';
 import KoiIcon from '@/components/KoiIcon.vue';
 import FormDialog from '@/components/FormDialog.vue';
 import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
+import BilibiliBinding from '@/components/BilibiliBinding.vue';
 const route = useRoute();
 const router = useRouter();
 function statusMessage(value: unknown): string { return typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 200) : ''; }
@@ -304,7 +306,9 @@ async function loadProgression(){ levelBusy.value = true; levelError.value = '';
 async function selectDisplay(badgeId: string | null){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.selectLevelDisplay(badgeId); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '更换等级展示失败'; } finally { levelBusy.value = false; } }
 const connections = ref<AccountConnection[]>([]), connectionError = ref(String(route.query.connection_error || '').slice(0, 200)), connectionMessage = ref(route.query.connection_success ? '绑定成功' : '');
 async function loadConnections(){ try { connections.value = (await platform.connections()).connections; } catch (e) { connectionError.value = e instanceof ApiError ? e.message : '读取社区账户失败'; } }
-async function bindConnection(provider: ConnectionProvider){ busy.value = true; connectionError.value = ''; try { await platform.authorizeConnection(provider); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '无法开始授权'; } finally { busy.value = false; } }
+const bilibiliBindingOpen = ref(false);
+async function bilibiliLinked(){ connectionMessage.value = 'B站账户已通过签名核验并绑定。'; await loadConnections(); }
+async function bindConnection(provider: ConnectionProvider){ if (provider === 'bilibili') { bilibiliBindingOpen.value = true; return; } busy.value = true; connectionError.value = ''; try { await platform.authorizeConnection(provider); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '无法开始授权'; } finally { busy.value = false; } }
 async function removeConnection(provider: ConnectionProvider){ busy.value = true; connectionError.value = ''; try { await platform.unlinkConnection(provider); await loadConnections(); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '解除绑定失败'; } finally { busy.value = false; } }
 async function loadDeletion(){ try { deletion.value = (await platform.deletionStatus()).request; } catch { /* 忽略 */ } }
 async function requestDeletion(){ busy.value = true; deleteError.value = ''; try { deletion.value = (await platform.requestDeletion()).request; deleteConfirm.value = ''; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '申请失败，请重试。'; } finally { busy.value = false; } }
