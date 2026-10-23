@@ -10,7 +10,8 @@
     <p class="pricing-note">{{ $ui("价格由 Paddle 实时返回并按你的地区本地化展示。") }}{{ isSandbox ? $ui("当前为沙箱环境，使用测试支付方式，不会产生真实扣款。") : '' }}</p>
     <p v-if="envError" class="form-error" role="alert">{{ $ui(envError) }}</p>
     <template v-else>
-      <p v-if="sessionReady && !canCheckout" class="form-error" role="alert">{{ $ui("沙箱测试阶段：结账仅对网站管理员开放，普通用户暂时无法结账。") }}</p>
+      <p v-if="!isSandbox" class="pricing-note" role="status">{{ $ui('正式支付尚未开放，当前仅供核对价格。') }}</p>
+      <p v-else-if="sessionReady && !canCheckout" class="form-error" role="alert">{{ $ui("沙箱测试阶段：结账仅对网站管理员开放，普通用户暂时无法结账。") }}</p>
       <p v-if="loading" class="empty-state" role="status">{{ $ui("正在读取实时价格…") }}</p>
       <p v-else-if="error" class="empty-state" role="alert">{{ $ui(error) }}　<button class="secondary-button" @click="loadPrices">{{ $ui("重试") }}</button></p>
       <div v-else class="pricing-grid">
@@ -20,7 +21,7 @@
           <p class="tier-desc">{{ $ui(tier.description) }}</p>
           <p class="tier-price"><template v-if="totals[tier.priceId[cycle]]"><strong>{{ totals[tier.priceId[cycle]] }}</strong><small> / {{ cycle === 'month' ? $ui("月") : $ui("年") }}</small></template><template v-else><strong>—</strong><small> {{ $ui("价格不可用") }}</small></template></p>
           <ul class="tier-features"><li v-for="feature in tier.features" :key="feature">{{ $ui(feature) }}</li></ul>
-          <button v-if="tier.priceId[cycle]" class="primary-button" :disabled="busy === tier.name || !canCheckout" :title="canCheckout ? '' : $ui('沙箱测试阶段，仅网站管理员可发起结账')" @click="subscribe(tier)">{{ busy === tier.name ? $ui("正在打开结账…") : $ui("订阅") }}</button>
+          <button v-if="tier.priceId[cycle]" class="primary-button" :disabled="busy === tier.name || !canCheckout" :title="canCheckout ? '' : $ui(isSandbox ? '沙箱测试阶段，仅网站管理员可发起结账' : '正式支付尚未开放，当前仅供核对价格。')" @click="subscribe(tier)">{{ busy === tier.name ? $ui("正在打开结账…") : $ui("订阅") }}</button>
           <p v-else class="tier-unconfigured">{{ cycle === 'month' ? $ui("该档位尚未配置月付价格。") : $ui("该档位尚未配置年付价格。") }}</p>
         </article>
       </div>
@@ -31,29 +32,55 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { initializePaddle, type Paddle } from '@paddle/paddle-js';
-import { TIERS, type Tier, type BillingCycle } from '@/config/pricing';
+import { tiersFor, type Tier, type BillingCycle } from '@/config/pricing';
 import { platform, type Session, type Membership } from '@/api/platform';
 import { uiLocale } from '@/languages/localize';
 
 const cycle = ref<BillingCycle>('month'), loading = ref(true), error = ref(''), busy = ref<Tier['name'] | ''>('');
 const totals = ref<Record<string, string>>({});
-const tiers = TIERS;
-// 沙箱测试门禁：仅 staff 账户可发起结账；普通用户看到明确提示，按钮禁用。
+// Until verification and a separate go-live step, production checkout stays closed.
 const session = ref<Session>(), sessionReady = ref(false);
 const membership = ref<Membership>(), membershipError = ref('');
-const canCheckout = computed(() => session.value?.staff === 1);
 
 // 环境必须显式配置：禁止在未设置环境变量时静默默认，避免连错 Paddle 账户。
 const env = import.meta.env.VITE_PADDLE_ENV;
 const token = import.meta.env.VITE_PADDLE_CLIENT_TOKEN;
+const tiers = tiersFor(env, import.meta.env);
 const envError = ref('');
-if (env !== 'sandbox' && env !== 'production') envError.value = 'Paddle 环境未配置：请在构建环境中设置 VITE_PADDLE_ENV（sandbox 或 production），不要使用未声明的默认值。';
-else if (!token) envError.value = '缺少 Paddle 客户端令牌：请设置 VITE_PADDLE_CLIENT_TOKEN（沙箱令牌以 test_ 开头）。';
+if (env !== 'sandbox' && env !== 'production') envError.value = '支付配置暂不可用，请稍后重试。';
+else if (!token || !token.startsWith(env === 'sandbox' ? 'test_' : 'live_')) envError.value = '支付配置暂不可用，请稍后重试。';
+else if (tiers.some(tier => !tier.priceId.month || !tier.priceId.year)
+  || new Set(tiers.flatMap(tier => Object.values(tier.priceId))).size !== 8) envError.value = '套餐价格尚未配置完成。';
 const isSandbox = env === 'sandbox';
+const canCheckout = computed(() => isSandbox && session.value?.staff === 1);
+
+let paddleCustomerId: string | null = null;
+let identityPromise: Promise<void> | undefined;
+function loadIdentity() {
+  identityPromise ??= (async () => {
+    try {
+      session.value = await platform.session();
+      if (session.value) {
+        const result = await platform.entitlements();
+        membership.value = result.membership;
+        // The authenticated API resolves the actual Paddle customer; never use
+        // the Nexa user ID or an email address as a Retain customer ID.
+        if (/^ctm_[a-z0-9]{26}$/.test(result.paddleCustomerId || '')) paddleCustomerId = result.paddleCustomerId;
+      }
+    } catch { membershipError.value = '暂时无法读取'; }
+    finally { sessionReady.value = true; }
+  })();
+  return identityPromise;
+}
 
 let paddlePromise: Promise<Paddle | undefined> | undefined;
-function getPaddle() {
-  paddlePromise ??= initializePaddle({ environment: env, token });
+async function getPaddle() {
+  await loadIdentity();
+  paddlePromise ??= initializePaddle({
+    ...(isSandbox ? { environment: 'sandbox' as const } : {}),
+    token,
+    ...(paddleCustomerId ? { pwCustomer: { id: paddleCustomerId } } : {})
+  });
   return paddlePromise;
 }
 
@@ -93,9 +120,10 @@ async function loadPrices() {
   }
 }
 watch(cycle, () => { if (!envError.value) void loadPrices(); });
-onMounted(() => { void loadPrices(); platform.session().then(async result => { session.value = result; if (result) { try { membership.value = (await platform.entitlements()).membership; } catch { membershipError.value = '暂时无法读取'; } } }).finally(() => { sessionReady.value = true; }); });
+onMounted(() => { void loadIdentity(); void loadPrices(); });
 
 async function subscribe(tier: Tier) {
+  if (!canCheckout.value) return;
   busy.value = tier.name; error.value = '';
   try {
     const paddle = await getPaddle();
@@ -104,6 +132,7 @@ async function subscribe(tier: Tier) {
     if (!priceId) throw new Error('该档位尚未配置价格。');
     // 已登录用户预填邮箱；未登录则交给结账页自行收集。
     const session = await platform.session();
+    if (!isSandbox || session?.staff !== 1) throw new Error('结账暂不可用。');
     await paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       ...(session?.email ? { customer: { email: session.email } } : {}),

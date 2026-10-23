@@ -9,7 +9,7 @@ export interface Tier {
   priceId: { month: string; year: string };
 }
 
-export const TIERS: Tier[] = [
+const SANDBOX_TIERS: Tier[] = [
   {
     name: 'Lite',
     description: '轻度使用，先体验 Cloud+ 的核心能力。',
@@ -38,3 +38,17 @@ export const TIERS: Tier[] = [
 ];
 
 export type BillingCycle = 'month' | 'year';
+
+// Sandbox IDs never cross into a live build. Live IDs come from the audited
+// live catalog, supplied at build time; an incomplete catalog stays unavailable.
+export function tiersFor(environment: string | undefined, settings: Record<string, string | undefined> = {}): Tier[] {
+  const sandboxIds = new Set(SANDBOX_TIERS.flatMap(tier => Object.values(tier.priceId)));
+  return SANDBOX_TIERS.map(tier => ({
+    ...tier,
+    priceId: Object.fromEntries((['month', 'year'] as const).map(cycle => {
+      const candidate = settings[`VITE_PADDLE_PRICE_${tier.name.toUpperCase()}_${cycle.toUpperCase()}`] || '';
+      return [cycle, environment === 'sandbox' ? tier.priceId[cycle]
+        : environment === 'production' && /^pri_[a-z0-9]{26}$/.test(candidate) && !sandboxIds.has(candidate) ? candidate : ''];
+    })) as Tier['priceId']
+  }));
+}

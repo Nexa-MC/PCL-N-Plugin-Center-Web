@@ -14,6 +14,16 @@
     <div class="cloud-body">
       <main id="cloud-content" class="cloud-content"><router-view :key="route.path.startsWith('/store') ? 'store' : route.path" /></main>
     </div>
+    <footer class="cloud-footer">
+      <div><strong>NexaCL</strong><p>{{ $ui('社区开发的 Minecraft 启动器与配套云服务。') }}</p></div>
+      <nav :aria-label="$ui('页脚导航')">
+        <router-link to="/pricing">{{ $ui('Cloud+ 订阅') }}</router-link>
+        <router-link to="/legal/terms">{{ $ui('服务条款') }}</router-link>
+        <router-link to="/legal/privacy">{{ $ui('隐私政策') }}</router-link>
+        <router-link to="/legal/refunds">{{ $ui('退款与取消政策') }}</router-link>
+        <a href="mailto:support@pcln.top">{{ $ui('联系支持') }}</a>
+      </nav>
+    </footer>
   </div>
 </template>
 <script setup lang="ts">
@@ -44,3 +54,8 @@ const removeRouteListener = router.afterEach(() => { menuOpen.value = false; });
 onMounted(() => { void loadSession(); window.addEventListener('focus', onFocus); window.addEventListener(SESSION_EVENT, onFocus); document.addEventListener('click', onDocumentClick); document.addEventListener('keydown', onDocumentKeydown); });
 onUnmounted(() => { window.removeEventListener('focus', onFocus); window.removeEventListener(SESSION_EVENT, onFocus); document.removeEventListener('click', onDocumentClick); document.removeEventListener('keydown', onDocumentKeydown); removeRouteListener(); });
 </script>
+<style scoped>
+.cloud-footer{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;max-width:1440px;margin:0 auto;padding:24px 40px 32px;border-top:1px solid var(--market-border);color:var(--market-muted);font-size:12px}
+.cloud-footer strong{color:var(--market-text);font-size:14px}.cloud-footer p{margin:6px 0 0;font-size:12px}.cloud-footer nav{display:flex;gap:12px 20px;flex-wrap:wrap}.cloud-footer a:hover{color:var(--nc-accent)}
+@media(max-width:680px){.cloud-footer{padding:24px 20px;gap:18px}}
+</style>

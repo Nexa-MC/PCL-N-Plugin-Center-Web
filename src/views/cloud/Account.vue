@@ -102,7 +102,26 @@
       </template>
 
       <template v-else-if="section === 'wallet'">
-        <section class="work-panel"><h2>{{ $ui("钱包与订阅") }}</h2><div class="profile-row"><span>{{ $ui("当前会员等级") }}</span><strong>{{ $ui(entitlements?.membership.name || (portalError ? "读取失败" : "正在读取…")) }}</strong></div><div v-if="entitlements?.cloudPlus" class="profile-row"><span>{{ $ui("订阅状态") }}</span><strong>{{ entitlements.membership.status === 'trialing' ? $ui("试用中") : $ui("已激活") }}{{ entitlements.membership.billingCycle === 'year' ? $ui(" · 年付") : entitlements.membership.billingCycle === 'month' ? $ui(" · 月付") : '' }}</strong></div><p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">{{ $ui("订阅变更将在当前计费周期结束时生效。") }}</p><div class="actions"><router-link class="primary-button" to="/pricing">{{ $ui("查看套餐与价格") }}</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">{{ $ui("管理订阅") }}</button></div><p v-if="portalError" class="form-error" role="alert">{{ $ui(portalError) }}</p><p class="login-fine">{{ $ui("支付方式、取消与发票在 Paddle 客户门户管理。") }}<router-link to="/legal/refunds">{{ $ui("退款政策") }}</router-link></p></section>
+        <section class="work-panel">
+          <h2>{{ $ui('钱包与订阅') }}</h2>
+          <div class="billing-toggle wallet-options" role="group" :aria-label="$ui('钱包选项')">
+            <button type="button" :class="{ active: walletView === 'subscription' }" :aria-pressed="walletView === 'subscription'" @click="walletView = 'subscription'">{{ $ui('订阅服务') }}</button>
+            <button type="button" :class="{ active: walletView === 'tokens' }" :aria-pressed="walletView === 'tokens'" @click="walletView = 'tokens'">{{ $ui('N代币') }}</button>
+          </div>
+          <template v-if="walletView === 'subscription'">
+            <div class="profile-row"><span>{{ $ui('当前会员等级') }}</span><strong>{{ $ui(entitlements?.membership.name || (portalError ? '读取失败' : '正在读取…')) }}</strong></div>
+            <div v-if="entitlements?.cloudPlus" class="profile-row"><span>{{ $ui('订阅状态') }}</span><strong>{{ entitlements.membership.status === 'trialing' ? $ui('试用中') : $ui('已激活') }}{{ entitlements.membership.billingCycle === 'year' ? $ui(' · 年付') : entitlements.membership.billingCycle === 'month' ? $ui(' · 月付') : '' }}</strong></div>
+            <p v-if="entitlements?.subscriptions.some(s => s.scheduled_change_action)" class="hint">{{ $ui('订阅变更将在当前计费周期结束时生效。') }}</p>
+            <div class="actions"><router-link class="primary-button" to="/pricing">{{ $ui('查看套餐与价格') }}</router-link><button class="secondary-button" :disabled="busy" @click="openPortal">{{ $ui('管理订阅') }}</button></div>
+            <p v-if="portalError" class="form-error" role="alert">{{ $ui(portalError) }}</p>
+            <p class="login-fine">{{ $ui('支付方式、取消与发票在 Paddle 客户门户管理。') }}<router-link to="/legal/refunds">{{ $ui('退款政策') }}</router-link></p>
+          </template>
+          <div v-else class="wallet-tokens">
+            <div class="section-heading"><h3>{{ $ui('N代币') }}</h3><span class="status-pill">{{ $ui('暂未开放') }}</span></div>
+            <p>{{ $ui('N代币购买暂未开放。') }}</p>
+            <button class="primary-button" type="button" disabled>{{ $ui('购买（暂未开放）') }}</button>
+          </div>
+        </section>
       </template>
 
       <template v-else-if="section === 'creator'">
@@ -321,6 +340,7 @@ async function exportData(){ busy.value = true; try { const data = await platfor
 
 const deletion = ref<DeletionRequest | null>(), deleteConfirm = ref(''), deleteError = ref('');
 const entitlements = ref<Entitlements | null>(), portalError = ref('');
+const walletView = ref<'subscription' | 'tokens'>('subscription');
 async function loadEntitlements(){ portalError.value = ''; try { entitlements.value = await platform.entitlements(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法读取订阅状态。'; } }
 async function openPortal(){ busy.value = true; portalError.value = ''; try { await platform.billingPortal(); } catch (e) { portalError.value = e instanceof ApiError ? e.message : '暂时无法打开订阅管理，请稍后重试。'; } finally { busy.value = false; } }
 const progression = ref<AccountProgression>(), levelBusy = ref(false), levelError = ref('');
@@ -523,6 +543,8 @@ onMounted(async () => {
 onUnmounted(() => { window.removeEventListener(SESSION_EVENT, syncSession); });
 </script>
 <style scoped>
+.wallet-options{width:fit-content;max-width:100%;margin:20px 0}
+.wallet-tokens{padding:4px 0 8px}.wallet-tokens .section-heading{margin-bottom:12px}.wallet-tokens p{color:var(--market-muted);margin-bottom:20px}.wallet-tokens button:disabled{cursor:not-allowed}
 .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 6px}
 .summary-cell{background:var(--market-surface-soft);border:1px solid var(--market-border);border-radius:12px;padding:16px 18px}
 .summary-cell b{display:block;font-size:24px;font-weight:700;letter-spacing:-.02em;color:var(--nc-accent);line-height:1.15}

@@ -8,7 +8,7 @@ export interface PolicyStatus { kind: string; version: string; effectiveAt: stri
 export interface DeletionRequest { id: string; state: 'pending' | 'cancelled' | 'finalized'; requestedAt: string; executeAfter?: number; cancelledAt: string | null; finalizedAt: string | null }
 export interface PrivacyRequest { id: string; type: string; state: string; createdAt: string; updatedAt: string }
 export interface Membership { id: string; name: string; rank: number; billingCycle: 'month' | 'year' | null; status: string }
-export interface Entitlements { cloudPlus: boolean; membership: Membership; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
+export interface Entitlements { cloudPlus: boolean; membership: Membership; paddleCustomerId: string | null; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
 export interface AccountBadge { id: string; name: string; replacesLevel: boolean; earned: boolean; requirement: string; progress: string; checkedAt?: string | null }
 export interface AccountProgression {
   level: number; xp: number; launched: boolean;
@@ -93,6 +93,7 @@ const testState = {
   deletion: null as DeletionRequest | null,
   entitlements: {
     cloudPlus: true,
+    paddleCustomerId: null,
     membership: { id: 'advanced', name: 'Cloud+ Advanced', rank: 3, billingCycle: 'month', status: 'active' },
     subscriptions: [{ subscription_id: 'sub_local_test', status: 'active', price_id: 'pri_local_test', product_id: 'pro_cloud_plus', scheduled_change_action: null }]
   } as Entitlements

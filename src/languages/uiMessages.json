@@ -1455,5 +1455,18 @@
   "测试账户不提交真实申请": "Test accounts do not submit real applications",
   "创作者申请仅接受kind字段": "Creator applications accept only the kind field",
   "申请操作过于频繁，请稍后重试": "Too many application requests. Try again later",
-  "账户状态已改变，请刷新后重试": "Your account changed. Refresh and try again"
+  "账户状态已改变，请刷新后重试": "Your account changed. Refresh and try again",
+  "钱包选项": "Wallet options",
+  "订阅服务": "Subscriptions",
+  "N代币": "N Tokens",
+  "N代币购买暂未开放。": "N Token purchases are not available yet.",
+  "购买（暂未开放）": "Buy (unavailable)",
+  "正式支付尚未开放，当前仅供核对价格。": "Live payments are not available yet. Prices are shown for review only.",
+  "支付配置暂不可用，请稍后重试。": "Payment configuration is unavailable. Try again later.",
+  "套餐价格尚未配置完成。": "Plan prices are not fully configured yet.",
+  "结账暂不可用。": "Checkout is currently unavailable.",
+  "社区开发的 Minecraft 启动器与配套云服务。": "A community-built Minecraft launcher and companion cloud services.",
+  "页脚导航": "Footer navigation",
+  "退款与取消政策": "Refund and cancellation policy",
+  "联系支持": "Contact support"
 }
