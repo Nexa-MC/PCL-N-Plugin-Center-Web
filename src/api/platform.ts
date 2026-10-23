@@ -16,7 +16,8 @@ export interface AccountProgression {
   rewards: { launcherLogin: number; firstGameStart: number; gameMinutes: number; launcherMinutes: number; dailyCap: number; timeZone: string };
 }
 export type ConnectionProvider = 'bilibili' | 'afdian';
-export interface BilibiliChallenge { id: string; uid: string; signature: string; accountLabel: string; expiresAt: number; maxAttempts: number }
+export interface BilibiliProfile { uid: string; name: string; avatar: string | null; level: number | null; followers: number | null; checkedAt: string }
+export interface BilibiliChallenge { id: string; uid: string; candidates: { index: number; text: string; language: 'zh' | 'en' }[]; encoderVersion: string; accountLabel: string; expiresAt: number; maxAttempts: number }
 export interface AccountConnection { provider: ConnectionProvider; label: string; configured: boolean; account: { subject: string; name: string | null; followers: number | null; connectedAt: string; checkedAt: string } | null }
 export interface LoginChallenge { challenge: string; factors: string[]; user: { name: string } }
 export interface MfaPasskey { credentialId: string; name: string | null; createdAt: string; lastUsedAt: string | null }
@@ -281,6 +282,14 @@ export const platform = {
     if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
     const result = await authJson<{ url: string }>(authFetch(`/auth/v1/connections/${provider}/authorizations`, { method: 'POST' }), '无法开始关联授权');
     window.location.assign(result.url);
+  },
+  bilibiliProfile: async (uid: string, signal?: AbortSignal) => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    return authJson<BilibiliProfile>(authFetch('/auth/v1/connections/bilibili/profile', { method: 'POST', body: JSON.stringify({ uid }), signal }), '无法读取B站公开资料');
+  },
+  selectBilibiliCandidate: async (id: string, index: number, signal?: AbortSignal) => {
+    if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
+    return authJson<{ selectedIndex: number }>(authFetch(`/auth/v1/connections/bilibili/challenges/${encodeURIComponent(id)}/select`, { method: 'POST', body: JSON.stringify({ index }), signal }), '无法选择候选签名');
   },
   createBilibiliChallenge: async (uid: string, signal?: AbortSignal) => {
     if (isTest()) throw new ApiError('测试账户不发起真实授权', 403);
