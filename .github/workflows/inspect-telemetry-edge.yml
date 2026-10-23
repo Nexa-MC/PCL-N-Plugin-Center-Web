@@ -1,0 +1,40 @@
+name: Inspect telemetry edge admission
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-pages
+    timeout-minutes: 5
+    steps:
+      - name: Inspect challenge policy for native anonymous ingress
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          token = os.environ.get('CLOUDFLARE_API_TOKEN', '')
+          if not token: raise SystemExit('Cloudflare API token is not configured')
+          def read(path):
+              request = urllib.request.Request('https://api.cloudflare.com/client/v4/'+path, headers={'Authorization':'Bearer '+token})
+              try:
+                  with urllib.request.urlopen(request, timeout=30) as response: return response.status, json.load(response)
+              except urllib.error.HTTPError as error:
+                  return error.code, {'success':False, 'errors':json.load(error).get('errors', [])}
+          status, zones = read('zones?name=pcln.top')
+          print(json.dumps({'operation':'zone lookup','status':status,'success':zones.get('success'),'errors':zones.get('errors')}))
+          if not zones.get('success') or len(zones.get('result', [])) != 1: raise SystemExit('Zone read permission is required')
+          zone = zones['result'][0]['id']
+          for endpoint in ['settings/security_level','settings/browser_check','bot_management','rulesets/phases/http_request_firewall_custom/entrypoint']:
+              status, value = read('zones/'+zone+'/'+endpoint)
+              result = value.get('result') or {}
+              if endpoint.startswith('rulesets/'):
+                  result = {'id':result.get('id'),'phase':result.get('phase'),'rules':[
+                      {key:rule.get(key) for key in ['id','action','description','expression','enabled','action_parameters']}
+                      for rule in result.get('rules', []) if rule.get('action') in ['challenge','managed_challenge','js_challenge','skip']]}
+              elif endpoint == 'bot_management':
+                  result = {key:result.get(key) for key in ['enable_js','fight_mode','sbfm_definitely_automated','sbfm_likely_automated','sbfm_verified_bots']}
+              else: result = {'id':result.get('id'),'value':result.get('value')}
+              print(json.dumps({'operation':endpoint,'status':status,'success':value.get('success'),'result':result,'errors':value.get('errors')},ensure_ascii=False))
+          PY
