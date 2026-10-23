@@ -1,6 +1,6 @@
 # One-shot / fallback: deploy PCLN-Docs to Cloudflare Pages using this repo's
 # cloudflare-pages environment secrets (same Account token as pcl-n-web).
-# Primary auto-deploy lives in PCL-N-Edition/PCLN-Docs → cloudflare-pages.yml.
+# Primary auto-deploy lives in Nexa-MC/PCLN-Docs → cloudflare-pages.yml.
 name: Deploy Docs (Cloudflare Pages)
 
 on:
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout docs
         uses: actions/checkout@v6
         with:
-          repository: PCL-N-Edition/PCLN-Docs
+          repository: Nexa-MC/PCLN-Docs
           ref: main
           path: docs-src
 
