@@ -51,6 +51,7 @@ Web `pnpm check && pnpm worker:check && pnpm manage:check`。
 ```bash
 cd /workspace/PCL-N-Plugin-Center-Auth
 pnpm check
+pnpm exec wrangler d1 migrations apply pcln-production --remote --env=""
 pnpm exec wrangler deploy --env=""
 
 cd /workspace/PCL-N-Plugin-Center-Server/nexa
@@ -77,9 +78,9 @@ GitHub PAT 不能替代 Cloudflare 部署凭据；不要把任何令牌写入仓
 
 Server 仓库的 `Deploy NexaCL management stack` 工作流可以一次发布关联的三个项目，复用 Server
 既有网关发布所使用的仓库级 Cloudflare 凭据。Auth/Web 使用显式的完整提交 SHA，API 使用本次运行的提交；
-所有测试通过后先保存 D1 Time Travel 恢复点，再依次发布 Auth、迁移并发布 API、发布管理 Worker。
+所有测试通过后先保存两库的 D1 Time Travel 恢复点，再依次迁移并发布 Auth、迁移并发布 API、发布主站和管理 Worker。
 Server 的 `codex/manage-console` 分支推送会触发首次上线；手动运行必须填写三项目的完整已审阅 SHA。
-该流程不会发布主站 Worker，结束前自动验证管理域名、构建文件、服务绑定、匿名权限边界和登录 CORS。
+该流程同时发布主站，供爱发电铭牌等跨项目功能更新使用；结束前自动验证管理域名、构建文件、服务绑定、匿名权限边界和登录 CORS。
 
 发布后检查根路径回跳、深层路径刷新、真实管理员登录与退出、普通账户拒绝访问，
 并使用可恢复的业务对象验证一次编辑与审计。真实 OAuth 登录、线上 Cookie、DNS、证书均需在部署后验证。

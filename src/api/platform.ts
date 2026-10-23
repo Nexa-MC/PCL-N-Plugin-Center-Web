@@ -104,7 +104,7 @@ const testProgression: AccountProgression = {
     { id: 'mc-streak', name: 'LvMC', replacesLevel: true, earned: false, requirement: '连续100天启动MC', progress: '12/100天' },
     { id: 'bilibili-level', name: 'b站来的', replacesLevel: false, earned: true, requirement: 'B站达到Lv6', progress: '已核验' },
     { id: 'bilibili-million', name: '小黄标', replacesLevel: false, earned: false, requirement: 'B站粉丝达到100w+', progress: '待核验' },
-    { id: 'donor', name: '我喜欢你', replacesLevel: false, earned: false, requirement: '向Nexa无偿捐赠累计超过1000元', progress: '待核验' }
+    { id: 'donor', name: '我喜欢你', replacesLevel: false, earned: false, requirement: '绑定爱发电账户，累计有效发电超过1000元（不含电铺）', progress: '请先绑定爱发电账户' }
   ]
 };
 const testNow = () => new Date().toISOString();

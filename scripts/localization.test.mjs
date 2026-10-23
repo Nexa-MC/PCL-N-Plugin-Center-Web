@@ -35,6 +35,13 @@ test('dynamic messages can reorder values without translating user content', () 
   assert.equal(translateUi('不存在的消息 {0}', 'en', ['原文']), '不存在的消息 原文');
 });
 
+test('donor badge explains account binding and excludes shop purchases in both languages', () => {
+  assert.equal(translateUi('请先绑定爱发电账户', 'en'), 'Link your Afdian account first');
+  assert.equal(translateUi('累计有效发电 ¥1000.01（不含电铺）', 'en'), 'Eligible sponsorships: CNY 1000.01 (excluding shop purchases)');
+  assert.equal(translateUi('累计有效发电 ¥1000.01（不含电铺） · 上次同步失败，显示上次统计', 'en'), 'Eligible sponsorships: CNY 1000.01 (excluding shop purchases); sync failed, showing the last successful total');
+  assert.equal(translateUi('累计有效发电 ¥1000.01（不含电铺）', 'zh'), '累计有效发电 ¥1000.01（不含电铺）');
+});
+
 test('authorization errors retain diagnostics and accurately describe a rejected connection', () => {
   const id = 'af1ed424-0d0f-4694-a770-68c5bc77763a';
   assert.equal(translateUi(`Minecraft 服务登录未完成，请稍后重试（HTTP 403；诊断号 ${id}）`, 'en'), `Minecraft service sign-in was not completed. Try again later (HTTP 403; Reference ${id})`);
