@@ -5,6 +5,9 @@
 | PCL-N-Plugin-Center-Web | nexa-web | 界面、静态资源、同源转发 |
 | PCL-N-Plugin-Center-Server/nexa | nexa-api | 商店、工单、计费、遥测，D1 nexa-platform |
 | PCL-N-Plugin-Center-Auth | nexa-auth | OAuth、账户、MFA、身份令牌、等级与角色资格，D1 pcln-production |
+| PCL-N-Plugin-Center-Web（独立入口） | nexa-telemetry | 仅转发原生客户端匿名事件到 nexa-api，复用 nexa-platform |
+
+原生遥测入口的部署、边缘防护边界和验证见 [Native launcher telemetry ingress](./telemetry-ingress.md)。
 
 Auth 在 auth.pcln.top 签发 HttpOnly Cookie，Web 换取仅存内存的 API Bearer 令牌。API 每次通过 AUTH binding 验证当前身份；管理员的统一账户会话可访问管理功能。浏览器修改请求携带 Origin 与 X-Nexa-Request，错误返回 problem+json。
 

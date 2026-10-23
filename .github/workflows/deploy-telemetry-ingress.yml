@@ -1,0 +1,41 @@
+name: Deploy native telemetry ingress
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact verified master commit to deploy
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: nexa-telemetry-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    environment: cloudflare-pages
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify deployment commit
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.7.0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node --test scripts/telemetry-ingress.test.mjs
+      - run: pnpm exec wrangler deploy --config wrangler.telemetry.jsonc --dry-run
+      - name: Deploy the narrow native ingress
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec wrangler deploy --config wrangler.telemetry.jsonc
