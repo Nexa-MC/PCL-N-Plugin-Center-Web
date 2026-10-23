@@ -13,3 +13,5 @@ Auth 在 auth.pcln.top 签发 HttpOnly Cookie，Web 换取仅存内存的 API Be
 Auth 密钥由 Wrangler secrets 配置：MFA_ENC_KEY、TOKEN_ENC_KEY、OAuth providers 的 CLIENT_ID/CLIENT_SECRET；SERVICE_TOKEN 仅供可信服务提交等级事件和资格证据。公开匿名遥测不会授予经验或角色，调用方应先验证事件归属再通过 Auth 内部通道提交。商店下载量证据由 API 负责产生；Auth 负责角色授权，避免浏览器自报经验改变权限。
 
 遥测四个原页面保留在管理页。规划文档中的未实现业务不能视为已交付功能；实际入口以路由和服务测试为准。
+
+网站后台独立运行于 `manage.pcln.top` / `nexa-manage`，实现范围、身份边界与三仓库发布顺序见 [后台部署说明](management.md)。

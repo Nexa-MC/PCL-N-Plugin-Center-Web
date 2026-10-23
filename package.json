@@ -17,6 +17,8 @@
     "check": "pnpm type:check && pnpm test && pnpm build",
     "preview": "vite preview",
     "worker:check": "wrangler deploy --dry-run",
+    "manage:check": "wrangler deploy --config wrangler.manage.jsonc --dry-run",
+    "manage:deploy": "pnpm build && wrangler deploy --config wrangler.manage.jsonc",
     "deploy": "pnpm build && wrangler deploy",
     "types": "wrangler types"
   },

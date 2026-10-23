@@ -6,6 +6,15 @@ import { ui, uiLocale } from '@/languages/localize';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), scrollBehavior: () => ({ top: 0 }),
   routes: [
+    { path: '/manage', component: () => import('@/views/manage/ManagementShell.vue'), children: [
+      { path: '', component: () => import('@/views/manage/Overview.vue'), meta: { title: '工作概览' } },
+      { path: 'users', component: () => import('@/views/manage/Users.vue'), meta: { title: '用户管理' } },
+      { path: 'resources', component: () => import('@/views/manage/Resources.vue'), meta: { title: '资源目录' } },
+      { path: 'tickets', component: () => import('@/views/manage/Tickets.vue'), meta: { title: '支持工单' } },
+      { path: 'applications', component: () => import('@/views/manage/Applications.vue'), meta: { title: '资格审批' } },
+      { path: 'audit', component: () => import('@/views/manage/Audit.vue'), meta: { title: '操作审计' } },
+      { path: 'telemetry', component: () => import('@/views/admin/telemetry/index.vue'), meta: { title: '启动器遥测' } }
+    ] },
     { path: '/', component: CloudShell, children: [
       { path: '', component: () => import('@/views/cloud/Home.vue') },
       { path: 'store', component: () => import('@/views/cloud/Store.vue') },
@@ -42,6 +51,7 @@ const router = createRouter({
 // 带 applyPageSeo 的页面（主页/下载/更新日志/登录/注册）会在挂载时用各自的 SEO 标题覆写。
 const ROUTE_TITLES: Record<string, string> = { '/login': '登录', '/register': '创建账户', '/account': '账户', '/store': '商店', '/download': '下载', '/changelog': '更新日志', '/pricing': 'Cloud+ 订阅', '/docs': '文档', '/welcome': '欢迎' };
 function titleFor(path: string): string {
+  if (path === '/manage' || path.startsWith('/manage/')) return `${String(router.currentRoute.value.meta.title || '网站管理')} · NexaCL 管理后台`;
   if (path === '/') return 'NexaCL — 一个更省心的 Minecraft 启动器';
   if (ROUTE_TITLES[path]) return `${ROUTE_TITLES[path]} · NexaCL`;
   if (path.startsWith('/legal')) return '法律文档 · NexaCL';
@@ -50,7 +60,10 @@ function titleFor(path: string): string {
   if (path.startsWith('/account')) return '账户 · NexaCL';
   return 'NexaCL';
 }
-router.beforeEach(() => { startProgress(); });
+router.beforeEach(to => {
+  startProgress();
+  if (window.location.hostname === 'manage.pcln.top' && to.path === '/') return '/manage';
+});
 router.afterEach(() => { doneProgress(); });
 router.onError(() => { doneProgress(); });
 router.afterEach(to => { document.title = ui(titleFor(to.path)); });

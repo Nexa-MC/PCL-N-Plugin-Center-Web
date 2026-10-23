@@ -7,12 +7,18 @@ on:
         description: Exact reviewed master commit to deploy
         required: true
         type: string
+      target:
+        description: Worker to deploy (deploy updated Auth/API and D1 migration before manage)
+        required: true
+        default: web
+        type: choice
+        options: [web, manage]
 
 permissions:
   contents: read
 
 concurrency:
-  group: nexa-web-production
+  group: nexa-${{ inputs.target || 'web' }}-production
   cancel-in-progress: false
 
 jobs:
@@ -38,13 +44,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm worker:check
-      - name: Deploy Web assets and release proxy together
+      - run: pnpm manage:check
+      - name: Deploy selected Worker and assets
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DEPLOY_TARGET: ${{ inputs.target }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo '::error::Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in the cloudflare-pages environment.'
             exit 1
           fi
-          pnpm exec wrangler deploy
+          case "$DEPLOY_TARGET" in
+            web) pnpm exec wrangler deploy ;;
+            manage) pnpm exec wrangler deploy --config wrangler.manage.jsonc ;;
+            *) echo '::error::Unknown deployment target.'; exit 1 ;;
+          esac

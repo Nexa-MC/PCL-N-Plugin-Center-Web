@@ -138,7 +138,8 @@ function backToCreds() { stepDirection.value = 'back'; loginStep.value = 'creds'
 
 onMounted(async () => {
   // 已登录时将关联错误带回账户页，避免自动回跳吞掉提示。
-  if (await platform.session()) { void router.replace(oauthError.value ? { path: '/account', query: { section: 'linked', oauth_error: oauthError.value } } : returnTo.value); return; }
+  const managementLogin = window.location.hostname === 'manage.pcln.top' || /^\/manage(?:\/|$)/.test(returnTo.value);
+  if (await (managementLogin ? platform.managementSession() : platform.session())) { void router.replace(oauthError.value ? { path: '/account', query: { section: 'linked', oauth_error: oauthError.value } } : returnTo.value); return; }
   checking.value = false;
 });
 watchEffect(() => { applyPageSeo({ title: '登录 · NexaCL', description: '登录 NexaCL：用户 ID + 密码（强制两步验证），或 GitHub / Google / Microsoft。', path: '/login' }); });

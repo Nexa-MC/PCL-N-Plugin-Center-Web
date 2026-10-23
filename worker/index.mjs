@@ -29,8 +29,11 @@ async function githubReleases() {
 
 export default {
   async fetch(request, env) {
-    const path = new URL(request.url).pathname;
+    const url = new URL(request.url), path = url.pathname;
     try {
+      if (url.hostname === 'manage.pcln.top' && path === '/') {
+        return new Response(null, { status: 302, headers: { location: new URL('/manage', url).href, 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
+      }
       if (path === '/api/v1/github/releases') return await githubReleases();
       if (path.startsWith('/api/')) {
         const headers = new Headers(request.headers);
@@ -49,7 +52,15 @@ export default {
       // Cloudflare 边缘国家码：供定价页本地化价格预览；缺失时返回 null，
       // 前端不传国家码，由 Paddle 按访客 IP 自动定位。
       if (path === '/geo.json') return Response.json({ country: request.cf?.country ?? null }, { headers: { 'cache-control': 'no-store' } });
-      return await env.ASSETS.fetch(request);
+      const response = await env.ASSETS.fetch(request);
+      if (url.hostname === 'manage.pcln.top' || path === '/manage' || path.startsWith('/manage/')) {
+        const headers = new Headers(response.headers);
+        headers.set('x-robots-tag', 'noindex, nofollow');
+        headers.set('x-frame-options', 'DENY');
+        headers.set('cache-control', 'no-store');
+        return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+      }
+      return response;
     } catch {
       return Response.json({ type: 'about:blank', title: 'Service Unavailable', status: 503, detail: '服务暂时不可用' }, { status: 503, headers: { 'content-type': 'application/problem+json', 'cache-control': 'no-store' } });
     }

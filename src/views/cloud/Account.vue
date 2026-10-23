@@ -115,7 +115,7 @@
           <section class="work-panel">
             <div class="section-heading"><div><span class="status-pill">{{ $ui("已具备资格") }}</span><h2>{{ $ui("网站后台管理") }}</h2></div>
               <div class="actions"><a class="primary-button" href="https://manage.pcln.top/" target="_blank" rel="noreferrer">{{ $ui("进入后台 ↗") }}</a><button class="secondary-button" :disabled="summaryLoading" @click="loadSummary">{{ $ui("刷新摘要") }}</button></div></div>
-            <p>{{ $ui("完整控制台位于独立后台") }} <strong>manage.pcln.top</strong>{{ $ui("（接线中）；此处为最近 7 天摘要") }}{{ testMode ? $ui("（测试账户为模拟数据）") : '' }}{{ $ui("。") }}</p>
+            <p>{{ $ui("完整控制台位于独立后台") }} <strong>manage.pcln.top</strong>{{ $ui("，提供用户、资源、工单、资格审批和操作审计。") }}{{ testMode ? $ui("（测试账户为模拟数据）") : '' }}</p>
           </section>
           <section class="work-panel">
             <div class="section-heading"><div><h2>{{ $ui("遥测摘要") }}</h2></div><span class="status-pill">{{ $ui("最近 7 天") }}</span></div>

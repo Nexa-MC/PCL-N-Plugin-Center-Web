@@ -169,15 +169,31 @@ const testPolicyFixtures = (): PolicyStatus[] => {
   ];
 };
 
+export async function managementAuthRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
+  return authJson<T>(authFetch('/auth/v1' + path, init), '管理请求失败，请重试。');
+}
+
 export const platform = {
+  // 后台不接受前端演示账户；每次进入或重新聚焦都向 Auth 验证真实身份。
+  managementSession: async () => {
+    testSession = undefined;
+    try { localStorage.removeItem(TEST_STORAGE_KEY); } catch { /* 存储不可用不影响真实身份验证 */ }
+    accessToken = ''; currentUser = undefined;
+    return mintToken();
+  },
+  managementLogout: async () => {
+    const response = await authFetch('/auth/v1/sessions/current?scope=console', { method: 'DELETE' });
+    if (!response.ok && response.status !== 401) await authJson(response, '退出失败，请重试。');
+    accessToken = ''; currentUser = undefined;
+  },
   oauthStart: (provider: 'github' | 'microsoft' | 'google', returnTo = '/account', mode: 'login' | 'link' = 'login') => {
-    if (isTest()) {
+    if (isTest() && window.location.hostname !== 'manage.pcln.top' && !/^\/manage(?:\/|$)/.test(returnTo)) {
       if (mode === 'link' && !testState.identities.some(i => i.provider === provider)) testState.identities.push({ provider, email: testSession?.email ?? null, created_at: testNow() });
       console.info(`[test] 已模拟 ${provider} ${mode === 'link' ? '关联' : '登录'}，未离开页面。`);
       return;
     }
     const target = new URL(`/auth/v1/oauth/${provider}/start`, AUTH_BASE || window.location.origin);
-    target.searchParams.set('return_to', returnTo);
+    target.searchParams.set('return_to', window.location.hostname === 'manage.pcln.top' ? new URL(returnTo, window.location.origin).href : returnTo);
     target.searchParams.set('mode', mode);
     target.searchParams.set('scope', 'console');
     if (mode === 'login') target.searchParams.set('tos', POLICY_VERSION);

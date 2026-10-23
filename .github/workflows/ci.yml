@@ -31,3 +31,5 @@ jobs:
         run: pnpm build:prod
       - name: Validate Worker bundle and bindings
         run: pnpm worker:check
+      - name: Validate management domain Worker
+        run: pnpm manage:check
