@@ -9,8 +9,8 @@
       </div>
       <section class="work-panel">
         <h2>{{ $ui("历史归档") }}</h2>
-        <p>{{ $ui("历史原文用于追溯当时提供的约定和告知。1.1 修订不会将旧版本记录改为新版本同意。") }}</p>
-        <p>{{ $ui('历史归档为当时提供的中文原文。') }}</p><div class="legal-archive"><a href="/legal/archive/1.1/refunds.zh-CN.md">{{ $ui("退款政策 v1.1 · 2026-10-24") }}</a><a href="/legal/archive/1.0/refunds.zh-CN.md">{{ $ui("退款政策 v1.0 · 2026-09-26") }}</a><a href="/legal/archive/1.0/terms.zh-CN.md">{{ $ui("服务条款 v1.0 · 2026-09-26") }}</a><a href="/legal/archive/1.0/privacy.zh-CN.md">{{ $ui("隐私政策 v1.0 · 2026-09-26") }}</a><a href="/legal/archive/0.2/terms.md">{{ $ui("N Cloud 用户服务协议 v0.2") }}</a><a href="/legal/archive/0.2/privacy.md">{{ $ui("N Cloud 隐私保护协议 v0.2") }}</a></div>
+        <p>{{ $ui("历史原文用于追溯当时提供的约定和告知。1.2 修订不会将旧版本记录改为新版本同意。") }}</p>
+        <p>{{ $ui('历史归档为当时提供的中文原文。') }}</p><div class="legal-archive"><a href="/legal/archive/1.1/terms.zh-CN.md">{{ $ui("服务条款 v1.1 · 2026-10-01") }}</a><a href="/legal/archive/1.1/privacy.zh-CN.md">{{ $ui("隐私政策 v1.1 · 2026-10-01") }}</a><a href="/legal/archive/1.1/refunds.zh-CN.md">{{ $ui("退款政策 v1.1 · 2026-10-24") }}</a><a href="/legal/archive/1.0/refunds.zh-CN.md">{{ $ui("退款政策 v1.0 · 2026-09-26") }}</a><a href="/legal/archive/1.0/terms.zh-CN.md">{{ $ui("服务条款 v1.0 · 2026-09-26") }}</a><a href="/legal/archive/1.0/privacy.zh-CN.md">{{ $ui("隐私政策 v1.0 · 2026-09-26") }}</a><a href="/legal/archive/0.2/terms.md">{{ $ui("N Cloud 用户服务协议 v0.2") }}</a><a href="/legal/archive/0.2/privacy.md">{{ $ui("N Cloud 隐私保护协议 v0.2") }}</a></div>
       </section>
     </template>
     <template v-else-if="documents.find(d => d.key === doc)">
@@ -32,8 +32,8 @@ import { marked } from 'marked';
 import { uiLocale } from '@/languages/localize';
 
 const documents = [
-  { key: 'terms', title: 'Nexa Cloud 服务条款', version: '1.1', effective: '2026-10-01', hash: '9033b50cfb0e14f4f4758adf610bb063529ec2443d879420105479cf067729f5', file: '/legal/current/terms.zh-CN.md', summary: '账户安全、社区关联、等级经验与铭牌，以及资源、付费服务和用户权利。' },
-  { key: 'privacy', title: 'Nexa Cloud 隐私政策', version: '1.1', effective: '2026-10-01', hash: '8e45f1f498b955232abc6e149acc5c7f71fb5e70f5e1b1e8b1c5eeb28911520b', file: '/legal/current/privacy.zh-CN.md', summary: '账户与验证方式、可选授权、等级活动、技术遥测、数据保存及你的选择和权利。' },
+  { key: 'terms', title: 'Nexa Cloud 服务条款', version: '1.2', effective: '2026-10-23', hash: '2b8f728b467b1d0e6bb43c27c3193ea3aec58a5274c79a7dc5183c72e81e1160', file: '/legal/current/terms.zh-CN.md', summary: '账户安全、社区关联、等级经验与铭牌，以及资源、付费服务和用户权利。' },
+  { key: 'privacy', title: 'Nexa Cloud 隐私政策', version: '1.2', effective: '2026-10-23', hash: 'a744cbba70b8661ae5188abe5abb5443b4c74c84016b9278a672224281f1870a', file: '/legal/current/privacy.zh-CN.md', summary: '账户与验证方式、可选授权、等级活动、技术遥测、数据保存及你的选择和权利。' },
   { key: 'publisher', title: 'NexaStore 发布者分发协议', version: '1.0', effective: '2026-09-26', hash: '0f35d7e2ba59c413f4da1fabddffebb69002d477b6056ef4ada390d078802678', file: '/legal/current/publisher.zh-CN.md', summary: '向 NexaStore 上传或维护资源的发布者签订的分发协议，覆盖发布资格、许可证、审核、下架与安全撤销。' },
   { key: 'refunds', title: 'Nexa 退款、试用与订阅政策', version: '1.2', effective: '2026-10-24', hash: 'a3eaa6002c73a689a5b56b6979c50cd3a4a884a457a2d705d8d8fa34bd1f559c', file: '/legal/current/refunds.zh-CN.md', summary: '自营套餐退款与试用、第三方商店商品、未使用充值N代币退款及支付费用规则。' }
 ];

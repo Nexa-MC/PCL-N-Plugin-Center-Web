@@ -82,7 +82,7 @@ const HANDLE_PATTERN = /^[A-Za-z][A-Za-z0-9_-]{5,19}$/;
 const canSubmit = computed(() => Boolean(name.value) && HANDLE_PATTERN.test(handle.value)
   && (!wantPassword.value || (password.value.length >= 14 && password.value === password2.value && Boolean(totp.value) && totpCode.value.length === 6)));
 
-function oauth(provider: 'github' | 'microsoft' | 'google') { busy.value = true; busyProvider.value = provider; platform.oauthStart(provider, '/register?setup=1', 'login'); }
+function oauth(provider: 'github' | 'microsoft' | 'google') { if (busy.value || !tosRead.value) return; busy.value = true; busyProvider.value = provider; platform.oauthStart(provider, '/register?setup=1', 'login'); }
 async function checkHandle() {
   handleHint.value = '';
   const value = handle.value.trim();

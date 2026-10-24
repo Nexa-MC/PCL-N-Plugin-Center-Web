@@ -68,6 +68,7 @@ export interface PasskeyAssertion {
   clientDataJSON: string;
   authenticatorData: string;
   signature: string;
+  userHandle?: string | null;
 }
 
 export async function assertPasskey(options: AssertOptions): Promise<PasskeyAssertion> {
@@ -87,6 +88,7 @@ export async function assertPasskey(options: AssertOptions): Promise<PasskeyAsse
     credentialId: credential.id,
     clientDataJSON: bufToB64(response.clientDataJSON),
     authenticatorData: bufToB64(response.authenticatorData),
-    signature: bufToB64(response.signature)
+    signature: bufToB64(response.signature),
+    userHandle: response.userHandle ? bufToB64(response.userHandle) : null
   };
 }

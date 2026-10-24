@@ -1,0 +1,1488 @@
+{
+  "audited_on": "2026-10-23",
+  "source": "Paddle production MCP, read-only audit",
+  "api_access": {
+    "ok": true,
+    "value": {
+      "environment": "production",
+      "authenticated": true,
+      "permissions": [
+        "account.read",
+        "address.read",
+        "adjustment.read",
+        "balance_currency.read",
+        "business.read",
+        "checkout_domain.read",
+        "checkout_settings.read",
+        "client_token.read",
+        "currency_conversion.read",
+        "customer.read",
+        "discount.read",
+        "metrics.read",
+        "notification.read",
+        "notification_setting.read",
+        "notification_simulation.read",
+        "payment_method.read",
+        "price.read",
+        "product.read",
+        "report.read",
+        "statement_descriptor.read",
+        "subscription.read",
+        "tax_settings.read",
+        "transaction.read"
+      ]
+    }
+  },
+  "account": {
+    "ok": true,
+    "value": {
+      "has_legal_name": true,
+      "has_email": true,
+      "display_name": null,
+      "website": "https://pcln.top"
+    }
+  },
+  "products": {
+    "ok": true,
+    "value": {
+      "pagination": {
+        "hasMore": false,
+        "estimatedTotal": 0
+      },
+      "products": []
+    }
+  },
+  "prices": {
+    "ok": true,
+    "value": {
+      "pagination": {
+        "hasMore": false,
+        "estimatedTotal": 0
+      },
+      "prices": []
+    }
+  },
+  "client_tokens": {
+    "ok": true,
+    "value": []
+  },
+  "checkout_url": {
+    "ok": true,
+    "value": {
+      "default_url": null
+    }
+  },
+  "tax": {
+    "ok": true,
+    "value": {
+      "default_tax_mode": "location"
+    }
+  },
+  "balance_currency": {
+    "ok": true,
+    "value": {
+      "primary": "USD",
+      "preferred": "USD",
+      "enabled": [
+        "USD"
+      ]
+    }
+  },
+  "payment_methods": {
+    "ok": true,
+    "value": {
+      "payment_methods": {
+        "alipay": {
+          "enabled": false,
+          "available": false
+        },
+        "apple_pay": {
+          "enabled": true,
+          "available": true
+        },
+        "bancontact": {
+          "enabled": true,
+          "available": true
+        },
+        "blik": {
+          "enabled": false,
+          "available": true
+        },
+        "card": {
+          "enabled": true,
+          "available": true
+        },
+        "google_pay": {
+          "enabled": false,
+          "available": true
+        },
+        "ideal": {
+          "enabled": false,
+          "available": true
+        },
+        "kakao_pay": {
+          "enabled": false,
+          "available": true
+        },
+        "mb_way": {
+          "enabled": false,
+          "available": true
+        },
+        "naver_pay": {
+          "enabled": false,
+          "available": true
+        },
+        "payco": {
+          "enabled": false,
+          "available": true
+        },
+        "paypal": {
+          "enabled": true,
+          "available": true
+        },
+        "pix": {
+          "enabled": false,
+          "available": true
+        },
+        "samsung_pay": {
+          "enabled": false,
+          "available": true
+        },
+        "south_korea_local_card": {
+          "enabled": false,
+          "available": true
+        },
+        "upi": {
+          "enabled": false,
+          "available": true
+        },
+        "wechat_pay": {
+          "enabled": false,
+          "available": true
+        }
+      }
+    }
+  },
+  "currency_conversions": {
+    "ok": true,
+    "value": {
+      "ARS": {
+        "enabled": false
+      },
+      "AUD": {
+        "enabled": false
+      },
+      "BRL": {
+        "enabled": false
+      },
+      "CAD": {
+        "enabled": false
+      },
+      "CHF": {
+        "enabled": false
+      },
+      "CLP": {
+        "enabled": false
+      },
+      "CNY": {
+        "enabled": false
+      },
+      "COP": {
+        "enabled": false
+      },
+      "CZK": {
+        "enabled": false
+      },
+      "DKK": {
+        "enabled": false
+      },
+      "EUR": {
+        "enabled": false
+      },
+      "GBP": {
+        "enabled": false
+      },
+      "HKD": {
+        "enabled": false
+      },
+      "HUF": {
+        "enabled": false
+      },
+      "ILS": {
+        "enabled": false
+      },
+      "INR": {
+        "enabled": false
+      },
+      "JPY": {
+        "enabled": false
+      },
+      "KRW": {
+        "enabled": false
+      },
+      "MXN": {
+        "enabled": false
+      },
+      "NOK": {
+        "enabled": false
+      },
+      "NZD": {
+        "enabled": false
+      },
+      "PEN": {
+        "enabled": false
+      },
+      "PLN": {
+        "enabled": false
+      },
+      "RUB": {
+        "enabled": false
+      },
+      "SEK": {
+        "enabled": false
+      },
+      "SGD": {
+        "enabled": false
+      },
+      "THB": {
+        "enabled": false
+      },
+      "TRY": {
+        "enabled": false
+      },
+      "TWD": {
+        "enabled": false
+      },
+      "UAH": {
+        "enabled": false
+      },
+      "USD": {
+        "enabled": false
+      },
+      "VND": {
+        "enabled": false
+      },
+      "ZAR": {
+        "enabled": false
+      }
+    }
+  },
+  "currencies": {
+    "ok": true,
+    "value": [
+      {
+        "code": "USD",
+        "decimal_places": 2,
+        "minimum_payment_amount": "70"
+      },
+      {
+        "code": "GBP",
+        "decimal_places": 2,
+        "minimum_payment_amount": "55"
+      },
+      {
+        "code": "EUR",
+        "decimal_places": 2,
+        "minimum_payment_amount": "65"
+      },
+      {
+        "code": "RUB",
+        "decimal_places": 2,
+        "minimum_payment_amount": "5900"
+      },
+      {
+        "code": "AUD",
+        "decimal_places": 2,
+        "minimum_payment_amount": "110"
+      },
+      {
+        "code": "BRL",
+        "decimal_places": 2,
+        "minimum_payment_amount": "400"
+      },
+      {
+        "code": "CAD",
+        "decimal_places": 2,
+        "minimum_payment_amount": "100"
+      },
+      {
+        "code": "CHF",
+        "decimal_places": 2,
+        "minimum_payment_amount": "60"
+      },
+      {
+        "code": "CNY",
+        "decimal_places": 2,
+        "minimum_payment_amount": "510"
+      },
+      {
+        "code": "PLN",
+        "decimal_places": 2,
+        "minimum_payment_amount": "265"
+      },
+      {
+        "code": "SEK",
+        "decimal_places": 2,
+        "minimum_payment_amount": "680"
+      },
+      {
+        "code": "ZAR",
+        "decimal_places": 2,
+        "minimum_payment_amount": "1275"
+      },
+      {
+        "code": "CZK",
+        "decimal_places": 2,
+        "minimum_payment_amount": "1550"
+      },
+      {
+        "code": "HUF",
+        "decimal_places": 2,
+        "minimum_payment_amount": "25200"
+      },
+      {
+        "code": "DKK",
+        "decimal_places": 2,
+        "minimum_payment_amount": "470"
+      },
+      {
+        "code": "NZD",
+        "decimal_places": 2,
+        "minimum_payment_amount": "120"
+      },
+      {
+        "code": "SGD",
+        "decimal_places": 2,
+        "minimum_payment_amount": "90"
+      },
+      {
+        "code": "HKD",
+        "decimal_places": 2,
+        "minimum_payment_amount": "550"
+      },
+      {
+        "code": "INR",
+        "decimal_places": 2,
+        "minimum_payment_amount": "6000"
+      },
+      {
+        "code": "JPY",
+        "decimal_places": 0,
+        "minimum_payment_amount": "100"
+      },
+      {
+        "code": "KRW",
+        "decimal_places": 0,
+        "minimum_payment_amount": "980"
+      },
+      {
+        "code": "MXN",
+        "decimal_places": 2,
+        "minimum_payment_amount": "1370"
+      },
+      {
+        "code": "ARS",
+        "decimal_places": 2,
+        "minimum_payment_amount": "78000"
+      },
+      {
+        "code": "TWD",
+        "decimal_places": 2,
+        "minimum_payment_amount": "2500"
+      },
+      {
+        "code": "NOK",
+        "decimal_places": 2,
+        "minimum_payment_amount": "725"
+      },
+      {
+        "code": "THB",
+        "decimal_places": 2,
+        "minimum_payment_amount": "2300"
+      },
+      {
+        "code": "TRY",
+        "decimal_places": 2,
+        "minimum_payment_amount": "2700"
+      },
+      {
+        "code": "ILS",
+        "decimal_places": 2,
+        "minimum_payment_amount": "250"
+      },
+      {
+        "code": "UAH",
+        "decimal_places": 2,
+        "minimum_payment_amount": "2900"
+      },
+      {
+        "code": "COP",
+        "decimal_places": 2,
+        "minimum_payment_amount": "298000"
+      },
+      {
+        "code": "VND",
+        "decimal_places": 0,
+        "minimum_payment_amount": "20276"
+      },
+      {
+        "code": "CLP",
+        "decimal_places": 0,
+        "minimum_payment_amount": "800"
+      },
+      {
+        "code": "PEN",
+        "decimal_places": 2,
+        "minimum_payment_amount": "250"
+      }
+    ]
+  },
+  "countries": {
+    "ok": true,
+    "value": [
+      {
+        "iso": "AD",
+        "allow_sales": true
+      },
+      {
+        "iso": "AE",
+        "allow_sales": true
+      },
+      {
+        "iso": "AF",
+        "allow_sales": false
+      },
+      {
+        "iso": "AG",
+        "allow_sales": true
+      },
+      {
+        "iso": "AI",
+        "allow_sales": true
+      },
+      {
+        "iso": "AL",
+        "allow_sales": true
+      },
+      {
+        "iso": "AM",
+        "allow_sales": true
+      },
+      {
+        "iso": "AN",
+        "allow_sales": false
+      },
+      {
+        "iso": "AO",
+        "allow_sales": true
+      },
+      {
+        "iso": "AQ",
+        "allow_sales": false
+      },
+      {
+        "iso": "AR",
+        "allow_sales": true
+      },
+      {
+        "iso": "AS",
+        "allow_sales": true
+      },
+      {
+        "iso": "AT",
+        "allow_sales": true
+      },
+      {
+        "iso": "AU",
+        "allow_sales": true
+      },
+      {
+        "iso": "AW",
+        "allow_sales": true
+      },
+      {
+        "iso": "AX",
+        "allow_sales": true
+      },
+      {
+        "iso": "AZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "BA",
+        "allow_sales": true
+      },
+      {
+        "iso": "BB",
+        "allow_sales": true
+      },
+      {
+        "iso": "BD",
+        "allow_sales": true
+      },
+      {
+        "iso": "BE",
+        "allow_sales": true
+      },
+      {
+        "iso": "BF",
+        "allow_sales": true
+      },
+      {
+        "iso": "BG",
+        "allow_sales": true
+      },
+      {
+        "iso": "BH",
+        "allow_sales": true
+      },
+      {
+        "iso": "BI",
+        "allow_sales": true
+      },
+      {
+        "iso": "BJ",
+        "allow_sales": true
+      },
+      {
+        "iso": "BL",
+        "allow_sales": true
+      },
+      {
+        "iso": "BM",
+        "allow_sales": true
+      },
+      {
+        "iso": "BN",
+        "allow_sales": true
+      },
+      {
+        "iso": "BO",
+        "allow_sales": true
+      },
+      {
+        "iso": "BQ",
+        "allow_sales": true
+      },
+      {
+        "iso": "BR",
+        "allow_sales": true
+      },
+      {
+        "iso": "BS",
+        "allow_sales": true
+      },
+      {
+        "iso": "BT",
+        "allow_sales": true
+      },
+      {
+        "iso": "BV",
+        "allow_sales": true
+      },
+      {
+        "iso": "BW",
+        "allow_sales": true
+      },
+      {
+        "iso": "BY",
+        "allow_sales": false
+      },
+      {
+        "iso": "BZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "CA",
+        "allow_sales": true
+      },
+      {
+        "iso": "CC",
+        "allow_sales": true
+      },
+      {
+        "iso": "CD",
+        "allow_sales": false
+      },
+      {
+        "iso": "CF",
+        "allow_sales": false
+      },
+      {
+        "iso": "CG",
+        "allow_sales": true
+      },
+      {
+        "iso": "CH",
+        "allow_sales": true
+      },
+      {
+        "iso": "CI",
+        "allow_sales": true
+      },
+      {
+        "iso": "CK",
+        "allow_sales": true
+      },
+      {
+        "iso": "CL",
+        "allow_sales": true
+      },
+      {
+        "iso": "CM",
+        "allow_sales": true
+      },
+      {
+        "iso": "CN",
+        "allow_sales": true
+      },
+      {
+        "iso": "CO",
+        "allow_sales": true
+      },
+      {
+        "iso": "CR",
+        "allow_sales": true
+      },
+      {
+        "iso": "CS",
+        "allow_sales": false
+      },
+      {
+        "iso": "CU",
+        "allow_sales": false
+      },
+      {
+        "iso": "CV",
+        "allow_sales": true
+      },
+      {
+        "iso": "CW",
+        "allow_sales": true
+      },
+      {
+        "iso": "CX",
+        "allow_sales": true
+      },
+      {
+        "iso": "CY",
+        "allow_sales": true
+      },
+      {
+        "iso": "CZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "DE",
+        "allow_sales": true
+      },
+      {
+        "iso": "DJ",
+        "allow_sales": true
+      },
+      {
+        "iso": "DK",
+        "allow_sales": true
+      },
+      {
+        "iso": "DM",
+        "allow_sales": true
+      },
+      {
+        "iso": "DO",
+        "allow_sales": true
+      },
+      {
+        "iso": "DZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "EC",
+        "allow_sales": true
+      },
+      {
+        "iso": "EE",
+        "allow_sales": true
+      },
+      {
+        "iso": "EG",
+        "allow_sales": true
+      },
+      {
+        "iso": "EH",
+        "allow_sales": true
+      },
+      {
+        "iso": "ER",
+        "allow_sales": true
+      },
+      {
+        "iso": "ES",
+        "allow_sales": true
+      },
+      {
+        "iso": "ET",
+        "allow_sales": true
+      },
+      {
+        "iso": "FI",
+        "allow_sales": true
+      },
+      {
+        "iso": "FJ",
+        "allow_sales": true
+      },
+      {
+        "iso": "FK",
+        "allow_sales": true
+      },
+      {
+        "iso": "FM",
+        "allow_sales": true
+      },
+      {
+        "iso": "FO",
+        "allow_sales": true
+      },
+      {
+        "iso": "FR",
+        "allow_sales": true
+      },
+      {
+        "iso": "GA",
+        "allow_sales": true
+      },
+      {
+        "iso": "GB",
+        "allow_sales": true
+      },
+      {
+        "iso": "GD",
+        "allow_sales": true
+      },
+      {
+        "iso": "GE",
+        "allow_sales": true
+      },
+      {
+        "iso": "GF",
+        "allow_sales": true
+      },
+      {
+        "iso": "GG",
+        "allow_sales": true
+      },
+      {
+        "iso": "GH",
+        "allow_sales": true
+      },
+      {
+        "iso": "GI",
+        "allow_sales": true
+      },
+      {
+        "iso": "GL",
+        "allow_sales": true
+      },
+      {
+        "iso": "GM",
+        "allow_sales": true
+      },
+      {
+        "iso": "GN",
+        "allow_sales": true
+      },
+      {
+        "iso": "GP",
+        "allow_sales": true
+      },
+      {
+        "iso": "GQ",
+        "allow_sales": true
+      },
+      {
+        "iso": "GR",
+        "allow_sales": true
+      },
+      {
+        "iso": "GS",
+        "allow_sales": true
+      },
+      {
+        "iso": "GT",
+        "allow_sales": true
+      },
+      {
+        "iso": "GU",
+        "allow_sales": true
+      },
+      {
+        "iso": "GW",
+        "allow_sales": true
+      },
+      {
+        "iso": "GY",
+        "allow_sales": true
+      },
+      {
+        "iso": "HK",
+        "allow_sales": true
+      },
+      {
+        "iso": "HM",
+        "allow_sales": true
+      },
+      {
+        "iso": "HN",
+        "allow_sales": true
+      },
+      {
+        "iso": "HR",
+        "allow_sales": true
+      },
+      {
+        "iso": "HT",
+        "allow_sales": false
+      },
+      {
+        "iso": "HU",
+        "allow_sales": true
+      },
+      {
+        "iso": "ID",
+        "allow_sales": true
+      },
+      {
+        "iso": "IE",
+        "allow_sales": true
+      },
+      {
+        "iso": "IL",
+        "allow_sales": true
+      },
+      {
+        "iso": "IM",
+        "allow_sales": true
+      },
+      {
+        "iso": "IN",
+        "allow_sales": true
+      },
+      {
+        "iso": "IO",
+        "allow_sales": true
+      },
+      {
+        "iso": "IQ",
+        "allow_sales": true
+      },
+      {
+        "iso": "IR",
+        "allow_sales": false
+      },
+      {
+        "iso": "IS",
+        "allow_sales": true
+      },
+      {
+        "iso": "IT",
+        "allow_sales": true
+      },
+      {
+        "iso": "JE",
+        "allow_sales": true
+      },
+      {
+        "iso": "JM",
+        "allow_sales": true
+      },
+      {
+        "iso": "JO",
+        "allow_sales": true
+      },
+      {
+        "iso": "JP",
+        "allow_sales": true
+      },
+      {
+        "iso": "KE",
+        "allow_sales": true
+      },
+      {
+        "iso": "KG",
+        "allow_sales": true
+      },
+      {
+        "iso": "KH",
+        "allow_sales": true
+      },
+      {
+        "iso": "KI",
+        "allow_sales": true
+      },
+      {
+        "iso": "KM",
+        "allow_sales": true
+      },
+      {
+        "iso": "KN",
+        "allow_sales": true
+      },
+      {
+        "iso": "KP",
+        "allow_sales": false
+      },
+      {
+        "iso": "KR",
+        "allow_sales": true
+      },
+      {
+        "iso": "KW",
+        "allow_sales": true
+      },
+      {
+        "iso": "KY",
+        "allow_sales": true
+      },
+      {
+        "iso": "KZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "LA",
+        "allow_sales": true
+      },
+      {
+        "iso": "LB",
+        "allow_sales": true
+      },
+      {
+        "iso": "LC",
+        "allow_sales": true
+      },
+      {
+        "iso": "LI",
+        "allow_sales": true
+      },
+      {
+        "iso": "LK",
+        "allow_sales": true
+      },
+      {
+        "iso": "LR",
+        "allow_sales": true
+      },
+      {
+        "iso": "LS",
+        "allow_sales": true
+      },
+      {
+        "iso": "LT",
+        "allow_sales": true
+      },
+      {
+        "iso": "LU",
+        "allow_sales": true
+      },
+      {
+        "iso": "LV",
+        "allow_sales": true
+      },
+      {
+        "iso": "LY",
+        "allow_sales": false
+      },
+      {
+        "iso": "MA",
+        "allow_sales": true
+      },
+      {
+        "iso": "MC",
+        "allow_sales": true
+      },
+      {
+        "iso": "MD",
+        "allow_sales": true
+      },
+      {
+        "iso": "ME",
+        "allow_sales": true
+      },
+      {
+        "iso": "MF",
+        "allow_sales": true
+      },
+      {
+        "iso": "MG",
+        "allow_sales": true
+      },
+      {
+        "iso": "MH",
+        "allow_sales": true
+      },
+      {
+        "iso": "MK",
+        "allow_sales": true
+      },
+      {
+        "iso": "ML",
+        "allow_sales": false
+      },
+      {
+        "iso": "MM",
+        "allow_sales": false
+      },
+      {
+        "iso": "MN",
+        "allow_sales": true
+      },
+      {
+        "iso": "MO",
+        "allow_sales": true
+      },
+      {
+        "iso": "MP",
+        "allow_sales": true
+      },
+      {
+        "iso": "MQ",
+        "allow_sales": true
+      },
+      {
+        "iso": "MR",
+        "allow_sales": true
+      },
+      {
+        "iso": "MS",
+        "allow_sales": true
+      },
+      {
+        "iso": "MT",
+        "allow_sales": true
+      },
+      {
+        "iso": "MU",
+        "allow_sales": true
+      },
+      {
+        "iso": "MV",
+        "allow_sales": true
+      },
+      {
+        "iso": "MW",
+        "allow_sales": true
+      },
+      {
+        "iso": "MX",
+        "allow_sales": true
+      },
+      {
+        "iso": "MY",
+        "allow_sales": true
+      },
+      {
+        "iso": "MZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "NA",
+        "allow_sales": true
+      },
+      {
+        "iso": "NC",
+        "allow_sales": true
+      },
+      {
+        "iso": "NE",
+        "allow_sales": true
+      },
+      {
+        "iso": "NF",
+        "allow_sales": true
+      },
+      {
+        "iso": "NG",
+        "allow_sales": true
+      },
+      {
+        "iso": "NI",
+        "allow_sales": false
+      },
+      {
+        "iso": "NL",
+        "allow_sales": true
+      },
+      {
+        "iso": "NO",
+        "allow_sales": true
+      },
+      {
+        "iso": "NP",
+        "allow_sales": true
+      },
+      {
+        "iso": "NR",
+        "allow_sales": true
+      },
+      {
+        "iso": "NU",
+        "allow_sales": true
+      },
+      {
+        "iso": "NZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "OM",
+        "allow_sales": true
+      },
+      {
+        "iso": "PA",
+        "allow_sales": true
+      },
+      {
+        "iso": "PE",
+        "allow_sales": true
+      },
+      {
+        "iso": "PF",
+        "allow_sales": true
+      },
+      {
+        "iso": "PG",
+        "allow_sales": true
+      },
+      {
+        "iso": "PH",
+        "allow_sales": true
+      },
+      {
+        "iso": "PK",
+        "allow_sales": true
+      },
+      {
+        "iso": "PL",
+        "allow_sales": true
+      },
+      {
+        "iso": "PM",
+        "allow_sales": true
+      },
+      {
+        "iso": "PN",
+        "allow_sales": true
+      },
+      {
+        "iso": "PR",
+        "allow_sales": true
+      },
+      {
+        "iso": "PS",
+        "allow_sales": true
+      },
+      {
+        "iso": "PT",
+        "allow_sales": true
+      },
+      {
+        "iso": "PW",
+        "allow_sales": true
+      },
+      {
+        "iso": "PY",
+        "allow_sales": true
+      },
+      {
+        "iso": "QA",
+        "allow_sales": true
+      },
+      {
+        "iso": "RE",
+        "allow_sales": true
+      },
+      {
+        "iso": "RO",
+        "allow_sales": true
+      },
+      {
+        "iso": "RS",
+        "allow_sales": true
+      },
+      {
+        "iso": "RU",
+        "allow_sales": false
+      },
+      {
+        "iso": "RW",
+        "allow_sales": true
+      },
+      {
+        "iso": "SA",
+        "allow_sales": true
+      },
+      {
+        "iso": "SB",
+        "allow_sales": true
+      },
+      {
+        "iso": "SC",
+        "allow_sales": true
+      },
+      {
+        "iso": "SD",
+        "allow_sales": false
+      },
+      {
+        "iso": "SE",
+        "allow_sales": true
+      },
+      {
+        "iso": "SG",
+        "allow_sales": true
+      },
+      {
+        "iso": "SH",
+        "allow_sales": true
+      },
+      {
+        "iso": "SI",
+        "allow_sales": true
+      },
+      {
+        "iso": "SJ",
+        "allow_sales": true
+      },
+      {
+        "iso": "SK",
+        "allow_sales": true
+      },
+      {
+        "iso": "SL",
+        "allow_sales": true
+      },
+      {
+        "iso": "SM",
+        "allow_sales": true
+      },
+      {
+        "iso": "SN",
+        "allow_sales": true
+      },
+      {
+        "iso": "SO",
+        "allow_sales": false
+      },
+      {
+        "iso": "SR",
+        "allow_sales": true
+      },
+      {
+        "iso": "SS",
+        "allow_sales": false
+      },
+      {
+        "iso": "ST",
+        "allow_sales": true
+      },
+      {
+        "iso": "SV",
+        "allow_sales": true
+      },
+      {
+        "iso": "SX",
+        "allow_sales": true
+      },
+      {
+        "iso": "SY",
+        "allow_sales": false
+      },
+      {
+        "iso": "SZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "TC",
+        "allow_sales": true
+      },
+      {
+        "iso": "TD",
+        "allow_sales": true
+      },
+      {
+        "iso": "TF",
+        "allow_sales": true
+      },
+      {
+        "iso": "TG",
+        "allow_sales": true
+      },
+      {
+        "iso": "TH",
+        "allow_sales": true
+      },
+      {
+        "iso": "TJ",
+        "allow_sales": true
+      },
+      {
+        "iso": "TK",
+        "allow_sales": true
+      },
+      {
+        "iso": "TL",
+        "allow_sales": true
+      },
+      {
+        "iso": "TM",
+        "allow_sales": true
+      },
+      {
+        "iso": "TN",
+        "allow_sales": true
+      },
+      {
+        "iso": "TO",
+        "allow_sales": true
+      },
+      {
+        "iso": "TR",
+        "allow_sales": true
+      },
+      {
+        "iso": "TT",
+        "allow_sales": true
+      },
+      {
+        "iso": "TV",
+        "allow_sales": true
+      },
+      {
+        "iso": "TW",
+        "allow_sales": true
+      },
+      {
+        "iso": "TZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "UA",
+        "allow_sales": true
+      },
+      {
+        "iso": "UG",
+        "allow_sales": true
+      },
+      {
+        "iso": "UM",
+        "allow_sales": true
+      },
+      {
+        "iso": "US",
+        "allow_sales": true
+      },
+      {
+        "iso": "UY",
+        "allow_sales": true
+      },
+      {
+        "iso": "UZ",
+        "allow_sales": true
+      },
+      {
+        "iso": "VA",
+        "allow_sales": true
+      },
+      {
+        "iso": "VC",
+        "allow_sales": true
+      },
+      {
+        "iso": "VE",
+        "allow_sales": false
+      },
+      {
+        "iso": "VG",
+        "allow_sales": true
+      },
+      {
+        "iso": "VI",
+        "allow_sales": true
+      },
+      {
+        "iso": "VN",
+        "allow_sales": true
+      },
+      {
+        "iso": "VU",
+        "allow_sales": true
+      },
+      {
+        "iso": "WF",
+        "allow_sales": true
+      },
+      {
+        "iso": "WS",
+        "allow_sales": true
+      },
+      {
+        "iso": "XK",
+        "allow_sales": true
+      },
+      {
+        "iso": "YE",
+        "allow_sales": false
+      },
+      {
+        "iso": "YT",
+        "allow_sales": true
+      },
+      {
+        "iso": "ZA",
+        "allow_sales": true
+      },
+      {
+        "iso": "ZM",
+        "allow_sales": true
+      },
+      {
+        "iso": "ZW",
+        "allow_sales": false
+      }
+    ]
+  },
+  "destinations": {
+    "ok": true,
+    "value": []
+  },
+  "checkout_domains": {
+    "ok": true,
+    "value": []
+  },
+  "onboarding_verification": {
+    "ok": true,
+    "value": [
+      {
+        "id": "slrvrf_01m3dw88z9h0qk6rhgzrqabhdn",
+        "status": "pending",
+        "open_steps": [
+          {
+            "key": "account_setup",
+            "status": "pending"
+          },
+          {
+            "key": "domain_review",
+            "status": "pending"
+          },
+          {
+            "key": "identity_verification",
+            "status": "pending"
+          },
+          {
+            "key": "final_review",
+            "status": "pending"
+          }
+        ]
+      }
+    ]
+  }
+}

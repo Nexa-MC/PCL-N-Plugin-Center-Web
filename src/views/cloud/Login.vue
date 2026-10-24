@@ -17,7 +17,26 @@
 
         <Transition :name="stepName" mode="out-in">
           <div v-if="loginStep === 'creds'" key="creds" class="step-pane">
-            <form class="credential-form" @submit.prevent="submitLogin">
+            <button class="primary-button passkey-primary" type="button" :disabled="loginBusy || busy" @click="directPasskeyLogin"><KoiIcon name="key-square" /> {{ $ui('使用 Passkey 直接登录') }}</button>
+            <p class="login-fine">{{ $ui('使用设备指纹、面容或 PIN，无需先输入密码。') }}</p>
+            <div class="login-methods" role="group" :aria-label="$ui('登录方式')">
+              <button type="button" :aria-pressed="loginMethod === 'password'" :disabled="loginBusy" @click="changeLoginMethod('password')">{{ $ui('密码登录') }}</button>
+              <button type="button" :aria-pressed="loginMethod === 'email'" :disabled="loginBusy" @click="changeLoginMethod('email')">{{ $ui('邮箱验证码') }}</button>
+            </div>
+            <form v-if="loginMethod === 'email'" class="credential-form" @submit.prevent="submitEmailCode">
+              <label>{{ $ui('账户邮箱') }}<input v-model.trim="emailAddress" type="email" autocomplete="email" maxlength="254" :readonly="Boolean(emailChallenge)" required /></label>
+              <p v-if="!emailAvailable" class="login-fine">{{ $ui('邮箱登录暂不可用，请使用其他登录方式') }}</p>
+              <button class="secondary-button" type="button" :disabled="loginBusy || !emailAvailable || !emailAddress || resendSeconds > 0" @click="sendEmailCode">{{ resendSeconds > 0 ? $ui('{0} 秒后可重发', [resendSeconds]) : $ui('发送登录验证码') }}</button>
+              <template v-if="emailChallenge">
+                <p class="login-fine" role="status">{{ $ui('若邮箱已绑定可用账户，验证码将发送到该邮箱；5 分钟内有效。') }}</p>
+                <SegmentedCode v-model="emailCode" :length="6" charset="digits" :label="$ui('邮箱验证码')" :disabled="loginBusy" @complete="submitEmailCode" />
+                <button class="primary-button" type="submit" :disabled="loginBusy || emailCode.length !== 6">{{ loginBusy ? $ui('正在验证…') : $ui('验证并登录') }}</button>
+                <button class="back-link" type="button" :disabled="loginBusy" @click="resetEmail">{{ $ui('更换邮箱') }}</button>
+              </template>
+              <p v-if="loginError" class="form-error" role="alert">{{ $ui(loginError) }}</p>
+              <p class="login-fine">{{ $ui('已设置两步验证的账户仍需完成原有验证。') }}</p>
+            </form>
+            <form v-else class="credential-form" @submit.prevent="submitLogin">
               <label>{{ $ui("用户 ID") }}<input v-model.trim="loginHandle" autocomplete="username" minlength="6" maxlength="20" required :placeholder="$ui('6–20 位，字母开头')" /></label>
               <label>{{ $ui("密码") }}<input v-model="loginPassword" type="password" autocomplete="current-password" required /></label>
               <p v-if="loginError" class="form-error" role="alert">{{ $ui(loginError) }}</p>
@@ -64,13 +83,14 @@
         <router-link to="/changelog">{{ $ui("更新日志") }}</router-link>
         <router-link to="/legal/terms">{{ $ui("服务条款") }}</router-link>
         <router-link to="/legal/privacy">{{ $ui("隐私政策") }}</router-link>
+        <router-link to="/contact">{{ $ui('联系我们') }}</router-link>
       </nav>
     </main>
   </div>
 </template>
 <script setup lang="ts">
 import BrandIcon from '@/components/BrandIcon.vue';
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, POLICY_VERSION } from '@/api/platform';
 import { assertPasskey } from '@/utils/webauthnClient';
@@ -86,7 +106,7 @@ const checking = ref(true), busy = ref(false), tosRead = ref(false), busyProvide
 const oauthError = computed(() => { const value = route.query.oauth_error; return typeof value === 'string' && value ? value : ''; });
 // 登录成功后的回跳目标：仅接受站内相对路径，防开放重定向。
 const returnTo = computed(() => { const value = route.query.return; return typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') ? value : '/account'; });
-function oauth(provider: 'github' | 'microsoft' | 'google') { busy.value = true; busyProvider.value = provider; platform.oauthStart(provider, returnTo.value, 'login'); }
+function oauth(provider: 'github' | 'microsoft' | 'google') { if (busy.value || !tosRead.value) return; busy.value = true; busyProvider.value = provider; platform.oauthStart(provider, returnTo.value, 'login'); }
 // Microsoft 式切页方向:前进右滑入,返回左滑入。
 const stepDirection = ref<'fwd' | 'back'>('fwd');
 const stepName = computed(() => stepDirection.value === 'fwd' ? 'ms-step' : 'ms-step-back');
@@ -94,6 +114,46 @@ const stepName = computed(() => stepDirection.value === 'fwd' ? 'ms-step' : 'ms-
 // ---- 用户 ID + 密码登录（两段式：密码 → 2FA，优先级 Passkey › 验证器 › 恢复码） ----
 const loginStep = ref<'creds' | 'mfa'>('creds');
 const loginHandle = ref(''), loginPassword = ref(''), loginError = ref(''), loginBusy = ref(false);
+const loginMethod = ref<'password' | 'email'>('password'), emailAvailable = ref(false);
+const emailAddress = ref(''), emailCode = ref(''), emailChallenge = ref(''), resendSeconds = ref(0);
+let resendTimer: ReturnType<typeof setInterval> | undefined;
+function resetEmail() { emailChallenge.value = ''; emailCode.value = ''; loginError.value = ''; }
+function changeLoginMethod(method: 'password' | 'email') { loginMethod.value = method; loginError.value = ''; }
+function enterMfa(result: { challenge: string; factors: string[]; user: { name: string } }) {
+  loginChallenge.value = result.challenge; loginFactors.value = result.factors; loginUserName.value = result.user.name;
+  mfaMode.value = result.factors.includes('totp') ? 'app' : 'recovery';
+  emailCode.value = ''; loginPassword.value = ''; stepDirection.value = 'fwd'; loginStep.value = 'mfa';
+}
+async function sendEmailCode() {
+  if (loginBusy.value || resendSeconds.value > 0) return;
+  loginBusy.value = true; loginError.value = '';
+  try {
+    const result = await platform.requestEmailLogin(emailAddress.value);
+    emailChallenge.value = result.challenge; emailCode.value = ''; resendSeconds.value = result.retryAfter;
+    clearInterval(resendTimer); resendTimer = setInterval(() => { if (resendSeconds.value > 0) resendSeconds.value--; else clearInterval(resendTimer); }, 1000);
+  } catch (error) { loginError.value = error instanceof Error ? error.message : '发送验证码失败'; }
+  finally { loginBusy.value = false; }
+}
+async function submitEmailCode() {
+  if (loginBusy.value || !emailChallenge.value || emailCode.value.length !== 6) return;
+  loginBusy.value = true; loginError.value = '';
+  try {
+    const result = await platform.verifyEmailLogin(emailChallenge.value, emailCode.value);
+    if ('mfaRequired' in result) enterMfa(result); else void router.replace(returnTo.value);
+  } catch (error) { loginError.value = error instanceof Error ? error.message : '邮箱验证码无效或已过期'; emailCode.value = ''; }
+  finally { loginBusy.value = false; }
+}
+async function directPasskeyLogin() {
+  loginBusy.value = true; loginError.value = '';
+  try {
+    const options = await platform.directPasskeyOptions();
+    const assertion = await assertPasskey(options);
+    await platform.directPasskeyLogin({ challenge: options.loginChallenge, ...assertion });
+    void router.replace(returnTo.value);
+  } catch (error) { loginError.value = error instanceof Error ? error.message : 'Passkey 校验失败'; }
+  finally { loginBusy.value = false; }
+}
+onUnmounted(() => clearInterval(resendTimer));
 const loginChallenge = ref(''), loginFactors = ref<string[]>([]), loginUserName = ref('');
 const mfaMode = ref<'app' | 'recovery'>('app');
 const appCode = ref(''), recoveryInput = ref('');
@@ -141,8 +201,9 @@ onMounted(async () => {
   const managementLogin = window.location.hostname === 'manage.pcln.top' || /^\/manage(?:\/|$)/.test(returnTo.value);
   if (await (managementLogin ? platform.managementSession() : platform.session())) { void router.replace(oauthError.value ? { path: '/account', query: { section: 'linked', oauth_error: oauthError.value } } : returnTo.value); return; }
   checking.value = false;
+  try { emailAvailable.value = (await platform.loginMethods()).emailCode; } catch { emailAvailable.value = false; }
 });
-watchEffect(() => { applyPageSeo({ title: '登录 · NexaCL', description: '登录 NexaCL：用户 ID + 密码（强制两步验证），或 GitHub / Google / Microsoft。', path: '/login' }); });
+watchEffect(() => { applyPageSeo({ title: '登录 · NexaCL', description: '使用 Passkey、邮箱验证码、密码或 GitHub / Google / Microsoft 登录 NexaCL。', path: '/login' }); });
 </script>
 <style scoped>
 .login-page{min-height:100vh;display:flex;flex-direction:column}
@@ -164,5 +225,6 @@ watchEffect(() => { applyPageSeo({ title: '登录 · NexaCL', description: '登�
 .seg-label{display:block;text-align:center;font-size:12px;color:var(--market-muted);margin:6px 0 10px}
 .passkey-primary{width:100%;min-height:46px;font-size:14px;margin-top:6px}
 .mfa-switch{display:flex;justify-content:center;margin-top:-2px}
+.login-methods{display:flex;gap:8px;margin-top:20px}.login-methods button{flex:1;padding:9px 12px;border:1px solid var(--market-border);border-radius:6px;background:var(--market-surface);color:var(--market-muted);cursor:pointer}.login-methods button[aria-pressed="true"]{border-color:var(--nc-accent);color:var(--market-text)}
 @media(max-width:480px){.login-topbar{padding:0 16px}.login-hero{padding:8px 12px 20px}}
 </style>

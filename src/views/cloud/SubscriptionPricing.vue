@@ -102,5 +102,5 @@ onMounted(() => { if (!legacy) { window.addEventListener(SESSION_EVENT, loadMemb
 onBeforeUnmount(() => { generation++; window.removeEventListener(SESSION_EVENT, loadMembership); });
 </script>
 <style scoped>
-.regional-currency{margin:20px 0 6px}.pricing-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}.pricing-card{max-width:420px;width:100%;justify-self:center}.more-plans{text-align:center;margin:26px 0}.more-plans a{color:var(--nc-accent);text-decoration:underline;text-underline-offset:4px}.subscription-plans>.login-fine{margin-top:24px}
+.regional-currency{margin:20px 0 6px}.pricing-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}.pricing-card{max-width:420px;width:100%;justify-self:center}.more-plans{text-align:center;margin:26px 0}.more-plans a{color:var(--nc-accent);text-decoration:underline;text-underline-offset:4px}.subscription-plans>.login-fine{margin-top:24px}.login-fine button.text-link{background:transparent;border:0;padding:0;color:var(--nc-accent);font:inherit;text-decoration:underline;text-underline-offset:3px}
 </style>

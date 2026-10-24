@@ -38,6 +38,7 @@ const router = createRouter({
       { path: 'plans', component: () => import('@/views/cloud/PublicPlans.vue') },
       { path: 'pricing', component: () => import('@/views/cloud/SubscriptionPricing.vue') },
       { path: 'checkout/result', component: () => import('@/views/cloud/CheckoutResult.vue') },
+      { path: 'contact', component: () => import('@/views/cloud/Contact.vue') },
       { path: 'welcome', component: () => import('@/views/cloud/Welcome.vue') },
       { path: 'legal', component: () => import('@/views/cloud/LegalDocs.vue') },
       { path: 'legal/:doc', component: () => import('@/views/cloud/LegalDocs.vue') },
@@ -63,7 +64,7 @@ const router = createRouter({
 });
 // 统一的页面标题体系：<页面名> · NexaCL；主页使用完整品牌标题。
 // 带 applyPageSeo 的页面（主页/下载/更新日志/登录/注册）会在挂载时用各自的 SEO 标题覆写。
-const ROUTE_TITLES: Record<string, string> = { '/login': '登录', '/register': '创建账户', '/account': '账户', '/store': '商店', '/download': '下载', '/changelog': '更新日志', '/plans': '套餐价格', '/pricing': 'Cloud+ 订阅', '/docs': '文档', '/welcome': '欢迎' };
+const ROUTE_TITLES: Record<string, string> = { '/login': '登录', '/register': '创建账户', '/account': '账户', '/store': '商店', '/download': '下载', '/changelog': '更新日志', '/plans': '套餐价格', '/pricing': 'Cloud+ 订阅', '/contact': '联系我们', '/docs': '文档', '/welcome': '欢迎' };
 function titleFor(path: string): string {
   if (path === '/manage' || path.startsWith('/manage/')) return ui('{0} · NexaCL 管理后台', [ui(router.currentRoute.value.meta.title || '网站管理')]);
   if (path === '/') return 'NexaCL — 一个更省心的 Minecraft 启动器';

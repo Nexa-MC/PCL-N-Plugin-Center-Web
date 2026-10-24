@@ -23,10 +23,10 @@ test('legal download bytes match published version, date and SHA-256 for every c
   });
 });
 
-test('refund revision does not change terms/privacy acceptance or publisher agreement versions', async () => {
+test('account consent follows terms and privacy 1.2 while supplemental policies retain their independent versions', async () => {
   const source = await readFile(new URL('src/api/platform.ts', root), 'utf8');
   const version = source.match(/export const POLICY_VERSION = '([^']+)'/)?.[1];
-  assert.equal(version, '1.1');
+  assert.equal(version, '1.2');
   assert.equal(documents.find(d => d.key === 'terms').version, version);
   assert.equal(documents.find(d => d.key === 'privacy').version, version);
   assert.equal(documents.find(d => d.key === 'publisher').version, '1.0');
@@ -52,4 +52,14 @@ test('refund 1.1 archives preserve both published originals after the fee and de
   const hashes = { 'zh-CN': '28419f19c122cce43d11e1c49befdfafb1be8749e8d0e48b5f3175fc4c26027e', en: '8fdf4ab31e87e59dd32144d4172644875aab7675b9ee1f39597bafebf008103d' };
   for (const [locale, hash] of Object.entries(hashes)) assert.equal(sha256(await readFile(new URL(`public/legal/archive/1.1/refunds.${locale}.md`, root))), hash);
   assert.ok(page.includes('href="/legal/archive/1.1/refunds.zh-CN.md"'));
+});
+
+test('1.1 archives preserve the preceding published Chinese and English documents', async () => {
+  const hashes = { terms: '9033b50cfb0e14f4f4758adf610bb063529ec2443d879420105479cf067729f5', privacy: '8e45f1f498b955232abc6e149acc5c7f71fb5e70f5e1b1e8b1c5eeb28911520b' };
+  for (const [kind, expected] of Object.entries(hashes)) {
+    const path = `/legal/archive/1.1/${kind}.zh-CN.md`;
+    assert.equal(sha256(await readFile(new URL('public' + path, root))), expected);
+    assert.ok(page.includes(`href="${path}"`));
+    assert.match(await readFile(new URL(`public/legal/archive/1.1/${kind}.en.md`, root), 'utf8'), /Version: 1\.1/);
+  }
 });

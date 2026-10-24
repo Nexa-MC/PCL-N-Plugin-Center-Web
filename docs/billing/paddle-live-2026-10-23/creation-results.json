@@ -1,0 +1,412 @@
+{
+  "environment": "production",
+  "created_on": "2026-10-23",
+  "initial_attempt": {
+    "ok": false,
+    "product_key": "lite",
+    "stage": "verify_lite_month",
+    "error": "Price conflict for pri_01m5nh7cbd1r1khpvm0mp345e5: tax_mode,custom_data",
+    "operations": [
+      {
+        "action": "created_product",
+        "id": "pro_01m5nh7c55ym98b44frhts15x5"
+      },
+      {
+        "action": "created_price",
+        "key": "lite_month",
+        "id": "pri_01m5nh7cbd1r1khpvm0mp345e5"
+      }
+    ]
+  },
+  "tax_readback_note": "Paddle persisted requested account_setting as location; production default_tax_mode was read as location. Effective tax mode matches. Metadata was compared without depending on object key order.",
+  "products": [
+    {
+      "ok": true,
+      "environment": "production",
+      "product_key": "lite",
+      "product": {
+        "id": "pro_01m5nh7c55ym98b44frhts15x5",
+        "name": "Cloud+ Lite",
+        "tax_category": "saas",
+        "status": "active"
+      },
+      "prices": [
+        {
+          "key": "lite_month",
+          "id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "product_id": "pro_01m5nh7c55ym98b44frhts15x5",
+          "unit_price": {
+            "amount": "99",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "month",
+            "frequency": 1
+          },
+          "trial_period": {
+            "interval": "day",
+            "frequency": 7,
+            "requires_payment_method": true
+          },
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        },
+        {
+          "key": "lite_year",
+          "id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "product_id": "pro_01m5nh7c55ym98b44frhts15x5",
+          "unit_price": {
+            "amount": "990",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "year",
+            "frequency": 1
+          },
+          "trial_period": {
+            "interval": "day",
+            "frequency": 7,
+            "requires_payment_method": true
+          },
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        }
+      ],
+      "operations": [
+        {
+          "action": "reused_product",
+          "id": "pro_01m5nh7c55ym98b44frhts15x5"
+        },
+        {
+          "action": "reused_price",
+          "key": "lite_month",
+          "id": "pri_01m5nh7cbd1r1khpvm0mp345e5"
+        },
+        {
+          "action": "created_price",
+          "key": "lite_year",
+          "id": "pri_01m5nha4dx3pxv59wtsg31edm8"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "environment": "production",
+      "product_key": "standard",
+      "product": {
+        "id": "pro_01m5nha7fbd0n69j862eqyvee0",
+        "name": "Cloud+ Standard",
+        "tax_category": "saas",
+        "status": "active"
+      },
+      "prices": [
+        {
+          "key": "standard_month",
+          "id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "product_id": "pro_01m5nha7fbd0n69j862eqyvee0",
+          "unit_price": {
+            "amount": "299",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "month",
+            "frequency": 1
+          },
+          "trial_period": null,
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        },
+        {
+          "key": "standard_year",
+          "id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "product_id": "pro_01m5nha7fbd0n69j862eqyvee0",
+          "unit_price": {
+            "amount": "2999",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "year",
+            "frequency": 1
+          },
+          "trial_period": null,
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        }
+      ],
+      "operations": [
+        {
+          "action": "created_product",
+          "id": "pro_01m5nha7fbd0n69j862eqyvee0"
+        },
+        {
+          "action": "created_price",
+          "key": "standard_month",
+          "id": "pri_01m5nha7ng5fmkanptfj0e6rr0"
+        },
+        {
+          "action": "created_price",
+          "key": "standard_year",
+          "id": "pri_01m5nha7zdh4abfmabq61v4cnn"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "environment": "production",
+      "product_key": "advanced",
+      "product": {
+        "id": "pro_01m5nhb3afhntzayvawsem00mg",
+        "name": "Cloud+ Advanced",
+        "tax_category": "saas",
+        "status": "active"
+      },
+      "prices": [
+        {
+          "key": "advanced_month",
+          "id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "product_id": "pro_01m5nhb3afhntzayvawsem00mg",
+          "unit_price": {
+            "amount": "799",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "month",
+            "frequency": 1
+          },
+          "trial_period": null,
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        },
+        {
+          "key": "advanced_year",
+          "id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "product_id": "pro_01m5nhb3afhntzayvawsem00mg",
+          "unit_price": {
+            "amount": "7999",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "year",
+            "frequency": 1
+          },
+          "trial_period": null,
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        }
+      ],
+      "operations": [
+        {
+          "action": "created_product",
+          "id": "pro_01m5nhb3afhntzayvawsem00mg"
+        },
+        {
+          "action": "created_price",
+          "key": "advanced_month",
+          "id": "pri_01m5nhb3gak4qafrssj64mn7k7"
+        },
+        {
+          "action": "created_price",
+          "key": "advanced_year",
+          "id": "pri_01m5nhb3sfk4at9kj3rx9s3768"
+        }
+      ]
+    },
+    {
+      "ok": true,
+      "environment": "production",
+      "product_key": "ultimate",
+      "product": {
+        "id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+        "name": "Cloud+ Ultimate",
+        "tax_category": "saas",
+        "status": "active"
+      },
+      "prices": [
+        {
+          "key": "ultimate_month",
+          "id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "product_id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+          "unit_price": {
+            "amount": "1799",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "month",
+            "frequency": 1
+          },
+          "trial_period": null,
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        },
+        {
+          "key": "ultimate_year",
+          "id": "pri_01m5nhb76c2are695yct25ffvj",
+          "product_id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+          "unit_price": {
+            "amount": "17999",
+            "currency_code": "USD"
+          },
+          "billing_cycle": {
+            "interval": "year",
+            "frequency": 1
+          },
+          "trial_period": null,
+          "override_groups": 36,
+          "override_countries": 228,
+          "verified_fields": [
+            "product_id",
+            "type",
+            "name",
+            "description",
+            "billing_cycle",
+            "trial_period",
+            "tax_mode",
+            "unit_price",
+            "unit_price_overrides",
+            "quantity",
+            "custom_data"
+          ],
+          "readback_effective_matches_manifest": true,
+          "tax_mode_requested": "account_setting",
+          "tax_mode_persisted": "location",
+          "effective_tax_mode": "location"
+        }
+      ],
+      "operations": [
+        {
+          "action": "created_product",
+          "id": "pro_01m5nhb6qhc8gnf713y2em4dcc"
+        },
+        {
+          "action": "created_price",
+          "key": "ultimate_month",
+          "id": "pri_01m5nhb6xg79ffbsdepk04z5dn"
+        },
+        {
+          "action": "created_price",
+          "key": "ultimate_year",
+          "id": "pri_01m5nhb76c2are695yct25ffvj"
+        }
+      ]
+    }
+  ]
+}
