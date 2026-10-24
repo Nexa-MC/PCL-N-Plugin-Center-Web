@@ -9,12 +9,13 @@ if (!/^[a-f0-9]{40}$/.test(sha ?? '')) throw new Error('Exact release SHA requir
 
 if (command === 'prepare') {
   const files = {
-    '/plans': 'index.html', '/legal/refunds': 'index.html',
+    '/plans': 'index.html', '/legal/refunds': 'index.html', '/checkout/result': 'index.html',
     '/legal/current/refunds.zh-CN.md': 'legal/current/refunds.zh-CN.md',
     '/legal/current/refunds.en.md': 'legal/current/refunds.en.md'
   };
-  const assets = (await readdir('dist/assets')).filter(name => /^(PublicPlans|LegalDocs|index)-.*\.(js|css)$/.test(name));
+  const assets = (await readdir('dist/assets')).filter(name => /^(PublicPlans|LegalDocs|CheckoutResult|index)-.*\.(js|css)$/.test(name));
   assert.ok(assets.some(name => /^PublicPlans-.*\.js$/.test(name)), 'Missing public pricing bundle');
+  assert.ok(assets.some(name => /^CheckoutResult-.*\.js$/.test(name)), 'Missing checkout return bundle');
   for (const name of assets) files[`/assets/${name}`] = `assets/${name}`;
   const hashes = {};
   for (const [path, file] of Object.entries(files)) hashes[path] = digest(await readFile(`dist/${file}`));
