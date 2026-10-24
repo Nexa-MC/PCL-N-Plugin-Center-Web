@@ -122,29 +122,21 @@
       </template>
 
       <template v-else-if="section === 'creator'">
-        <section class="work-panel">
-          <div class="section-heading"><h2>{{ $ui('创作者控制台') }}</h2><span v-if="session.creator" class="status-pill">{{ $ui('已开通') }}</span></div>
-          <template v-if="session.creator">
-            <p>{{ $ui('创作者资格已开通。') }}</p>
-            <div class="profile-row"><span>{{ $ui('创作者') }}</span><strong>{{ session.handle ? '@' + session.handle : session.name }}</strong></div>
-            <p>{{ $ui('查看创作指南，开始准备你的作品。') }}</p>
-            <div class="actions"><router-link class="primary-button" to="/docs">{{ $ui('创作指南') }}</router-link><router-link class="secondary-button" to="/store">{{ $ui('浏览商店') }}</router-link></div>
-          </template>
-          <template v-else>
-            <p>{{ $ui('完成注册并接受服务条款后，即可申请创作者资格。提交申请后自动开通，无需等待人工审核。') }}</p>
-            <button class="primary-button" :disabled="creatorBusy || testMode" @click="applyCreator">{{ $ui(creatorBusy ? '正在开通…' : '申请并开通创作者资格') }}</button>
-          </template>
+        <PublisherContentSummary v-if="session.creator" kind="theme" />
+        <section v-else class="work-panel">
+          <div class="section-heading"><h2>{{ $ui('创作者控制台') }}</h2></div>
+          <p>{{ $ui('完成注册并接受服务条款后，即可申请创作者资格。提交申请后自动开通，无需等待人工审核。') }}</p>
+          <button class="primary-button" :disabled="creatorBusy || testMode" @click="applyCreator">{{ $ui(creatorBusy ? '正在开通…' : '申请并开通创作者资格') }}</button>
           <p v-if="creatorError" class="form-error" role="alert">{{ $ui(creatorError) }}</p>
           <p v-if="testMode" class="test-mode-note">{{ $ui('前端测试账户不连接真实认证服务。') }}</p>
         </section>
-        <PublisherContentSummary v-if="session.creator" kind="theme" />
       </template>
 
       <template v-else-if="section === 'developer'">
-        <PublisherContentSummary v-if="session.developer || session.trustedDeveloper" kind="plugin" />
-        <DeveloperApplication v-if="!session.developer" key="developer" kind="developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
-        <DeveloperApplication v-else-if="!session.trustedDeveloper" key="trusted" kind="trusted_developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
-        <section v-else class="work-panel"><span class="status-pill">{{ $ui('已具备资格') }}</span><h2>{{ $ui('受信任开发者') }}</h2></section>
+        <PublisherContentSummary v-if="session.developer || session.trustedDeveloper" kind="plugin">
+          <DeveloperApplication v-if="!session.trustedDeveloper" key="trusted" kind="trusted_developer" embedded :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
+        </PublisherContentSummary>
+        <DeveloperApplication v-else key="developer" kind="developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
       </template>
 
       <template v-else-if="section === 'website'">

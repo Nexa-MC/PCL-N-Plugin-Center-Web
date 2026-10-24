@@ -1,6 +1,6 @@
 <template>
-  <section class="work-panel">
-    <div class="section-heading"><h2>{{ $ui(kind === 'developer' ? '申请开发者资格' : '申请受信任开发者资格') }}</h2><button class="secondary-button" :disabled="busy" @click="load">{{ $ui('刷新') }}</button></div>
+  <section :class="embedded ? 'qualification-section' : 'work-panel'">
+    <div class="section-heading"><component :is="embedded ? 'h3' : 'h2'">{{ $ui(kind === 'developer' ? '申请开发者资格' : '申请受信任开发者资格') }}</component><button class="secondary-button" :disabled="busy" @click="load">{{ $ui('刷新') }}</button></div>
     <p>{{ $ui(kind === 'developer' ? '满足以下五项中的至少两项即可获得开发者资格。' : '满足以下六项中的至少三项即可获得受信任开发者资格。') }}</p>
     <p class="login-fine">{{ $ui('GitHub核验读取账号注册日期、仓库、关注者和组织成员身份，支持隐藏的组织成员关系；不会保存授权令牌。核验资料24小时内有效。') }}</p>
     <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { platform, type DeveloperEligibility, type DeveloperKind } from '@/api/platform';
-const props=defineProps<{kind:DeveloperKind;initialError?:string}>();
+const props=defineProps<{kind:DeveloperKind;initialError?:string;embedded?:boolean}>();
 const emit=defineEmits<{granted:[]}>();
 const eligibility=ref<DeveloperEligibility>(),busy=ref(false),error=ref(props.initialError || ''),message=ref(''),coreContributor=ref(false),submitted=ref(false);
 const canSubmit=computed(()=>{const e=eligibility.value;return !!e?.githubFresh && e.verifiedCount + Number(coreContributor.value && !e.conditions.find(c=>c.id==='core')?.met) >= e.required;});
@@ -36,5 +36,6 @@ async function submit(){if(!canSubmit.value || busy.value)return;busy.value=true
 onMounted(load);
 </script>
 <style scoped>
+.qualification-section{border-top:1px solid var(--market-border);margin-top:24px;padding-top:20px}
 .qualification-list{padding:0;list-style:none;margin:20px 0;counter-reset:condition}.qualification-list li{counter-increment:condition;border-top:1px solid var(--market-border);padding:15px 0}.qualification-list li>div{display:flex;align-items:baseline;gap:12px;justify-content:space-between}.qualification-list strong{font-size:13px;line-height:1.7}.qualification-list strong:before{content:counter(condition) ". ";color:var(--market-muted)}.qualification-list small{display:block;color:var(--market-muted);margin-top:6px;overflow-wrap:anywhere}.qualification-list .status-pill{flex-shrink:0}.core-claim{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.7;margin-top:10px;color:var(--market-muted)}.core-claim input{margin-top:4px}.actions{flex-wrap:wrap;margin-top:18px}
 </style>

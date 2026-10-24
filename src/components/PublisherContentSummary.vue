@@ -1,6 +1,6 @@
 <template>
   <section class="work-panel">
-    <div class="section-heading store-summary-heading"><h2>{{ $ui(kind === 'plugin' ? '我的插件概览' : '我的主题概览') }}</h2><div class="actions"><a class="primary-button" :href="consoleOrigin(kind)" target="_blank" rel="noopener noreferrer">{{ $ui('进入内容控制台 ↗') }}</a><button class="secondary-button" :disabled="loading" @click="load">{{ $ui('刷新摘要') }}</button></div></div>
+    <div class="section-heading store-summary-heading"><h2>{{ $ui(kind === 'plugin' ? '开发者控制台' : '创作者控制台') }}</h2><div class="actions"><a class="primary-button" :href="consoleOrigin(kind)" target="_blank" rel="noopener noreferrer">{{ $ui('进入内容控制台 ↗') }}</a><button class="secondary-button" :disabled="loading" @click="load">{{ $ui('刷新摘要') }}</button></div></div>
     <p class="store-muted">{{ consoleOrigin(kind).replace('https://', '') }}</p>
     <p v-if="loading" role="status" class="store-muted">{{ $ui('正在读取内容概览…') }}</p><p v-else-if="error" role="alert" class="form-error">{{ $ui(error) }}</p>
     <template v-if="data">
@@ -9,6 +9,7 @@
       <div v-for="item in data.items.slice(0, 5)" :key="item.id" class="store-content-row"><div><router-link :to="storePath(kind, item.id)">{{ item.name }}</router-link><small>{{ $ui('{0} 人拥有', [item.owner_count]) }} · {{ $ui('{0} 人评分', [item.rating_count]) }}</small></div><span class="status-pill">{{ $ui(storeState(item.state)) }}</span></div><p v-if="!data.items.length" class="store-muted">{{ $ui('还没有自己的内容。') }}</p>
       <p v-if="data.preview" class="store-muted">{{ $ui('前端测试账户仅显示空白预览，不产生商店操作。') }}</p>
     </template>
+    <slot />
   </section>
 </template>
 <script setup lang="ts">
