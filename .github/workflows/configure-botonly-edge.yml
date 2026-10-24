@@ -1,0 +1,42 @@
+name: Configure owner-approved botonly edge policy
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact reviewed master commit
+        required: true
+        type: string
+      disable_basic_bot_fight_mode:
+        description: Owner explicitly approved disabling basic Bot Fight Mode for pcln.top
+        required: true
+        default: false
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: nexa-telemetry-production
+  cancel-in-progress: false
+jobs:
+  configure:
+    if: github.ref == 'refs/heads/master' && inputs.disable_basic_bot_fight_mode
+    runs-on: ubuntu-24.04
+    environment: cloudflare-pages
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify reviewed configuration commit
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: node --test scripts/botonly-edge.test.mjs
+      - name: Disable approved basic mode, set the exact endpoint exception and verify both routes
+        run: node scripts/configure-botonly-edge.mjs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BASIC_BOT_DISABLE_APPROVED: ${{ inputs.disable_basic_bot_fight_mode }}
