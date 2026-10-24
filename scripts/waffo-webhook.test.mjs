@@ -49,3 +49,11 @@ test('asset routing runs the Worker before SPA handling for the exact Waffo name
   } } });
   assert.equal(await response.text(), 'existing Paddle handler');
 });
+test('production webhook forwards only to the separate live handler and never accepts a test route alias', async () => {
+  const input = new Request('https://pcln.top/webhooks/wp_wh/live', { method: 'POST', body: raw, headers: { 'content-type': 'application/json', 'x-waffo-signature': 'fixture' } });
+  const response = await worker.fetch(input, { API: { fetch: async request => {
+    assert.equal(new URL(request.url).pathname, '/api/webhooks/waffo-live'); assert.equal(await request.text(), raw);
+    return Response.json({ detail: 'waffo_live_event_scope_invalid' }, { status: 403 });
+  } } });
+  assert.equal(response.status, 403); assert.equal(response.headers.get('x-nexa-webhook'), 'waffo-live');
+});

@@ -16,3 +16,6 @@ export function planAction(current: CurrentPlan | null, targetRank: number, cycl
   if (targetRank < current.rank) return 'downgrade';
   return current.billingCycle && current.billingCycle !== cycle ? 'switch_cycle' : 'current';
 }
+export function visiblePlanRanks(current: CurrentPlan | null, expanded: boolean): number[] {
+  return [1, 2, 3, 4].filter(rank => expanded || !current || rank >= current.rank);
+}

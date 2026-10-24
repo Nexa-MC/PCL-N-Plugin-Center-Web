@@ -28,3 +28,15 @@ export function regionalCurrencyFor(country: unknown): RegionalCurrency {
   if (['GB', 'GG', 'GI', 'IM', 'JE'].includes(country)) return 'GBP';
   return ({ CN: 'CNY', JP: 'JPY', HK: 'HKD', TW: 'TWD', KR: 'KRW', CA: 'CAD', AU: 'AUD', SG: 'SGD' } as Record<string, RegionalCurrency>)[country] || 'USD';
 }
+
+// Browser locale is a display hint, never proof of residence or billing country.
+export function browserRegionalPricing(languages: readonly string[]) {
+  let country: string | undefined;
+  for (const language of languages) {
+    try { country = new Intl.Locale(language).region; } catch { continue; }
+    if (country) break;
+  }
+  const requestedCurrency = regionalCurrencyFor(country);
+  const currency = SUPPORTED_SUBSCRIPTION_CURRENCIES.has(requestedCurrency) ? requestedCurrency : 'USD';
+  return { currency, fallback: currency !== requestedCurrency };
+}

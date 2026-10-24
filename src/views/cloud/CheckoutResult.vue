@@ -1,6 +1,6 @@
 <template>
   <section class="checkout-result pricing-page">
-    <p class="eyebrow">CLOUD+ · TEST</p><h1>{{ copy.title }}</h1><p class="pricing-note">{{ copy.note }}</p>
+    <p class="eyebrow">{{ scope.mode === 'test' ? 'CLOUD+ · TEST' : 'CLOUD+' }}</p><h1>{{ copy.title }}</h1><p class="pricing-note">{{ copy.note }}</p>
     <div class="work-panel result-panel" aria-live="polite">
       <p v-if="state === 'invalid'" role="alert">{{ copy.invalid }}</p>
       <p v-else-if="state === 'login'">{{ copy.login }}</p>
@@ -27,10 +27,11 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { request, ApiError, SESSION_EVENT } from '@/api/platform';
 import { uiLocale } from '@/languages/localize';
-import { parseTestReturn, testOrderResults, type TestOrderResult } from '@/utils/checkoutResult';
-const route = useRoute(), orders = ref<TestOrderResult[]>([]), busy = ref(false);
+import { parseBillingReturn, billingOrderResults, type BillingOrderResults } from '@/utils/checkoutResult';
+const route = useRoute(), orders = ref<BillingOrderResults['orders']>([]), busy = ref(false);
+const scope = computed(() => parseBillingReturn(new URL(route.fullPath, window.location.origin).search));
 const state = ref<'loading' | 'ready' | 'invalid' | 'login' | 'forbidden' | 'missing' | 'unavailable'>('loading');
-const copy = computed(() => uiLocale.value.startsWith('en') ? {
+const testCopy = computed(() => uiLocale.value.startsWith('en') ? {
   title: 'Test checkout result', note: 'Only your own test orders appear here. This page does not confirm a live payment.',
   invalid: 'This return link does not identify a supported test checkout.', login: 'Sign in to your Nexa account to view your own test orders.',
   forbidden: 'Test checkout is currently available only to site administrators.', missing: 'This order does not exist or is not available to this account.',
@@ -47,6 +48,11 @@ const copy = computed(() => uiLocale.value.startsWith('en') ? {
   pending: '感谢您的订阅，我们正在核验您的账单，这可能需要几分钟。', confirmed: '服务端已确认测试权益，不会授予正式服务权益。',
   inactive: '此测试订单当前没有有效权益。', status: { pending: '等待确认', confirmed: '测试权益已确认', inactive: '已失效', review: '待复核', revoked: '已撤销' }
 });
+const copy = computed(() => scope.value.mode === 'test' ? testCopy.value : uiLocale.value.startsWith('en') ? {
+  ...testCopy.value, title: 'Subscription result', note: 'Your bill and subscription are confirmed by the payment service and our server.', invalid: 'This checkout return link is invalid.', login: 'Sign in to view your own orders.', forbidden: 'This account cannot access this order.', empty: 'No orders are linked to this account.', confirmed: 'The server has confirmed access for this subscription.', inactive: 'This order currently grants no active access.', status: { ...testCopy.value.status, confirmed: 'Confirmed' }
+} : {
+  ...testCopy.value, title: '订阅结果', note: '账单和订阅权益以支付服务与服务端核验结果为准。', invalid: '此结账返回链接无效。', login: '请登录后查看本人的订单。', forbidden: '当前账户无权查看此订单。', empty: '当前账户没有已关联的订单。', confirmed: '服务端已确认本订单对应的订阅权益。', inactive: '此订单当前没有有效权益。', status: { ...testCopy.value.status, confirmed: '已确认' }
+});
 function offerName(id: string) {
   const parts = id.split(':');
   if (parts[0] !== 'cloud-plus') return uiLocale.value.startsWith('en') ? 'Software order' : '软件订单';
@@ -54,16 +60,16 @@ function offerName(id: string) {
   const cycle = uiLocale.value.startsWith('en') ? (parts[2] === 'year' ? 'Annual' : 'Monthly') : (parts[2] === 'year' ? '年付' : '月付');
   return `Cloud+ ${plan[parts[1]] || ''} · ${cycle}`;
 }
-const amount = (order: TestOrderResult) => new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency: order.currency }).format(Number(order.amountMinor) / 100);
+const amount = (order: BillingOrderResults['orders'][number]) => new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency: order.currency }).format(Number(order.amountMinor) / (order.currency === 'JPY' ? 1 : 100));
 let generation = 0, attempts = 0, timer: ReturnType<typeof setTimeout> | undefined;
 const stop = () => { if (timer) clearTimeout(timer); timer = undefined; };
 async function load() {
-  stop(); const current = ++generation, parsed = parseTestReturn(window.location.search);
+  stop(); const current = ++generation, parsed = scope.value;
   if (!parsed.valid) { orders.value = []; state.value = 'invalid'; busy.value = false; return; }
   busy.value = true; state.value = 'loading';
   try {
     const suffix = parsed.intentId ? '/' + encodeURIComponent(parsed.intentId) : '';
-    const result = testOrderResults(await request<unknown>('/billing/test/orders' + suffix));
+    const result = billingOrderResults(await request<unknown>((parsed.mode === 'test' ? '/billing/test/orders' : '/billing/waffo/orders') + suffix), parsed.mode);
     if (generation !== current) return;
     orders.value = result.orders; state.value = 'ready';
     if (result.orders.some(order => order.status === 'pending') && ++attempts < 10) timer = setTimeout(load, 3000);
@@ -71,7 +77,7 @@ async function load() {
     if (generation !== current) return;
     orders.value = [];
     state.value = error instanceof ApiError && error.status === 401 ? 'login' : error instanceof ApiError && error.status === 403 ? 'forbidden'
-      : error instanceof ApiError && error.status === 404 && error.message === 'waffo_test_order_not_found' ? 'missing' : 'unavailable';
+      : error instanceof ApiError && error.status === 404 && ['waffo_test_order_not_found', 'waffo_live_order_not_found'].includes(error.message) ? 'missing' : 'unavailable';
   } finally { if (generation === current) busy.value = false; }
 }
 function reload() { attempts = 0; orders.value = []; void load(); }

@@ -19,3 +19,22 @@ export function testOrderResults(value: unknown): TestOrderResults {
   }
   return data as TestOrderResults;
 }
+
+export function parseBillingReturn(search: string): { valid: boolean; mode: 'test' | 'prod'; intentId: string | null } {
+  const params = new URLSearchParams(search), mode = params.get('mode') === 'prod' ? 'prod' : 'test';
+  if (mode === 'test') return { ...parseTestReturn(search), mode };
+  const intentId = params.get('intent');
+  return { mode, intentId, valid: params.getAll('provider').length === 1 && params.get('provider') === 'waffo' && params.getAll('mode').length === 1 && params.getAll('intent').length <= 1 && (intentId === null || uuid.test(intentId)) };
+}
+export interface BillingOrderResults { provider: 'waffo'; mode: 'test' | 'prod'; productionAccess: boolean; orders: (Omit<TestOrderResult, 'currency'> & { currency: 'USD' | 'EUR' | 'GBP' | 'JPY' | 'HKD' })[] }
+export function billingOrderResults(value: unknown, mode: 'test' | 'prod'): BillingOrderResults {
+  if (mode === 'test') return testOrderResults(value);
+  const data = value as Partial<BillingOrderResults> | null;
+  if (data?.provider !== 'waffo' || data.mode !== 'prod' || data.productionAccess !== true || !Array.isArray(data.orders) || data.orders.length > 20) throw new Error('Invalid production order response');
+  // Reuse the same identity/status/time checks; currency is independently bounded.
+  for (const order of data.orders) {
+    if (!['USD', 'EUR', 'GBP', 'JPY', 'HKD'].includes(order?.currency)) throw new Error('Invalid order currency');
+    testOrderResults({ provider: 'waffo', mode: 'test', productionAccess: false, orders: [{ ...order, currency: 'USD' }] });
+  }
+  return data as BillingOrderResults;
+}
