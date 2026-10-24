@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-10-24T07:21:14Z",
+  "zone": "pcln.top",
+  "sourceCommit": "d77c9f44cd0db5b68c9b78f07f4240a73d205a90",
+  "workflow": "https://github.com/Nexa-MC/PCL-N-Plugin-Center-Web/actions/runs/40073763783",
+  "basicBotFightMode": false,
+  "globalBrowserCheck": "on",
+  "globalSecurityLevel": "medium",
+  "exceptionRuleId": "f53fe4c06d1b4b95bc12f7f09a08d767",
+  "exceptionExpression": "(http.host eq \"botonly.pcln.top\" and http.request.method eq \"POST\" and http.request.uri.path in {\"/v1/events\" \"/webhooks/wp_wh/live\"})",
+  "skippedProducts": [
+    "bic",
+    "securityLevel"
+  ],
+  "unrelatedWafRulesUnchanged": true,
+  "externalProbes": {
+    "telemetryEmptyArray": 400,
+    "liveWebhookInvalidSignature": 401,
+    "liveWebhookMarker": "waffo-live"
+  },
+  "realTelemetryEventsInserted": false,
+  "realTransactionExecuted": false
+}
