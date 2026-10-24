@@ -6,9 +6,10 @@
       <p v-else-if="state === 'login'">{{ copy.login }}</p>
       <p v-else-if="state === 'forbidden'" role="alert">{{ copy.forbidden }}</p>
       <p v-else-if="state === 'missing'" role="alert">{{ copy.missing }}</p>
-      <p v-else-if="state === 'unavailable'" role="alert">{{ copy.unavailable }}</p>
+      <p v-else-if="state === 'unavailable'">{{ copy.pending }}</p>
       <p v-else-if="state === 'loading' && !orders.length">{{ copy.loading }}</p>
       <p v-else-if="state === 'ready' && !orders.length">{{ copy.empty }}</p>
+      <p v-if="state === 'unavailable'" class="pricing-note" role="alert">{{ copy.unavailable }}</p>
       <article v-for="order in orders" :key="order.intentId" class="result-order">
         <div><h2>{{ offerName(order.offerId) }}</h2><span class="status-pill" :class="{ confirmed: order.status === 'confirmed' }">{{ copy.status[order.status] }}</span></div>
         <p>{{ amount(order) }} · {{ copy.reference }}</p>
@@ -35,7 +36,7 @@ const copy = computed(() => uiLocale.value.startsWith('en') ? {
   forbidden: 'Test checkout is currently available only to site administrators.', missing: 'This order does not exist or is not available to this account.',
   unavailable: 'Order confirmation is temporarily unavailable. This does not mean payment succeeded. Please try again later.', loading: 'Checking…',
   empty: 'No test orders are linked to this account.', refresh: 'Check again', plans: 'View plans', account: 'Account and subscriptions',
-  reference: 'Order reference price', pending: 'Waiting for confirmation from the payment service. Returning to this page does not grant access.',
+  reference: 'Order reference price', pending: 'Thank you for subscribing. We are verifying your bill. This may take a few minutes.',
   confirmed: 'Test access has been confirmed by the server. It grants no live service access.', inactive: 'This test order currently grants no active access.',
   status: { pending: 'Awaiting confirmation', confirmed: 'Test access confirmed', inactive: 'Inactive', review: 'Under review', revoked: 'Revoked' }
 } : {
@@ -43,7 +44,7 @@ const copy = computed(() => uiLocale.value.startsWith('en') ? {
   login: '请登录 Nexa 账户后查看本人的测试订单。', forbidden: '当前测试结账仅向网站管理员开放。', missing: '订单不存在或当前账户无权查看。',
   unavailable: '暂时无法确认订单，这不代表支付成功。请稍后重试。', loading: '正在核对…', empty: '当前账户没有已关联的测试订单。',
   refresh: '重新核对', plans: '查看套餐', account: '账户与订阅', reference: '订单参考标价',
-  pending: '正在等待支付服务确认。仅返回此页面不会获得权益。', confirmed: '服务端已确认测试权益，不会授予正式服务权益。',
+  pending: '感谢您的订阅，我们正在核验您的账单，这可能需要几分钟。', confirmed: '服务端已确认测试权益，不会授予正式服务权益。',
   inactive: '此测试订单当前没有有效权益。', status: { pending: '等待确认', confirmed: '测试权益已确认', inactive: '已失效', review: '待复核', revoked: '已撤销' }
 });
 function offerName(id: string) {
