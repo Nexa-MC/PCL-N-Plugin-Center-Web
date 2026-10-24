@@ -4,8 +4,6 @@
     <div class="section-heading"><div><p class="eyebrow">CLOUD+</p><h1>{{ copy.title }}</h1><p class="pricing-note">{{ copy.description }}</p></div>
       <div class="billing-toggle" role="group" :aria-label="copy.cycle"><button :class="{ active: cycle === 'month' }" :aria-pressed="cycle === 'month'" @click="cycle = 'month'">{{ copy.month }}</button><button :class="{ active: cycle === 'year' }" :aria-pressed="cycle === 'year'" @click="cycle = 'year'">{{ copy.year }}</button></div>
     </div>
-    <p class="pricing-note regional-currency">{{ copy.currency }}：{{ currency }}<span v-if="region.fallback"> · {{ copy.fallback }}</span></p>
-    <p class="pricing-note">{{ copy.tax }}</p>
     <p v-if="loading" class="pricing-note" role="status">{{ copy.loading }}</p>
     <p v-else-if="unavailable" class="pricing-note" role="status">{{ copy.unavailable }}</p>
     <p v-if="error" class="form-error" role="alert">{{ error }}</p>
@@ -32,8 +30,7 @@ import { uiLocale } from '@/languages/localize';
 const legacy = import.meta.env.VITE_BILLING_PROVIDER === 'paddle';
 const LegacyPricing = defineAsyncComponent(() => import('./Pricing.vue'));
 const router = useRouter(), plans = PUBLIC_PLANS;
-const region = browserRegionalPricing(navigator.languages?.length ? navigator.languages : [navigator.language]);
-const currency = region.currency, cycle = ref<BillingCycle>('month');
+const currency = browserRegionalPricing(navigator.languages?.length ? navigator.languages : [navigator.language]).currency, cycle = ref<BillingCycle>('month');
 const session = ref<Session>(), current = ref<CurrentPlan | null>(null), loading = ref(true), unavailable = ref(false), expanded = ref(false);
 const readiness = ref<WaffoReadiness>(), busy = ref(''), error = ref('');
 const paddleSubscription = ref(false);
@@ -43,13 +40,13 @@ const visiblePlans = computed(() => plans.filter(plan => ranks.value.includes(ra
 const hasLowerPlans = computed(() => Boolean(current.value && current.value.rank > 1));
 const disabled = computed(() => loading.value || Boolean(busy.value) || Boolean(session.value && (!current.value || isTestSession() || (current.value.rank > 0 ? !paddleSubscription.value && !readiness.value?.portalEnabled : !readiness.value?.checkoutEnabled || !readiness.value.currencies.includes(currency)))));
 const copy = computed(() => uiLocale.value.startsWith('en') ? {
-  title: 'Choose your Cloud+ plan', description: 'Flexible monthly and annual plans.', cycle: 'Billing period', month: 'Monthly', year: 'Annual', monthUnit: 'month', yearUnit: 'year', currency: 'Billing currency', fallback: 'Subscriptions in this region are billed in USD',
-  tax: 'Prices follow your browser region settings. Final taxes and the total are shown before payment.', loading: 'Checking subscription…', unavailable: 'Payment is temporarily unavailable. Please try again later.', annual: 'Billed annually at ten months of the monthly price', monthly: 'Billed monthly',
+  title: 'Choose your Cloud+ plan', description: 'Flexible monthly and annual plans.', cycle: 'Billing period', month: 'Monthly', year: 'Annual', monthUnit: 'month', yearUnit: 'year',
+  loading: 'Checking subscription…', unavailable: 'Payment is temporarily unavailable. Please try again later.', annual: 'Billed annually at ten months of the monthly price', monthly: 'Billed monthly',
   payment: 'Payments are processed by Waffo Pancake.', refunds: 'Refund, trial and subscription policy', more: 'More plans', less: 'Fewer plans', opening: 'Opening checkout…', failed: 'Unable to open payment. Please try again.',
   actions: { subscribe: 'Subscribe', current: 'Manage subscription', upgrade: 'Upgrade', downgrade: 'Change plan', switch_cycle: 'Change billing period', unknown: 'Subscribe' }
 } : {
-  title: '选择你的 Cloud+ 套餐', description: '灵活选择月付和年付。', cycle: '计费周期', month: '按月', year: '按年', monthUnit: '月', yearUnit: '年', currency: '结算币种', fallback: '当前地区订阅使用美元结算',
-  tax: '价格按浏览器地区设置展示，最终税费与总额将在付款前列明。', loading: '正在读取订阅…', unavailable: '支付暂不可用，请稍后重试。', annual: '按年一次计费，年费为月费的十倍', monthly: '每月计费',
+  title: '选择你的 Cloud+ 套餐', description: '灵活选择月付和年付。', cycle: '计费周期', month: '按月', year: '按年', monthUnit: '月', yearUnit: '年',
+  loading: '正在读取订阅…', unavailable: '支付暂不可用，请稍后重试。', annual: '按年一次计费，年费为月费的十倍', monthly: '每月计费',
   payment: '付款由 Waffo Pancake 处理。', refunds: '退款、试用与订阅政策', more: '更多套餐', less: '收起套餐', opening: '正在打开结账…', failed: '暂时无法打开支付，请重试。',
   actions: { subscribe: '订阅', current: '管理订阅', upgrade: '升级', downgrade: '调整套餐', switch_cycle: '切换计费周期', unknown: '订阅' }
 });
@@ -102,5 +99,5 @@ onMounted(() => { if (!legacy) { window.addEventListener(SESSION_EVENT, loadMemb
 onBeforeUnmount(() => { generation++; window.removeEventListener(SESSION_EVENT, loadMembership); });
 </script>
 <style scoped>
-.regional-currency{margin:20px 0 6px}.pricing-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}.pricing-card{max-width:420px;width:100%;justify-self:center}.more-plans{text-align:center;margin:26px 0}.more-plans a{color:var(--nc-accent);text-decoration:underline;text-underline-offset:4px}.subscription-plans>.login-fine{margin-top:24px}.login-fine button.text-link{background:transparent;border:0;padding:0;color:var(--nc-accent);font:inherit;text-decoration:underline;text-underline-offset:3px}
+.pricing-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}.pricing-card{max-width:420px;width:100%;justify-self:center}.more-plans{text-align:center;margin:26px 0}.more-plans a{color:var(--nc-accent);text-decoration:underline;text-underline-offset:4px}.subscription-plans>.login-fine{margin-top:24px}.login-fine button.text-link{background:transparent;border:0;padding:0;color:var(--nc-accent);font:inherit;text-decoration:underline;text-underline-offset:3px}
 </style>

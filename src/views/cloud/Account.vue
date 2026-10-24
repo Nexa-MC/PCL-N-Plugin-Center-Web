@@ -116,7 +116,6 @@
             <p v-if="portalError" class="form-error" role="alert">{{ $ui(portalError) }}</p>
             <p v-if="billingAvailability?.portalEnabled" class="login-fine">{{ $ui('支付方式、取消与发票在 Waffo 客户门户管理。') }}<router-link to="/legal/refunds">{{ $ui('退款政策') }}</router-link></p>
             <p v-else-if="billingAvailability?.portalEnabled === false" class="login-fine">{{ $ui('当前账户尚无可管理的 Waffo 订阅。') }}<router-link to="/legal/refunds">{{ $ui('退款政策') }}</router-link></p>
-            <button v-if="legacyPaddleHistory" class="secondary-button" type="button" :disabled="busy" @click="openPortal('paddle')">{{ $ui('历史 Paddle 订阅与账单') }}</button>
           </template>
           <StoreWallet v-else />
         </section>
@@ -235,7 +234,6 @@ import BilibiliBinding from '@/components/BilibiliBinding.vue';
 import DeveloperApplication from '@/components/DeveloperApplication.vue';
 import PublisherContentSummary from '@/components/PublisherContentSummary.vue';
 import { waffoReadiness, type WaffoReadiness } from '@/utils/waffoCheckout';
-import { hasLegacyPaddleHistory } from '@/utils/subscriptionPlan';
 const route = useRoute();
 const router = useRouter();
 function statusMessage(value: unknown): string { return typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 200) : ''; }
@@ -346,11 +344,10 @@ const deletionFinance=ref<{ready:boolean;token?:string;confirmed:boolean}>({read
 const deletion = ref<DeletionRequest | null>(), deleteConfirm = ref(''), deleteError = ref('');
 const entitlements = ref<Entitlements | null>(), portalError = ref('');
 const billingAvailability = ref<WaffoReadiness>(), billingLoading = ref(false);
-const legacyPaddleHistory = computed(() => hasLegacyPaddleHistory(entitlements.value));
 let billingGeneration = 0;
 const walletView = ref<'subscription' | 'tokens'>('subscription');
 async function loadEntitlements(){ const step = ++billingGeneration; portalError.value = ''; entitlements.value = null; billingAvailability.value = undefined; billingLoading.value = true; try { const [membership, availability] = await Promise.all([platform.entitlements(), request<unknown>('/billing/waffo/status').then(waffoReadiness).catch(() => undefined)]); if (step !== billingGeneration) return; entitlements.value = membership; billingAvailability.value = availability; if (typeof availability?.portalEnabled !== 'boolean') portalError.value = '暂时无法读取订阅状态。'; } catch { if (step === billingGeneration) portalError.value = '暂时无法读取订阅状态。'; } finally { if (step === billingGeneration) billingLoading.value = false; } }
-async function openPortal(provider: 'waffo' | 'paddle' = 'waffo'){ if (busy.value || provider === 'waffo' && !billingAvailability.value?.portalEnabled || provider === 'paddle' && !legacyPaddleHistory.value) return; busy.value = true; portalError.value = ''; try { await platform.billingPortal(provider); } catch { portalError.value = '暂时无法打开订阅管理，请稍后重试。'; } finally { busy.value = false; } }
+async function openPortal(){ if (busy.value || !billingAvailability.value?.portalEnabled) return; busy.value = true; portalError.value = ''; try { await platform.billingPortal(); } catch { portalError.value = '暂时无法打开订阅管理，请稍后重试。'; } finally { busy.value = false; } }
 const progression = ref<AccountProgression>(), levelBusy = ref(false), levelError = ref('');
 async function loadProgression(){ levelBusy.value = true; levelError.value = ''; try { progression.value = await platform.accountProgression(); } catch (e) { levelError.value = e instanceof ApiError ? e.message : '暂时无法读取等级与经验'; } finally { levelBusy.value = false; } }
 async function refreshRoles(){ session.value=await platform.refreshSession(); await loadProgression(); }
