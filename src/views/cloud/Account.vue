@@ -116,11 +116,7 @@
             <p v-if="portalError" class="form-error" role="alert">{{ $ui(portalError) }}</p>
             <p class="login-fine">{{ $ui('支付方式、取消与发票在 Paddle 客户门户管理。') }}<router-link to="/legal/refunds">{{ $ui('退款政策') }}</router-link></p>
           </template>
-          <div v-else class="wallet-tokens">
-            <div class="section-heading"><h3>{{ $ui('N代币') }}</h3><span class="status-pill">{{ $ui('暂未开放') }}</span></div>
-            <p>{{ $ui('N代币购买暂未开放。') }}</p>
-            <button class="primary-button" type="button" disabled>{{ $ui('购买（暂未开放）') }}</button>
-          </div>
+          <NTokenWalletPanel v-else />
         </section>
       </template>
 
@@ -219,6 +215,7 @@
 </template>
 <script setup lang="ts">
 import { ui, uiLocale } from '@/languages/localize';
+import NTokenWalletPanel from '@/components/NTokenWalletPanel.vue';
 import DeletionFinanceConfirmation from '@/components/DeletionFinanceConfirmation.vue';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

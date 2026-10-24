@@ -1498,5 +1498,17 @@
   "暂时无法核验作者收入，不能提交注销；请重试或联系支持。": "Author income could not be verified. Deletion cannot be requested; retry or contact support.",
   "商店收入核验暂不可用；如有未提现收入，请先联系支持核对。": "Store income verification is unavailable. If you have unpaid income, contact support before continuing.",
   "退款政策 v1.1 · 2026-10-24": "Refund policy v1.1 · 2026-10-24",
-  "请先核对并确认未提现收入与待审提现将不会支付并在注销后丢弃": "Review and confirm that unpaid income and withdrawal requests will not be paid and will be forfeited after deletion"
+  "请先核对并确认未提现收入与待审提现将不会支付并在注销后丢弃": "Review and confirm that unpaid income and withdrawal requests will not be paid and will be forfeited after deletion",
+  "1元人民币＝10 N代币，余额与商品价格均为整数。": "CNY 1 = 10 N Tokens. Balances and product prices use whole tokens.",
+  "正在读取钱包…": "Loading your wallet…",
+  "可用N代币": "Available N Tokens",
+  "退款申请冻结": "Reserved for refund requests",
+  "余额暂不可用；充值与真实结算尚未开放。": "Balance is unavailable. Top-ups and paid settlement are not yet available.",
+  "钱包流水": "Wallet activity",
+  "暂时无法读取钱包流水，请重试。": "Wallet activity is unavailable. Please retry.",
+  "暂无钱包流水。": "No wallet activity yet.",
+  "商品购买": "Product purchase",
+  "充值入账": "Top-up credited",
+  "注销余额处置": "Balance forfeited after deletion",
+  "钱包服务尚未启用或暂不可用，余额不能确认为零。": "The wallet service is not enabled or is unavailable. This does not mean your balance is zero."
 }
