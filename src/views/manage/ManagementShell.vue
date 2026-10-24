@@ -36,6 +36,7 @@ const navigation = [
   { path: '/manage', label: '工作概览', icon: 'dashboard' },
   { path: '/manage/users', label: '用户管理', icon: 'users' },
   { path: '/manage/resources', label: '资源目录', icon: 'folder' },
+  { path: '/manage/store', label: '商店审核', icon: 'shield-tick' },
   { path: '/manage/tickets', label: '支持工单', icon: 'messages-bubbles' },
   { path: '/manage/applications', label: '资格审批', icon: 'shield-tick' },
   { path: '/manage/telemetry', label: '启动器遥测', icon: 'chart' },

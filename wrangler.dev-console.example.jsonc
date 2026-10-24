@@ -1,0 +1,13 @@
+// Deployment reference only. This file is not used by any deployment workflow.
+// Domain ownership/routes and exact Auth/API origins must be approved first.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nexa-developer-console",
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-09-26",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "routes": [{ "pattern": "dev.consol.pcln.top", "custom_domain": true }],
+  "assets": { "directory": "dist", "binding": "ASSETS", "not_found_handling": "single-page-application", "run_worker_first": true },
+  "services": [{ "binding": "API", "service": "nexa-api" }, { "binding": "AUTH", "service": "nexa-auth" }]
+}

@@ -1,0 +1,19 @@
+<template>
+  <section class="store-page">
+    <div class="manage-page-heading"><div><span class="manage-eyebrow">{{ $ui('内容安全') }}</span><h1>{{ $ui('商店审核') }}</h1><p>{{ $ui('核对完整制品扫描及举报补充信息，审核决定将记入审计。') }}</p></div><button class="secondary-button" :disabled="busy" @click="load">{{ $ui('刷新') }}</button></div>
+    <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p><p v-if="message" class="form-success" role="status">{{ $ui(message) }}</p>
+    <section class="work-panel"><p v-if="loading" role="status">{{ $ui('正在读取审核队列…') }}</p><p v-else-if="!cases.length" class="store-muted">{{ $ui('暂无待处理的商店审核。') }}</p><div v-for="item in cases" :key="item.id" class="store-content-row"><div><strong>{{ item.name }}</strong><small>{{ item.publisher_name }} · {{ $ui(item.reason === 'reports' ? '举报阈值触发' : '制品待审核') }} · {{ item.code }}</small></div><button class="secondary-button" :disabled="busy" @click="inspect(item)">{{ $ui('查看审核材料') }}</button></div></section>
+    <section v-if="selected" class="work-panel"><h2>{{ selected.name }}</h2><p class="store-hash">SHA-256 {{ selected.sha256 }}</p><p>{{ selected.code }}</p><h3>{{ $ui('完整扫描记录') }}</h3><pre class="store-evidence">{{ selected.response_json || $ui('没有可核验的完整扫描结果。') }}</pre><h3>{{ $ui('举报及补充信息') }}</h3><article v-for="(report, index) in selected.reports" :key="index" class="store-review"><small>{{ report.id }} · {{ report.message_at }}</small><p>{{ report.body }}</p></article><button v-if="selected.reports.length < selected.report_total" class="secondary-button" :disabled="busy" @click="moreReports">{{ $ui('读取更多举报材料') }}</button><form class="store-form" @submit.prevent="decide"><label>{{ $ui('审核决定') }}<select v-model="decision" :aria-label="$ui('审核决定')"><option value="keep_offline">{{ $ui('保持下架') }}</option><option value="approve">{{ $ui('审核通过并上架') }}</option></select></label><label>{{ $ui('审核理由') }}<textarea v-model="note" required maxlength="2000" rows="4" /></label><p class="store-muted">{{ $ui('插件缺少有效完整扫描时不能通过；禁止审核自己的内容。') }}</p><button class="primary-button" :disabled="busy || !note.trim()">{{ $ui('保存审核决定') }}</button></form></section>
+  </section>
+</template>
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { store, type StoreCase, type StoreCaseDetail } from '@/api/store';
+import '@/styles/store.css';
+const cases = ref<StoreCase[]>([]), selected = ref<StoreCaseDetail>(), loading = ref(false), busy = ref(false), error = ref(''), message = ref(''), note = ref(''), decision = ref<'approve' | 'keep_offline'>('keep_offline');
+async function load() { loading.value = true; error.value = ''; try { cases.value = (await store.cases()).data; } catch (e) { error.value = e instanceof Error ? e.message : '审核队列读取失败'; } finally { loading.value = false; } }
+async function inspect(item: StoreCase) { busy.value = true; error.value = ''; try { selected.value = await store.case(item.id); note.value = ''; decision.value = 'keep_offline'; } catch (e) { error.value = e instanceof Error ? e.message : '审核材料读取失败'; } finally { busy.value = false; } }
+async function moreReports() { if (!selected.value) return; busy.value = true; error.value = ''; try { const next = await store.case(selected.value.id, selected.value.reports.length); if (next.revision !== selected.value.revision) throw new Error('审核材料已改变，请重新读取'); selected.value.reports.push(...next.reports); } catch (e) { error.value = e instanceof Error ? e.message : '审核材料读取失败'; } finally { busy.value = false; } }
+async function decide() { if (!selected.value) return; busy.value = true; error.value = ''; try { await store.decide(selected.value, decision.value, note.value); selected.value = undefined; message.value = '审核决定已保存。'; await load(); } catch (e) { error.value = e instanceof Error ? e.message : '审核提交失败'; } finally { busy.value = false; } }
+onMounted(load);
+</script>

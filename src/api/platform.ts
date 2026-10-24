@@ -62,6 +62,13 @@ export async function request<T>(path: string, init: RequestInit = {}): Promise<
 
 export interface Page<T> { data: T[]; pagination: { limit: number; offset: number; total: number } }
 
+export async function requestBlob(path: string): Promise<{ blob: Blob; filename: string }> {
+  const response = await fetch(`/api/v1${path}`, { credentials: 'same-origin', headers: { 'X-Nexa-Request': '1', ...authHeaders() }, signal: AbortSignal.timeout(60000) });
+  if (!response.ok) { const value = await response.json().catch(() => ({})); throw new ApiError(value.detail || '制品下载失败，请稍后重试', response.status); }
+  const encoded = response.headers.get('content-disposition')?.match(/filename\*=UTF-8''([^;]+)/)?.[1];
+  return { blob: await response.blob(), filename: encoded ? decodeURIComponent(encoded) : 'nexa-content.zip' };
+}
+
 // 访问令牌仅保存在内存中；页面刷新后用 auth 域 Cookie 会话静默换取新令牌。
 async function mintToken(): Promise<Session | undefined> {
   const response = await authFetch('/auth/v1/tokens', { method: 'POST', body: '{}' });

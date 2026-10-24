@@ -31,6 +31,8 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url), path = url.pathname;
     try {
+      const publisherLanding = { 'dev.consol.pcln.top': '/publisher/plugins', 'creator.consol.pcln.top': '/publisher/themes' }[url.hostname];
+      if (publisherLanding && path === '/') return new Response(null, { status: 302, headers: { location: new URL(publisherLanding, url).href, 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
       if (url.hostname === 'manage.pcln.top' && path === '/') {
         return new Response(null, { status: 302, headers: { location: new URL('/manage', url).href, 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
       }
@@ -53,7 +55,7 @@ export default {
       // 前端不传国家码，由 Paddle 按访客 IP 自动定位。
       if (path === '/geo.json') return Response.json({ country: request.cf?.country ?? null }, { headers: { 'cache-control': 'no-store' } });
       const response = await env.ASSETS.fetch(request);
-      if (url.hostname === 'manage.pcln.top' || path === '/manage' || path.startsWith('/manage/')) {
+      if (publisherLanding || path.startsWith('/publisher/') || url.hostname === 'manage.pcln.top' || path === '/manage' || path.startsWith('/manage/')) {
         const headers = new Headers(response.headers);
         headers.set('x-robots-tag', 'noindex, nofollow');
         headers.set('x-frame-options', 'DENY');

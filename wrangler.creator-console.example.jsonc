@@ -1,0 +1,12 @@
+// Deployment reference only; no DNS, routes or trusted origins were changed.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nexa-creator-console",
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-09-26",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "routes": [{ "pattern": "creator.consol.pcln.top", "custom_domain": true }],
+  "assets": { "directory": "dist", "binding": "ASSETS", "not_found_handling": "single-page-application", "run_worker_first": true },
+  "services": [{ "binding": "API", "service": "nexa-api" }, { "binding": "AUTH", "service": "nexa-auth" }]
+}

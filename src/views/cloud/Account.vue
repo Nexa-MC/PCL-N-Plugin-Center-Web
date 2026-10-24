@@ -140,10 +140,11 @@
           <p v-if="creatorError" class="form-error" role="alert">{{ $ui(creatorError) }}</p>
           <p v-if="testMode" class="test-mode-note">{{ $ui('前端测试账户不连接真实认证服务。') }}</p>
         </section>
+        <PublisherContentSummary v-if="session.creator" kind="theme" />
       </template>
 
       <template v-else-if="section === 'developer'">
-        <section v-if="session.developer" class="work-panel"><span class="status-pill">{{ $ui("已具备资格") }}</span><h2>{{ $ui("开发者管理控制台") }}</h2><p>{{ $ui("发布者工作空间、资源提交与管理功能正在接入，入口将在此开放。") }}</p></section>
+        <PublisherContentSummary v-if="session.developer || session.trustedDeveloper" kind="plugin" />
         <DeveloperApplication v-if="!session.developer" key="developer" kind="developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
         <DeveloperApplication v-else-if="!session.trustedDeveloper" key="trusted" kind="trusted_developer" :initial-error="statusMessage(route.query.oauth_error)" @granted="refreshRoles" />
         <section v-else class="work-panel"><span class="status-pill">{{ $ui('已具备资格') }}</span><h2>{{ $ui('受信任开发者') }}</h2></section>
@@ -232,6 +233,7 @@ import FormDialog from '@/components/FormDialog.vue';
 import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
 import BilibiliBinding from '@/components/BilibiliBinding.vue';
 import DeveloperApplication from '@/components/DeveloperApplication.vue';
+import PublisherContentSummary from '@/components/PublisherContentSummary.vue';
 const route = useRoute();
 const router = useRouter();
 function statusMessage(value: unknown): string { return typeof value === 'string' ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 200) : ''; }

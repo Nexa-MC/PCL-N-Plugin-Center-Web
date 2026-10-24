@@ -10,6 +10,7 @@ const router = createRouter({
       { path: '', component: () => import('@/views/manage/Overview.vue'), meta: { title: '工作概览' } },
       { path: 'users', component: () => import('@/views/manage/Users.vue'), meta: { title: '用户管理' } },
       { path: 'resources', component: () => import('@/views/manage/Resources.vue'), meta: { title: '资源目录' } },
+      { path: 'store', component: () => import('@/views/manage/StoreModeration.vue'), meta: { title: '商店审核' } },
       { path: 'tickets', component: () => import('@/views/manage/Tickets.vue'), meta: { title: '支持工单' } },
       { path: 'applications', component: () => import('@/views/manage/Applications.vue'), meta: { title: '资格审批' } },
       { path: 'audit', component: () => import('@/views/manage/Audit.vue'), meta: { title: '操作审计' } },
@@ -17,8 +18,14 @@ const router = createRouter({
     ] },
     { path: '/', component: CloudShell, children: [
       { path: '', component: () => import('@/views/cloud/Home.vue') },
-      { path: 'store', component: () => import('@/views/cloud/Store.vue') },
-      { path: 'store/:id', component: () => import('@/views/cloud/Store.vue') },
+      { path: 'store', redirect: to => to.query.category === 'theme' ? '/store/themes' : '/store/plugins' },
+      { path: 'store/plugins', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'plugin' } },
+      { path: 'store/plugins/:id', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'plugin' } },
+      { path: 'store/themes', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'theme' } },
+      { path: 'store/themes/:id', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'theme' } },
+      { path: 'store/:id', redirect: to => '/store/plugins/' + encodeURIComponent(String(to.params.id)) },
+      { path: 'publisher/plugins', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin' } },
+      { path: 'publisher/themes', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme' } },
       { path: 'download', component: () => import('@/views/site/download.vue') },
       { path: 'changelog', component: () => import('@/views/site/changelog.vue') },
       { path: 'account', component: () => import('@/views/cloud/Account.vue') },
@@ -64,6 +71,8 @@ function titleFor(path: string): string {
 router.beforeEach(to => {
   startProgress();
   if (window.location.hostname === 'manage.pcln.top' && to.path === '/') return '/manage';
+  if (window.location.hostname === 'dev.consol.pcln.top' && to.path === '/') return '/publisher/plugins';
+  if (window.location.hostname === 'creator.consol.pcln.top' && to.path === '/') return '/publisher/themes';
 });
 router.afterEach(() => { doneProgress(); });
 router.onError(() => { doneProgress(); });
