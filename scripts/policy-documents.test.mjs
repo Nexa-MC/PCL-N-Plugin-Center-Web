@@ -23,20 +23,21 @@ test('legal download bytes match published version, date and SHA-256 for every c
   });
 });
 
-test('1.1 account entry version follows terms and privacy while supplemental policies remain 1.0', async () => {
+test('refund revision does not change terms/privacy acceptance or publisher agreement versions', async () => {
   const source = await readFile(new URL('src/api/platform.ts', root), 'utf8');
   const version = source.match(/export const POLICY_VERSION = '([^']+)'/)?.[1];
   assert.equal(version, '1.1');
   assert.equal(documents.find(d => d.key === 'terms').version, version);
   assert.equal(documents.find(d => d.key === 'privacy').version, version);
   assert.equal(documents.find(d => d.key === 'publisher').version, '1.0');
-  assert.equal(documents.find(d => d.key === 'refunds').version, '1.0');
+  assert.equal(documents.find(d => d.key === 'refunds').version, '1.1');
 });
 
 test('1.0 archives preserve the original accepted document bytes and are reachable from the index', async t => {
   const oldHashes = {
     terms: '13665d991a4ca5eba6f82c25a76d81a313c4b6e555ade65da9bea2a2d15f11a1',
-    privacy: 'a0acdf32c4f651783e93ad54bc86f7244b94fbb93dcdb4ad22e1cf983d0f8009'
+    privacy: 'a0acdf32c4f651783e93ad54bc86f7244b94fbb93dcdb4ad22e1cf983d0f8009',
+    refunds: '7af2704ab5c01f3e275500165590e67802cf3776531dd2cf55ebdb0dabab8345'
   };
   for (const [kind, expected] of Object.entries(oldHashes)) await t.test(kind, async () => {
     const path = `/legal/archive/1.0/${kind}.zh-CN.md`;

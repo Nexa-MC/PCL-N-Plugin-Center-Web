@@ -4,6 +4,11 @@ on:
   push:
     branches: [master]
     paths:
+      - public/**
+      - src/views/cloud/**
+      - src/views/site/**
+      - src/config/publicPricing.ts
+      - src/config/pricing.ts
       - src/views/manage/**
       - src/styles/management.css
       - src/api/management.ts
@@ -15,6 +20,9 @@ on:
       - src/routers/index.ts
       - worker/index.mjs
       - wrangler.manage.jsonc
+      - wrangler.jsonc
+      - scripts/deployment-targets.mjs
+      - scripts/public-release.mjs
       - .github/workflows/deploy-web.yml
   workflow_dispatch:
     inputs:
@@ -33,7 +41,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: nexa-${{ inputs.target || 'manage' }}-production
+  group: nexa-web-workers-production
   cancel-in-progress: false
 
 jobs:
@@ -45,6 +53,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Verify reviewed deployment commit
         env:
           EXPECTED_SHA: ${{ inputs.expected_sha || github.sha }}
@@ -56,22 +65,37 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+      - name: Select affected production Workers
+        id: targets
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          MANUAL_TARGET: ${{ inputs.target }}
+        run: node scripts/deployment-targets.mjs
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm worker:check
       - run: pnpm manage:check
+      - name: Prepare public release manifest
+        if: steps.targets.outputs.web == 'true'
+        run: node scripts/public-release.mjs prepare
       - name: Deploy selected Worker and assets
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          DEPLOY_TARGET: ${{ inputs.target || 'manage' }}
+          DEPLOY_TARGETS: ${{ steps.targets.outputs.targets }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo '::error::Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in the cloudflare-pages environment.'
             exit 1
           fi
-          case "$DEPLOY_TARGET" in
-            web) pnpm exec wrangler deploy ;;
-            manage) pnpm exec wrangler deploy --config wrangler.manage.jsonc ;;
-            *) echo '::error::Unknown deployment target.'; exit 1 ;;
-          esac
+          IFS=',' read -ra targets <<< "$DEPLOY_TARGETS"
+          for target in "${targets[@]}"; do
+            case "$target" in
+              web) pnpm exec wrangler deploy ;;
+              manage) pnpm exec wrangler deploy --config wrangler.manage.jsonc ;;
+              *) echo '::error::Unknown deployment target.'; exit 1 ;;
+            esac
+          done
+      - name: Verify published public pages and release commit
+        if: steps.targets.outputs.web == 'true'
+        run: node scripts/public-release.mjs verify

@@ -6,6 +6,7 @@
         <button type="button" :class="{ active: cycle === 'year' }" @click="cycle = 'year'">{{ $ui("按年") }}</button>
       </div>
     </div>
+    <p class="pricing-note"><router-link class="text-link" to="/plans">{{ $ui("查看无需登录的套餐参考价格 ›") }}</router-link></p>
     <p v-if="session" class="pricing-note">{{ $ui("当前会员等级：") }}<strong>{{ $ui(membership?.name || membershipError || "正在读取…") }}</strong></p>
     <p class="pricing-note">{{ $ui("价格由 Paddle 实时返回并按你的地区本地化展示。") }}{{ isSandbox ? $ui("当前为沙箱环境，使用测试支付方式，不会产生真实扣款。") : '' }}</p>
     <p v-if="envError" class="form-error" role="alert">{{ $ui(envError) }}</p>
