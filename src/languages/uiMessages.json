@@ -1765,5 +1765,12 @@
   "商品不存在": "Product not found",
   "仅网站管理员可审核": "Only site administrators can review requests",
   "安全审核字段无效": "Invalid security review fields",
-  "原交易编号": "Original transaction ID"
+  "原交易编号": "Original transaction ID",
+  "申请冻结对应代币，经人工审批后原路退回；对应原充值交易的全部支付手续费由退款用户承担，同笔费用只扣一次。": "Requests reserve the tokens and require manual approval for a refund to the original payment method. The applicant bears the full fee of the original top-up transaction, deducted only once.",
+  "该笔手续费已在此前审批中保留分配，不在本次重复扣取；审批不代表退款已经执行。": "This fee was allocated by a previous approval and will not be deducted again here. Approval does not mean a refund has been executed.",
+  "原交易支付费用已变化，需重新核对": "The original transaction fee has changed and requires reconciliation",
+  "退款原金额不足以承担全部支付手续费": "The gross refund is too small to cover the full provider fee",
+  "注销后丢弃，不再支付": "Forfeited after account deletion; no payment",
+  "支付平台费用尚未核验或退款金额不足以承担费用": "Provider fees are unverified or the refund is too small to cover them",
+  "支付平台费用或退款审批快照已变化，请重新核验": "Provider fees or the refund approval snapshot changed; verify again"
 }

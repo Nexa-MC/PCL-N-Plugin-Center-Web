@@ -30,6 +30,6 @@ async function load() { const current = ++generation; error.value = ''; try { co
 function select(value: 'withdrawals' | 'token-refunds') { if (busy.value) return; kind.value = value; rows.value = []; void load(); }
 async function checkFee(row: FinanceRequest) { busy.value = true; error.value = ''; try { quotes[row.id] = (await commerce.refundDetails(row.id)).quote; } catch (e) { error.value = e instanceof Error ? e.message : '退款费用读取失败'; } finally { busy.value = false; } }
 async function decide(row: FinanceRequest, decision: 'approve' | 'reject') { if (busy.value) return; busy.value = true; error.value = ''; message.value = ''; try { await commerce.review(kind.value, row, decision, notes[row.id]); message.value = '审核结果已记录，尚未执行款项。'; await load(); } catch (e) { error.value = e instanceof Error ? e.message : '审核提交失败'; } finally { busy.value = false; } }
-async function recover() { if (busy.value) return; busy.value = true; error.value = ''; try { const result = await commerce.sync(); message.value = result.status === 'ready' ? '本轮同步已完成。' : '同步尚未完成，可继续执行。'; await load(); } catch (e) { error.value = e instanceof Error ? e.message : '同步失败'; } finally { busy.value = false; } }
+async function recover() { if (busy.value) return; busy.value = true; error.value = ''; try { const result = await commerce.sync(); message.value = result.status === 'complete' ? '本轮同步已完成。' : '同步尚未完成，可继续执行。'; await load(); } catch (e) { error.value = e instanceof Error ? e.message : '同步失败'; } finally { busy.value = false; } }
 onMounted(load);
 </script>

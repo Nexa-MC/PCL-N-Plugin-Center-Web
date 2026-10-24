@@ -3,7 +3,7 @@ import type { StoreProduct } from './store';
 
 export interface RechargeLot { id: string; provider: string; provider_transaction_id: string; paid_at: string; tokens_issued: number; consumed_tokens: number; reserved_tokens: number; available_tokens: number }
 export interface RefundQuote { currency: 'CNY'; grossFen: number; originalProviderFeeFen: number | null; feeDeductionFen: number | null; netFen: number | null;
-  approvalBlockedReason: string | null; availableTokens: number; originalPayment: { provider: string; transactionId: string }; paymentsEnabled: false }
+  approvalBlockedReason: string | null; feeAllocatedFen?: number; availableTokens: number; originalPayment: { provider: string; transactionId: string }; paymentsEnabled: false }
 export interface FinanceRequest { id: string; version: number; state: string; created_at: string; user_id?: string; publisher_id?: string;
   requested_tokens?: number; amount_fen?: number; gross_refund_fen?: number; fee_deduction_fen?: number | null; net_refund_fen?: number | null; reason?: string; review_note?: string }
 export interface Revenue { earned_units: number; reserved_units: number; available_units: number; unitDenominator: 100; payoutPolicy: { currency: 'CNY'; tokensPerCny: 10; minimumFen: 10000 }; paymentsEnabled: false }
@@ -20,8 +20,8 @@ export function cnyToFen(value: string) {
   return Number(fen);
 }
 export const financeState = (state: string) => ({ pending: '待审核', pending_review: '待审核', approved_pending_payment: '已批准，待打款',
-  approved_pending_execution: '已批准，待原路退款', rejected: '已拒绝', closed_account_deleted: '账户已注销，申请已关闭' }[state] || state);
-export const refundBlockReason = (reason: string) => ({ provider_fee_unavailable: '支付平台费用尚未核验', partial_fee_allocation_unconfirmed: '部分退款手续费分摊待确认',
+  approved_pending_execution: '已批准，待原路退款', rejected: '已拒绝', forfeited_account_deleted: '注销后丢弃，不再支付', closed_account_deleted: '账户已注销，申请已关闭' }[state] || state);
+export const refundBlockReason = (reason: string) => ({ provider_fee_unavailable: '支付平台费用尚未核验', provider_fee_changed: '原交易支付费用已变化，需重新核对', refund_below_provider_fee: '退款原金额不足以承担全部支付手续费',
   insufficient_unused_tokens: '未使用充值代币不足' }[reason] || reason);
 export const commerce = {
   lots: () => isTestSession() ? Promise.resolve({ data: [] as RechargeLot[] }) : request<{ data: RechargeLot[] }>('/wallet/recharges'),
@@ -40,7 +40,7 @@ export const commerce = {
   review: (kind: 'withdrawals' | 'token-refunds', row: FinanceRequest, decision: 'approve' | 'reject', note: string) => { preventPreview(); return request('/manage/store/' + kind + '/' + row.id, {
     method: 'POST', headers: { 'If-Match': `"${row.version}"` }, body: JSON.stringify({ decision, note }) }); },
   syncStatus: () => { preventPreview(); return request<SyncStatus>('/manage/store/accounts/sync'); },
-  sync: () => { preventPreview(); return request<{ status: string }>('/manage/store/accounts/sync', { method: 'POST', body: '{}' }); },
+  sync: () => { preventPreview(); return request<{ status: 'complete' | 'pending' | 'blocked' | 'disabled' }>('/manage/store/accounts/sync', { method: 'POST', body: '{}' }); },
   security: (id: string) => { preventPreview(); return request<SecurityItem>('/manage/store/items/' + encodeURIComponent(id) + '/security'); },
   decideSecurity: (item: SecurityItem['item'], classification: 'suspected' | 'confirmed_malicious' | 'clear', sha256: string, evidence: string) => {
     preventPreview(); return request('/manage/store/items/' + item.id + '/security', { method: 'POST', headers: { 'If-Match': `"${item.revision}"` }, body: JSON.stringify({ classification, sha256, evidence }) });

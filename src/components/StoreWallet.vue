@@ -6,7 +6,7 @@
     <template v-if="wallet">
       <div class="store-summary-grid"><div class="store-summary-cell"><strong>{{ wallet.productionConnected ? wallet.availableBalance : '—' }}</strong><span>{{ $ui(wallet.productionConnected ? '可用N代币' : '余额来源待核验') }}</span></div><div class="store-summary-cell"><strong>{{ wallet.reservedForRefunds }}</strong><span>{{ $ui('退款申请冻结') }}</span></div></div>
       <p class="store-muted">{{ $ui('充值暂未开放；商品及内购不提供退款申请。') }}</p><button class="primary-button" type="button" disabled>{{ $ui('购买（暂未开放）') }}</button>
-      <h3>{{ $ui('未使用充值代币退款') }}</h3><p>{{ $ui('申请后冻结对应代币，经人工审批后扣除核验的支付平台手续费并原路退回。') }}</p>
+      <h3>{{ $ui('未使用充值代币退款') }}</h3><p>{{ $ui('申请冻结对应代币，经人工审批后原路退回；对应原充值交易的全部支付手续费由退款用户承担，同笔费用只扣一次。') }}</p>
       <p v-if="!lots.length" class="store-muted">{{ $ui('暂无已核验的充值批次。') }}</p>
       <form v-else class="store-form" @submit.prevent="submit">
         <label>{{ $ui('原充值批次') }}<select v-model="lotId" :aria-label="$ui('原充值批次')" required @change="quote = undefined"><option value="" disabled>{{ $ui('请选择') }}</option><option v-for="lot in lots" :key="lot.id" :value="lot.id">{{ lot.provider }} · {{ new Date(lot.paid_at).toLocaleDateString($locale) }} · {{ lot.available_tokens }} N · {{ lot.provider_transaction_id.slice(-8) }}</option></select></label>
@@ -14,7 +14,7 @@
         <label>{{ $ui('申请退回的N代币') }}<input v-model.number="tokens" type="number" min="1" :max="selected?.available_tokens || 0" step="1" required @input="quote = undefined" /></label>
         <label>{{ $ui('申请原因') }}<textarea v-model.trim="reason" rows="3" maxlength="2000" required /></label>
         <button class="secondary-button" type="button" :disabled="busy || !selected || tokens < 1" @click="preview">{{ $ui('核对退款费用') }}</button>
-        <div v-if="quote" class="store-muted"><p>{{ $ui('退款原金额') }}：{{ money(quote.grossFen) }}</p><p v-if="quote.approvalBlockedReason">{{ $ui(refundBlockReason(quote.approvalBlockedReason)) }}；{{ $ui('尚不能批准退款金额。') }}</p><p v-else>{{ $ui('支付平台手续费') }}：{{ money(quote.feeDeductionFen || 0) }} · {{ $ui('预计原路退回') }}：{{ money(quote.netFen || 0) }}</p></div>
+        <p v-if="quote?.feeAllocatedFen" class="store-muted">{{ $ui('该笔手续费已在此前审批中保留分配，不在本次重复扣取；审批不代表退款已经执行。') }}</p><div v-if="quote" class="store-muted"><p>{{ $ui('退款原金额') }}：{{ money(quote.grossFen) }}</p><p v-if="quote.approvalBlockedReason">{{ $ui(refundBlockReason(quote.approvalBlockedReason)) }}；{{ $ui('尚不能批准退款金额。') }}</p><p v-else>{{ $ui('支付平台手续费') }}：{{ money(quote.feeDeductionFen || 0) }} · {{ $ui('预计原路退回') }}：{{ money(quote.netFen || 0) }}</p></div>
         <button class="primary-button" :disabled="busy || !quote || !selected || tokens > selected.available_tokens">{{ $ui('提交退款申请') }}</button>
       </form>
       <p v-if="message" class="form-success" role="status">{{ $ui(message) }}</p>
