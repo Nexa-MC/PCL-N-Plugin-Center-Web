@@ -15,11 +15,12 @@ if (command === 'prepare') {
     '/legal/current/refunds.zh-CN.md': 'legal/current/refunds.zh-CN.md',
     '/legal/current/refunds.en.md': 'legal/current/refunds.en.md'
   };
-  const assets = (await readdir('dist/assets')).filter(name => /^(PublicPlans|SubscriptionPricing|LegalDocs|CheckoutResult|Login|Register|Contact|index)-.*\.(js|css)$/.test(name));
+  const assets = (await readdir('dist/assets')).filter(name => /^(Account|PublicPlans|SubscriptionPricing|LegalDocs|CheckoutResult|Login|Register|Contact|index)-.*\.(js|css)$/.test(name));
   assert.ok(assets.some(name => /^PublicPlans-.*\.js$/.test(name)), 'Missing public pricing bundle');
   assert.ok(assets.some(name => /^CheckoutResult-.*\.js$/.test(name)), 'Missing checkout return bundle');
   assert.ok(assets.some(name => /^SubscriptionPricing-.*\.js$/.test(name)), 'Missing subscription pricing bundle');
   assert.ok(assets.some(name => /^Login-.*\.js$/.test(name)), 'Missing login bundle');
+  assert.ok(assets.some(name => /^Account-.*\.js$/.test(name)), 'Missing account subscription management bundle');
   for (const name of assets) files[`/assets/${name}`] = `assets/${name}`;
   const hashes = {};
   for (const [path, file] of Object.entries(files)) hashes[path] = digest(await readFile(`dist/${file}`));

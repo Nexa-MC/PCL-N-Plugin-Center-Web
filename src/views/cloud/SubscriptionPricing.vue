@@ -26,7 +26,7 @@ import { platform, request, isTestSession, SESSION_EVENT, type Session } from '@
 import { PUBLIC_PLANS } from '@/config/publicPricing';
 import { browserRegionalPricing, regionalAmount } from '@/config/regionalPricing';
 import type { BillingCycle, Tier } from '@/config/pricing';
-import { confirmedPlan, planAction, visiblePlanRanks, type CurrentPlan } from '@/utils/subscriptionPlan';
+import { confirmedPlan, planAction, visiblePlanRanks, hasLegacyPaddleSubscription, type CurrentPlan } from '@/utils/subscriptionPlan';
 import { waffoReadiness, waffoRedirect, type WaffoReadiness } from '@/utils/waffoCheckout';
 import { uiLocale } from '@/languages/localize';
 const legacy = import.meta.env.VITE_BILLING_PROVIDER === 'paddle';
@@ -64,7 +64,7 @@ async function loadMembership() {
     if (user) {
       const [membership, availability] = await Promise.all([platform.entitlements(), request<unknown>('/billing/waffo/status').then(waffoReadiness).catch(() => undefined)]);
       if (step !== generation) return; current.value = confirmedPlan(membership.membership); readiness.value = availability;
-      paddleSubscription.value = membership.billingProvider !== 'waffo' && /^ctm_[a-z0-9]{26}$/.test(membership.paddleCustomerId || '');
+      paddleSubscription.value = hasLegacyPaddleSubscription(membership);
       unavailable.value = !current.value || !availability?.checkoutEnabled;
     }
   } catch { if (step === generation) unavailable.value = true; }
@@ -88,7 +88,7 @@ async function subscribe(name: Tier['name']) {
 }
 async function manage() {
   if (busy.value || !session.value || isTestSession()) return;
-  if (paddleSubscription.value) { await router.push('/account?section=wallet'); return; }
+  if (paddleSubscription.value && !readiness.value?.portalEnabled) { await router.push('/account?section=wallet'); return; }
   const userId = session.value.id, step = generation; busy.value = 'portal'; error.value = '';
   try {
     const target = waffoRedirect(await request('/billing/waffo/portal', { method: 'POST', body: '{}' }), 'portal');

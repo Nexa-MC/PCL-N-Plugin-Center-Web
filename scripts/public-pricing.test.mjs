@@ -17,12 +17,10 @@ test('public reference prices contain the confirmed eight USD amounts without ch
   }
 });
 
-test('public page works without payment SDK/configuration and keeps purchases closed', async () => {
+test('public plans share the current subscription flow instead of stale disabled reference buttons', async () => {
   const source = await readFile(new URL('../src/views/cloud/PublicPlans.vue', import.meta.url), 'utf8');
-  assert.doesNotMatch(source, /paddle|platform\.|import\.meta\.env|fetch\(/i);
-  assert.match(source, /<button class="primary-button" disabled>/);
-  assert.match(source, /税费配置待核验/);
-  assert.match(source, /to="\/legal\/refunds"/);
+  assert.match(source, /<SubscriptionPricing\s*\/>/);
+  assert.doesNotMatch(source, /购买暂未开放|税费配置待核验|Paddle/);
 });
 
 test('release selects the affected site while preserving existing management-only deployments', () => {

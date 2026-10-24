@@ -19,3 +19,10 @@ export function planAction(current: CurrentPlan | null, targetRank: number, cycl
 export function visiblePlanRanks(current: CurrentPlan | null, expanded: boolean): number[] {
   return [1, 2, 3, 4].filter(rank => expanded || !current || rank >= current.rank);
 }
+interface BillingOwnership { billingProvider?: 'waffo' | 'paddle' | null; cloudPlus?: boolean; paddleCustomerId?: string | null; subscriptions?: { status: string }[] }
+export function hasLegacyPaddleHistory(value: BillingOwnership | null | undefined): boolean {
+  return Boolean(value?.paddleCustomerId && value.subscriptions?.length);
+}
+export function hasLegacyPaddleSubscription(value: BillingOwnership | null | undefined): boolean {
+  return Boolean(value?.billingProvider === 'paddle' && value.cloudPlus && hasLegacyPaddleHistory(value) && value.subscriptions?.some(row => ['active', 'trialing'].includes(row.status)));
+}

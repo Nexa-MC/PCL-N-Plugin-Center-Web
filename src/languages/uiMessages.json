@@ -1832,5 +1832,10 @@
   "服务条款 v1.1 · 2026-10-01": "Terms of Service v1.1 · 2026-10-01",
   "隐私政策 v1.1 · 2026-10-01": "Privacy Policy v1.1 · 2026-10-01",
   "Passkey 登录已取消或超时，请重试。": "Passkey sign-in was cancelled or timed out. Try again.",
-  "历史原文用于追溯当时提供的约定和告知。1.2 修订不会将旧版本记录改为新版本同意。": "Archived originals show the terms and notices supplied at the time. Revision 1.2 does not turn earlier records into acceptance of the new version."
+  "历史原文用于追溯当时提供的约定和告知。1.2 修订不会将旧版本记录改为新版本同意。": "Archived originals show the terms and notices supplied at the time. Revision 1.2 does not turn earlier records into acceptance of the new version.",
+  "支付方式、取消与发票在 Waffo 客户门户管理。": "Manage payment methods, cancellation and invoices in the Waffo customer portal.",
+  "当前账户尚无可管理的 Waffo 订阅。": "This account has no Waffo subscription to manage yet.",
+  "历史 Paddle 订阅与账单": "Previous Paddle subscriptions and billing",
+  "账户已切换，请重新打开订阅管理。": "Your account changed. Please reopen subscription management.",
+  "请先登录账户。": "Please sign in first."
 }

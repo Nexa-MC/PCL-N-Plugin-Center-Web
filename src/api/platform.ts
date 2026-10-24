@@ -1,4 +1,5 @@
 import type { RegisterOptions, AssertOptions, CreatedPasskey, PasskeyAssertion } from '../utils/webauthnClient';
+import { waffoRedirect } from '../utils/waffoCheckout.ts';
 
 export interface Session { id: string; name: string; email?: string | null; staff?: 0 | 1; creator?: 0 | 1; developer?: 0 | 1; trustedDeveloper?: 0 | 1; termsAccepted?: number; handle?: string | null; setupRequired?: 0 | 1; scope: 'console' | 'operations' }
 export type DeveloperKind = 'developer' | 'trusted_developer';
@@ -8,7 +9,7 @@ export interface PolicyStatus { kind: string; version: string; effectiveAt: stri
 export interface DeletionRequest { id: string; state: 'pending' | 'cancelled' | 'finalized'; requestedAt: string; executeAfter?: number; cancelledAt: string | null; finalizedAt: string | null }
 export interface PrivacyRequest { id: string; type: string; state: string; createdAt: string; updatedAt: string }
 export interface Membership { id: string; name: string; rank: number; billingCycle: 'month' | 'year' | null; status: string }
-export interface Entitlements { cloudPlus: boolean; membership: Membership; paddleCustomerId: string | null; billingProvider?: 'waffo'; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
+export interface Entitlements { cloudPlus: boolean; membership: Membership; paddleCustomerId: string | null; billingProvider?: 'waffo' | 'paddle' | null; subscriptions: { subscription_id: string; status: string; price_id: string; product_id: string; scheduled_change_action: string | null }[] }
 export interface AccountBadge { id: string; name: string; replacesLevel: boolean; earned: boolean; requirement: string; progress: string; checkedAt?: string | null }
 export interface AccountProgression {
   level: number; xp: number; launched: boolean;
@@ -340,10 +341,15 @@ export const platform = {
     const response = await authFetch(`/auth/v1/connections/${provider}`, { method: 'DELETE' });
     if (!response.ok) await authJson(response, '解除绑定失败');
   },
-  billingPortal: async () => {
+  billingPortal: async (provider: 'waffo' | 'paddle' = 'waffo') => {
     if (isTest()) { console.info('[test] 测试模式不打开支付门户。'); return; }
-    const result = await request<{ url: string }>('/billing/portal', { method: 'POST' });
-    window.location.assign(result.url);
+    const owner = (await platform.session())?.id;
+    if (!owner) throw new ApiError('请先登录账户。', 401);
+    const result = await request<unknown>(provider === 'waffo' ? '/billing/waffo/portal' : '/billing/portal?provider=paddle', { method: 'POST', body: '{}' });
+    const target = provider === 'waffo' ? waffoRedirect(result, 'portal') : (result as { url: string }).url;
+    const user = await platform.refreshSession();
+    if (user?.id !== owner || isTest()) throw new ApiError('账户已切换，请重新打开订阅管理。', 409);
+    window.location.assign(target);
   },
   // ---- 注册完善与登录（nexa-auth 提供）。注册必须先经第三方身份验证，此处仅完善资料。 ----
   registerComplete: async (payload: RegisterCompletePayload) => {

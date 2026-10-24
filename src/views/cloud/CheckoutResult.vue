@@ -19,7 +19,7 @@
       </article>
       <button v-if="state !== 'invalid'" class="secondary-button" type="button" :disabled="busy" @click="reload">{{ busy ? copy.loading : copy.refresh }}</button>
     </div>
-    <div class="actions result-actions"><router-link class="primary-button" to="/plans">{{ copy.plans }}</router-link><router-link class="secondary-button" to="/account?section=wallet">{{ copy.account }}</router-link></div>
+    <div class="actions result-actions"><router-link class="primary-button" to="/pricing">{{ copy.plans }}</router-link><router-link class="secondary-button" to="/account?section=wallet">{{ copy.account }}</router-link></div>
   </section>
 </template>
 <script setup lang="ts">

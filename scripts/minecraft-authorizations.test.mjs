@@ -1,23 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
-import ts from 'typescript';
-
-const source = await readFile(new URL('../src/api/platform.ts', import.meta.url), 'utf8');
-let instance = 0;
-
-async function loadPlatform(t) {
-  const previousWindow = globalThis.window;
-  const redirects = [];
-  globalThis.window = { location: { origin: 'https://pcln.top', assign: value => redirects.push(value) }, dispatchEvent() {} };
-  t.after(() => { if (previousWindow === undefined) delete globalThis.window; else globalThis.window = previousWindow; });
-  // Run the production client in Node without Vite, preserving its actual request implementation.
-  const compiled = ts.transpileModule(source.replace('import.meta.env.DEV', 'false'), {
-    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext }
-  }).outputText;
-  const module = await import(`data:text/javascript;base64,${Buffer.from(compiled + `\n// fixture ${++instance}`).toString('base64')}`);
-  return { ...module, redirects };
-}
+import { loadPlatform } from './platform-client-fixture.mjs';
 
 test('Minecraft authorization uses the Nexa session and a separate POST before navigating', async t => {
   const requests = [];
