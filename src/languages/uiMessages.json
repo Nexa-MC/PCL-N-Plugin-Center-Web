@@ -1483,5 +1483,20 @@
   "自营套餐退款与试用、第三方商店商品、未使用充值N代币退款及支付费用规则。": "Refunds and trials for directly supplied plans, third-party store products, unused N Token top-ups and payment-provider fees.",
   "退款政策 v1.0 · 2026-09-26": "Refund policy v1.0 · 2026-09-26",
   "查看无需登录的套餐参考价格 ›": "View public reference plan prices ›",
-  "套餐价格 · NexaCL": "Plan pricing · NexaCL"
+  "套餐价格 · NexaCL": "Plan pricing · NexaCL",
+  "注销前的收入确认": "Income confirmation before deletion",
+  "正在核对未提现收入与待审提现…": "Checking unpaid income and withdrawal requests…",
+  "商店未提现收入合计": "Total unpaid store income",
+  "其中待审核提现": "Included withdrawals awaiting review",
+  "其中已批准待打款": "Included approved withdrawals awaiting payment",
+  "待审及待打款金额已包含在合计中，不重复相加。": "Pending and approved unpaid withdrawals are included in the total, not added twice.",
+  "确认注销并经过7天冷静期后，未提现收入及待审、待打款提现不会支付，将被丢弃；冷静期内新增的剩余收入也适用。撤销注销可取消本次处置。": "After confirmation, the 7-day cooling-off period and completed deletion, unpaid income and pending or approved unpaid withdrawals will not be paid and will be forfeited. Additional unpaid income during this period is also covered. Cancelling deletion cancels this disposition.",
+  "本确认不影响适用法律规定的不可放弃权利。": "This confirmation does not affect mandatory statutory rights.",
+  "我已核对上述金额，并确认注销完成后这些金额不会提现且将被丢弃。": "I have checked these amounts and confirm that they will not be paid and will be forfeited after deletion is completed.",
+  "重新核对收入": "Recheck income",
+  "注销收入金额尚未核验": "Deletion income amounts have not been verified",
+  "暂时无法核验作者收入，不能提交注销；请重试或联系支持。": "Author income could not be verified. Deletion cannot be requested; retry or contact support.",
+  "商店收入核验暂不可用；如有未提现收入，请先联系支持核对。": "Store income verification is unavailable. If you have unpaid income, contact support before continuing.",
+  "退款政策 v1.1 · 2026-10-24": "Refund policy v1.1 · 2026-10-24",
+  "请先核对并确认未提现收入与待审提现将不会支付并在注销后丢弃": "Review and confirm that unpaid income and withdrawal requests will not be paid and will be forfeited after deletion"
 }

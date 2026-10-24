@@ -30,7 +30,7 @@ test('refund revision does not change terms/privacy acceptance or publisher agre
   assert.equal(documents.find(d => d.key === 'terms').version, version);
   assert.equal(documents.find(d => d.key === 'privacy').version, version);
   assert.equal(documents.find(d => d.key === 'publisher').version, '1.0');
-  assert.equal(documents.find(d => d.key === 'refunds').version, '1.1');
+  assert.equal(documents.find(d => d.key === 'refunds').version, '1.2');
 });
 
 test('1.0 archives preserve the original accepted document bytes and are reachable from the index', async t => {
@@ -46,4 +46,10 @@ test('1.0 archives preserve the original accepted document bytes and are reachab
     assert.equal(bytes.toString('utf8').match(/\*\*版本：([^*]+)\*\*/)?.[1], '1.0');
     assert.ok(page.includes(`href="${path}"`), 'the original document must remain available to users');
   });
+});
+
+test('refund 1.1 archives preserve both published originals after the fee and deletion revision', async () => {
+  const hashes = { 'zh-CN': '28419f19c122cce43d11e1c49befdfafb1be8749e8d0e48b5f3175fc4c26027e', en: '8fdf4ab31e87e59dd32144d4172644875aab7675b9ee1f39597bafebf008103d' };
+  for (const [locale, hash] of Object.entries(hashes)) assert.equal(sha256(await readFile(new URL(`public/legal/archive/1.1/refunds.${locale}.md`, root))), hash);
+  assert.ok(page.includes('href="/legal/archive/1.1/refunds.zh-CN.md"'));
 });
