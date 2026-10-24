@@ -1,11 +1,9 @@
 <template>
-  <section class="wallet-tokens">
-    <div class="section-heading"><h3>{{ $ui('N代币') }}</h3><span class="status-pill">{{ $ui('暂未开放') }}</span></div>
-    <p>{{ $ui('1元人民币＝10 N代币，余额与商品价格均为整数。') }}</p>
+  <section class="store-wallet">
+    <NTokenWalletPanel ref="walletPanel" @loaded="wallet = $event" />
     <p v-if="loading" role="status">{{ $ui('正在读取钱包…') }}</p><p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
     <template v-if="wallet">
-      <div class="store-summary-grid"><div class="store-summary-cell"><strong>{{ wallet.productionConnected ? wallet.availableBalance : '—' }}</strong><span>{{ $ui(wallet.productionConnected ? '可用N代币' : '余额来源待核验') }}</span></div><div class="store-summary-cell"><strong>{{ wallet.reservedForRefunds }}</strong><span>{{ $ui('退款申请冻结') }}</span></div></div>
-      <p class="store-muted">{{ $ui('充值暂未开放；商品及内购不提供退款申请。') }}</p><button class="primary-button" type="button" disabled>{{ $ui('购买（暂未开放）') }}</button>
+      <p class="store-muted">{{ $ui('充值暂未开放；商品及内购不提供退款申请。') }}</p>
       <h3>{{ $ui('未使用充值代币退款') }}</h3><p>{{ $ui('申请冻结对应代币，经人工审批后原路退回；对应原充值交易的全部支付手续费由退款用户承担，同笔费用只扣一次。') }}</p>
       <p v-if="!lots.length" class="store-muted">{{ $ui('暂无已核验的充值批次。') }}</p>
       <form v-else class="store-form" @submit.prevent="submit">
@@ -26,18 +24,20 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { uiLocale } from '@/languages/localize';
-import { ntokenWallet, type NTokenWallet } from '@/api/wallet';
+import type { NTokenWallet } from '@/api/wallet';
+import NTokenWalletPanel from '@/components/NTokenWalletPanel.vue';
 import { commerce, financeState, refundBlockReason, newCommerceKey, type RechargeLot, type RefundQuote, type FinanceRequest } from '@/api/commerce';
 import '@/styles/store.css';
 const wallet = ref<NTokenWallet>(), lots = ref<RechargeLot[]>([]), requests = ref<FinanceRequest[]>([]), loading = ref(false), busy = ref(false), error = ref(''), message = ref('');
+const walletPanel=ref<{refresh:()=>Promise<void>}>();
 const lotId = ref(''), tokens = ref(1), reason = ref(''), quote = ref<RefundQuote>(), selected = computed(() => lots.value.find(lot => lot.id === lotId.value));
 let requestKey = '', fingerprint = '';
 const money = (fen: number) => new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency: 'CNY' }).format(fen / 100);
-async function load() { loading.value = true; try { const [value, charges, rows] = await Promise.all([ntokenWallet.read(), commerce.lots(), commerce.refunds()]); wallet.value = value; lots.value = charges.data; requests.value = rows.data; } catch (e) { error.value = e instanceof Error ? e.message : '钱包读取失败'; } finally { loading.value = false; } }
+async function load() { loading.value = true; try { const [charges, rows] = await Promise.all([commerce.lots(), commerce.refunds()]); lots.value = charges.data; requests.value = rows.data; await walletPanel.value?.refresh(); } catch (e) { error.value = e instanceof Error ? e.message : '钱包读取失败'; } finally { loading.value = false; } }
 async function preview() { if (busy.value) return; busy.value = true; error.value = ''; try { quote.value = await commerce.quote(lotId.value, tokens.value); } catch (e) { error.value = e instanceof Error ? e.message : '退款费用读取失败'; } finally { busy.value = false; } }
 async function submit() { if (busy.value) return; busy.value = true; error.value = ''; message.value = ''; const next = JSON.stringify([lotId.value, tokens.value, reason.value]); if (next !== fingerprint) { fingerprint = next; requestKey = newCommerceKey(); } try { await commerce.refund(lotId.value, tokens.value, reason.value, requestKey); message.value = '退款申请已提交，尚未执行退款。'; reason.value = ''; quote.value = undefined; fingerprint = ''; await load(); } catch (e) { error.value = e instanceof Error ? e.message : '退款申请失败'; } finally { busy.value = false; } }
 onMounted(load);
 </script>
 <style scoped>
-.wallet-tokens select{width:100%}
+.store-wallet select{width:100%}
 </style>
