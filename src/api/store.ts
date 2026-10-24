@@ -1,4 +1,5 @@
 import { ApiError, isTestSession, request, requestBlob, type Page } from './platform';
+import { ntokenWallet } from './wallet';
 export type StoreKind = 'plugin' | 'theme';
 export interface StoreContent {
   id: string; kind: StoreKind; name: string; summary: string; description: string; publisher_name: string;
@@ -17,7 +18,7 @@ export const store = {
   catalog: (kind: StoreKind, search = '', offset = 0) => isTestSession() ? Promise.resolve({ data: [], pagination: { limit: 50, offset: 0, total: 0 } } as Page<StoreContent>) : request<Page<StoreContent>>('/store/items?' + new URLSearchParams({ kind, search, offset: String(offset), limit: '50' })),
   detail: (id: string) => { preventTestWrite(); return request<StoreDetail>('/store/items/' + encodeURIComponent(id)); },
   reviews: (id: string) => { preventTestWrite(); return request<Page<StoreReview>>('/store/items/' + encodeURIComponent(id) + '/reviews?limit=20'); },
-  wallet: () => isTestSession() ? Promise.resolve({ balance: 0, paidCheckoutEnabled: false }) : request<{ balance: number; paidCheckoutEnabled: false }>('/store/wallet'),
+  wallet: ntokenWallet.read,
   purchase: (product: StoreProduct, key: string) => { preventTestWrite(); return request('/store/products/' + product.id + '/purchase', { method: 'POST', headers: { 'Idempotency-Key': key }, body: JSON.stringify({ productRevision: product.revision }) }); },
   review: (id: string, score: number, body: string) => { preventTestWrite(); return request('/store/items/' + id + '/review', { method: 'PUT', body: JSON.stringify({ score, body }) }); },
   report: (id: string, message: string) => { preventTestWrite(); return request<{ message_count: number; item_state: string }>('/store/items/' + id + '/report', { method: 'POST', body: JSON.stringify({ message }) }); },

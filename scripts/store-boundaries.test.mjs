@@ -17,7 +17,7 @@ test('publisher hosts preserve the exact requested spelling and private response
 });
 
 test('store client sends server product revisions, stable idempotency keys and no client price or balance', async () => {
-  const source = (await readFile(new URL('src/api/store.ts', root), 'utf8')).replace(/^import .*from '\.\/platform';$/m,
+  const source = (await readFile(new URL('src/api/store.ts', root), 'utf8')).replace(/^import .*from '\.\/wallet';$/m, 'const ntokenWallet = { read: async () => ({}) };').replace(/^import .*from '\.\/platform';$/m,
     `const calls = []; let preview = false; class ApiError extends Error {};
     const isTestSession = () => preview; const requestBlob = () => { throw new Error('not used'); };
     const request = async (path, options) => { calls.push({ path, options }); return {}; };
@@ -32,4 +32,18 @@ test('store client sends server product revisions, stable idempotency keys and n
   assert.throws(() => store.purchase(product, 'another-key'), /前端测试账户/);
   assert.throws(() => store.report('item', 'fixture report'), /前端测试账户/);
   assert.equal(fixture.calls.length, 1);
+});
+
+test('N Token consumers share the authenticated wallet API and preview never reads real balances', async () => {
+  const source = (await readFile(new URL('src/api/wallet.ts', root), 'utf8')).replace(/^import .*from '\.\/platform';$/m,
+    `const calls = []; let preview = false; const isTestSession = () => preview;
+    const request = async (path) => { calls.push(path); return {}; };
+    export const fixture = { calls, setPreview(value) { preview = value; } };`);
+  const { outputText } = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } });
+  const { ntokenWallet, fixture } = await import('data:text/javascript;base64,' + Buffer.from(outputText).toString('base64'));
+  await ntokenWallet.read(); await ntokenWallet.entries(50);
+  assert.deepEqual(fixture.calls, ['/wallet', '/wallet/entries?limit=50&offset=50']);
+  fixture.setPreview(true);
+  const preview = await ntokenWallet.read(); assert.equal(preview.balance, 0); assert.equal(preview.topUpEnabled, false); assert.equal(preview.paidCheckoutEnabled, false);
+  assert.deepEqual((await ntokenWallet.entries()).data, []); assert.equal(fixture.calls.length, 2);
 });

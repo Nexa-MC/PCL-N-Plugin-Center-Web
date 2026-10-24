@@ -1618,5 +1618,9 @@
   "审核材料已改变，请重新读取": "The review evidence changed. Load it again",
   "安全或侵权问题无需购买：": "Safety and copyright reports do not require a purchase: ",
   "安全反馈": "Report a safety issue",
-  "知识产权投诉": "Copyright complaint"
+  "知识产权投诉": "Copyright complaint",
+  "已注销账户": "Deleted account",
+  "账户当前不可使用商店，请联系支持": "This account cannot currently use the store. Contact support.",
+  "账户当前不可使用商店": "This account cannot currently use the store",
+  "系统保管的内容不可经营或重新发布": "Content in system custody cannot be sold or republished"
 }
