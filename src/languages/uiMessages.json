@@ -1615,5 +1615,8 @@
   "审核提交失败": "Unable to submit the review",
   "已拥有": "Owned",
   "读取更多举报材料": "Load more report evidence",
-  "审核材料已改变，请重新读取": "The review evidence changed. Load it again"
+  "审核材料已改变，请重新读取": "The review evidence changed. Load it again",
+  "安全或侵权问题无需购买：": "Safety and copyright reports do not require a purchase: ",
+  "安全反馈": "Report a safety issue",
+  "知识产权投诉": "Copyright complaint"
 }
