@@ -41,5 +41,5 @@ test('refund update preserves old plan clauses and separates unused token fees f
     assert.equal(current.slice(current.indexOf('## 1.'), current.indexOf('## 28.')).trim(), old.slice(old.indexOf('## 1.')).trim());
   }
   const english = await readFile(new URL('../public/legal/current/refunds.en.md', import.meta.url), 'utf8');
-  for (const text of ['CNY 1 = 10 N Tokens', 'original payment method and transaction', 'manual approval', 'whole tokens', 'non-waivable rights', 'Allocation of fees', 'remains unconfirmed', 'not silently prorated', '20% platform revenue share']) assert.ok(english.includes(text), text);
+  for (const text of ['CNY 1 = 10 N Tokens', 'original payment method and transaction', 'manual approval', 'whole tokens', 'non-waivable rights', 'full actual payment-provider fee', 'only once', 'no negative net refund', '20% platform revenue share']) assert.ok(english.includes(text), text);
 });

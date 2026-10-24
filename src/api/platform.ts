@@ -266,12 +266,12 @@ export const platform = {
     if (isTest()) return { request: testState.deletion, cooldownDays: 7 };
     return authJson<{ request: DeletionRequest | null; cooldownDays: number }>(authFetch('/auth/v1/account/delete'), '暂时无法读取注销状态。');
   },
-  requestDeletion: async () => {
+  requestDeletion: async (confirmation?: { publisherForfeitToken: string; publisherForfeitConfirmed: boolean }) => {
     if (isTest()) {
       testState.deletion = { id: 'del-local', state: 'pending', requestedAt: testNow(), executeAfter: Date.now() + 7 * 864e5, cancelledAt: null, finalizedAt: null };
       return { request: testState.deletion };
     }
-    return authJson<{ request: DeletionRequest }>(authFetch('/auth/v1/account/delete', { method: 'POST', body: '{}' }), '注销申请失败，请重试。');
+    return authJson<{ request: DeletionRequest }>(authFetch('/auth/v1/account/delete', { method: 'POST', body: JSON.stringify(confirmation ?? {}) }), '注销申请失败，请重试。');
   },
   cancelDeletion: async () => {
     if (isTest()) { if (testState.deletion) { testState.deletion.state = 'cancelled'; testState.deletion.cancelledAt = testNow(); } return { ok: true }; }

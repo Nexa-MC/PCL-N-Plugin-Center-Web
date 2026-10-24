@@ -1,6 +1,6 @@
 # Nexa Refund, Trial and Subscription Policy
 
-**Version: 1.1**\
+**Version: 1.2**\
 **Effective: October 24, 2026**
 
 English translation of the original Chinese policy, available from the legal documents page.
@@ -150,8 +150,16 @@ Refunds require manual approval and return to the **original payment method and 
 
 Where applicable law and the actual transaction provider's rules permit, the refund deducts verifiable **payment-provider fees or commission** attributable to the original transaction. This is separate from the marketplace's 20% platform revenue share; that share must not be substituted for actual payment fees. Any applicable right to a full refund under law or provider rules is preserved.
 
-For a wholly unused original top-up, the original amount less verified actual payment fees can be calculated. Allocation of fees to a partial amount or a partly consumed top-up remains unconfirmed. Until the rule and actual fees are verified, fees are not silently prorated, the full original fee is not repeatedly deducted on each request, and an unknown fee is not treated as zero. The related net amount cannot yet be approved.
+Whether requesting all or part of the unused tokens, the refund applicant bears the full actual payment-provider fee verified for the original top-up transaction; it is not prorated by the requested refund amount. This fee is allocated and deducted only once per original transaction. Approval reserves the fee allocation, and later requests must not deduct the same fee again. Approval and reservation do not mean an actual refund has been executed.
+
+If the requested gross refund is smaller than the full fee still due, no negative net refund is created and no difference is automatically charged to another top-up or account. The request must be adjusted or reviewed manually. Unknown or changed actual fees and disputed transactions require verification before approval; an unknown fee is not treated as zero.
 
 This revision adds no universal application deadline, review duration or time-to-receipt promise. Mandatory requirements of applicable law or the actual provider still apply. Manual review identifies the verified original transaction, gross amount, applicable deduction and expected refund; unavailable actual refund execution is clearly identified.
 
 Reference: [Paddle Buyer Terms](https://www.paddle.com/legal/checkout-buyer-terms) for transactions actually sold through Paddle. Legal applicability and provider terms must be checked for the actual transaction, region and current rules; this Policy gives no unconditional assurance of legal compliance.
+
+## 30. Author account deletion and unpaid income
+
+Before requesting account deletion, authors must be shown their current total unpaid store income, including withdrawal requests awaiting review and approved withdrawals awaiting payment, and separately confirm that these unpaid amounts will not be withdrawn or paid and will be forfeited after confirmation, the existing 7-day cooling-off period and completed deletion. Additional income accrued but still unpaid during that period is also covered. Pending and approved unpaid withdrawals are included in the total, not added twice.
+
+Cancelling deletion during the cooling-off period cancels this deletion disposition. Unverifiable amounts must not be presented as zero, and historical author income without valid confirmation is not automatically forfeited. Necessary confirmation and audit records are retained. This description does not claim that any real user deletion, payment or removal of funds has been executed. Mandatory statutory rights and obligations remain unaffected.

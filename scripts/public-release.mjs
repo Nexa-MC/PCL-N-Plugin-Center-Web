@@ -26,7 +26,9 @@ if (command === 'prepare') {
   const origin = 'https://pcln.top';
   async function get(path) {
     const response = await fetch(`${origin}${path}?release=${sha}`, { redirect: 'error', signal: AbortSignal.timeout(15000), headers: { 'cache-control': 'no-cache' } });
-    assert.equal(response.status, 200, `${origin}${path}: HTTP ${response.status}`);
+    const diagnosticHeaders = Object.fromEntries(['server', 'content-type', 'cf-mitigated', 'cf-ray', 'via', 'x-cache']
+      .map(name => [name, response.headers.get(name)]).filter(([, value]) => value));
+    assert.equal(response.status, 200, `${origin}${path}: HTTP ${response.status}; response=${JSON.stringify(diagnosticHeaders)}`);
     return Buffer.from(await response.arrayBuffer());
   }
   let lastError;

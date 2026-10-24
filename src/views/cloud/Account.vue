@@ -80,7 +80,7 @@
       </template>
 
       <template v-else-if="section === 'delete'">
-        <section class="work-panel"><h2>{{ $ui("删除账户") }}</h2><template v-if="deletion && deletion.state === 'pending'"><span class="status-pill">{{ $ui("注销已申请") }}</span><p>{{ $ui("注销将于") }} <strong>{{ new Date(deletion.executeAfter || 0).toLocaleString($locale) }}</strong> {{ $ui("生效（7 天冷静期）。在此之前登录并撤销，即可取消注销。") }}</p><button class="danger-button" :disabled="busy" @click="cancelDeletion">{{ $ui("撤销注销申请") }}</button></template><template v-else-if="deletion && deletion.state === 'finalized'"><span class="status-pill">{{ $ui("已注销") }}</span><p>{{ $ui("该账户已完成注销，个人资料已删除或匿名化。此页面仅为记录。") }}</p></template><template v-else><p>{{ $ui("注销申请设有") }} <strong>{{ $ui("7 天冷静期") }}</strong>{{ $ui("。生效后将撤销全部会话、解绑第三方身份、删除或匿名化账户资料；依法需要保留的记录将与普通账户分离受限保存。与组织或发布资源相关的关系将转移至不可登录的系统保管主体，资源立即下架。") }}</p><label class="delete-confirm">{{ $ui("输入账户名") }} <strong>{{ session.name }}</strong> {{ $ui("以确认") }}<input v-model="deleteConfirm" :placeholder="session.name" /></label><p v-if="deleteError" class="form-error" role="alert">{{ $ui(deleteError) }}</p><button class="danger-button" :disabled="busy || deleteConfirm !== session.name" @click="requestDeletion">{{ $ui("申请删除账户") }}</button></template></section>
+        <section class="work-panel"><h2>{{ $ui("删除账户") }}</h2><template v-if="deletion && deletion.state === 'pending'"><span class="status-pill">{{ $ui("注销已申请") }}</span><p>{{ $ui("注销将于") }} <strong>{{ new Date(deletion.executeAfter || 0).toLocaleString($locale) }}</strong> {{ $ui("生效（7 天冷静期）。在此之前登录并撤销，即可取消注销。") }}</p><button class="danger-button" :disabled="busy" @click="cancelDeletion">{{ $ui("撤销注销申请") }}</button></template><template v-else-if="deletion && deletion.state === 'finalized'"><span class="status-pill">{{ $ui("已注销") }}</span><p>{{ $ui("该账户已完成注销，个人资料已删除或匿名化。此页面仅为记录。") }}</p></template><template v-else><p>{{ $ui("注销申请设有") }} <strong>{{ $ui("7 天冷静期") }}</strong>{{ $ui("。生效后将撤销全部会话、解绑第三方身份、删除或匿名化账户资料；依法需要保留的记录将与普通账户分离受限保存。与组织或发布资源相关的关系将转移至不可登录的系统保管主体，资源立即下架。") }}</p><DeletionFinanceConfirmation :account-id="session.id" :required="Boolean(session.creator || session.developer || session.trustedDeveloper)" @change="deletionFinance = $event" /><label class="delete-confirm">{{ $ui("输入账户名") }} <strong>{{ session.name }}</strong> {{ $ui("以确认") }}<input v-model="deleteConfirm" :placeholder="session.name" /></label><p v-if="deleteError" class="form-error" role="alert">{{ $ui(deleteError) }}</p><button class="danger-button" :disabled="busy || deleteConfirm !== session.name || !deletionFinance.ready" @click="requestDeletion">{{ $ui("申请删除账户") }}</button></template></section>
       </template>
 
       <template v-else-if="section === 'tickets'">
@@ -216,6 +216,7 @@
 </template>
 <script setup lang="ts">
 import { ui, uiLocale } from '@/languages/localize';
+import DeletionFinanceConfirmation from '@/components/DeletionFinanceConfirmation.vue';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors, type MinecraftProfile } from '@/api/platform';
@@ -337,6 +338,7 @@ async function loadPrivacy(){ try { privacyList.value = (await platform.privacyR
 async function submitPrivacy(){ busy.value = true; error.value = ''; try { await platform.createPrivacyRequest(privacyType.value); await loadPrivacy(); } catch (e) { error.value = e instanceof ApiError ? e.message : '提交失败，请重试。'; } finally { busy.value = false; } }
 async function exportData(){ busy.value = true; try { const data = await platform.exportData(); const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })); const a = document.createElement('a'); a.href = url; a.download = `nexa-account-export-${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(url); } catch (e) { error.value = e instanceof ApiError ? e.message : '导出失败，请重试。'; } finally { busy.value = false; } }
 
+const deletionFinance=ref<{ready:boolean;token?:string;confirmed:boolean}>({ready:false,confirmed:false});
 const deletion = ref<DeletionRequest | null>(), deleteConfirm = ref(''), deleteError = ref('');
 const entitlements = ref<Entitlements | null>(), portalError = ref('');
 const walletView = ref<'subscription' | 'tokens'>('subscription');
@@ -355,7 +357,7 @@ async function bilibiliLinked(){ connectionMessage.value = 'B站账户已通过�
 async function bindConnection(provider: ConnectionProvider){ if (provider === 'bilibili') { bilibiliBindingOpen.value = true; return; } busy.value = true; connectionError.value = ''; try { await platform.authorizeConnection(provider); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '无法开始授权'; } finally { busy.value = false; } }
 async function removeConnection(provider: ConnectionProvider){ busy.value = true; connectionError.value = ''; try { await platform.unlinkConnection(provider); await Promise.all([loadConnections(), loadProgression()]); } catch(e) { connectionError.value = e instanceof ApiError ? e.message : '解除绑定失败'; } finally { busy.value = false; } }
 async function loadDeletion(){ try { deletion.value = (await platform.deletionStatus()).request; } catch { /* 忽略 */ } }
-async function requestDeletion(){ busy.value = true; deleteError.value = ''; try { deletion.value = (await platform.requestDeletion()).request; deleteConfirm.value = ''; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '申请失败，请重试。'; } finally { busy.value = false; } }
+async function requestDeletion(){ if (!deletionFinance.value.ready) return; busy.value = true; deleteError.value = ''; try { deletion.value = (await platform.requestDeletion(deletionFinance.value.token ? { publisherForfeitToken: deletionFinance.value.token, publisherForfeitConfirmed: deletionFinance.value.confirmed } : undefined)).request; deleteConfirm.value = ''; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '申请失败，请重试。'; } finally { busy.value = false; } }
 async function cancelDeletion(){ busy.value = true; deleteError.value = ''; try { await platform.cancelDeletion(); deletion.value = null; } catch (e) { deleteError.value = e instanceof ApiError ? e.message : '撤销失败，请重试。'; } finally { busy.value = false; } }
 
 const tickets = ref<Ticket[]>([]), ticketsLoaded = ref(false), showResolved = ref(false), subject = ref(''), body = ref(''), message = ref('');
