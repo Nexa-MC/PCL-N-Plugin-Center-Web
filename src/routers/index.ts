@@ -3,6 +3,8 @@ import { startProgress, doneProgress } from '@/utils/progressBar';
 import CloudShell from '@/views/cloud/CloudShell.vue';
 import { watch } from 'vue';
 import { ui, uiLocale } from '@/languages/localize';
+// Store publishing still depends on the separate wallet/artifact rollout.
+const storeView = () => import.meta.env.VITE_STORE_ENABLED === 'true' ? import('@/views/cloud/Store.vue') : import('@/views/cloud/LegacyStore.vue');
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), scrollBehavior: () => ({ top: 0 }),
   routes: [
@@ -21,10 +23,10 @@ const router = createRouter({
     { path: '/', component: CloudShell, children: [
       { path: '', component: () => import('@/views/cloud/Home.vue') },
       { path: 'store', redirect: to => to.query.category === 'theme' ? '/store/themes' : '/store/plugins' },
-      { path: 'store/plugins', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'plugin' } },
-      { path: 'store/plugins/:id', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'plugin' } },
-      { path: 'store/themes', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'theme' } },
-      { path: 'store/themes/:id', component: () => import('@/views/cloud/Store.vue'), meta: { storeKind: 'theme' } },
+      { path: 'store/plugins', component: storeView, meta: { storeKind: 'plugin' } },
+      { path: 'store/plugins/:id', component: storeView, meta: { storeKind: 'plugin' } },
+      { path: 'store/themes', component: storeView, meta: { storeKind: 'theme' } },
+      { path: 'store/themes/:id', component: storeView, meta: { storeKind: 'theme' } },
       { path: 'store/:id', redirect: to => '/store/plugins/' + encodeURIComponent(String(to.params.id)) },
       { path: 'publisher/plugins', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin' } },
       { path: 'publisher/themes', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme' } },
