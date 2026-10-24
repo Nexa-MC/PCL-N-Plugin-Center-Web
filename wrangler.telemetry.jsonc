@@ -5,6 +5,7 @@
   "compatibility_date": "2026-09-26",
   "workers_dev": true,
   "preview_urls": false,
+  "routes": [{ "pattern": "botonly.pcln.top", "custom_domain": true }],
   "services": [{ "binding": "API", "service": "nexa-api" }],
   "observability": { "enabled": true, "head_sampling_rate": 0.1 }
 }

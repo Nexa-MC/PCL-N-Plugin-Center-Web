@@ -32,10 +32,10 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: node --test scripts/telemetry-ingress.test.mjs
+      - run: node --test scripts/telemetry-ingress.test.mjs scripts/native-ingress-deployment.test.mjs
       - run: pnpm exec wrangler deploy --config wrangler.telemetry.jsonc --dry-run
-      - name: Deploy the narrow native ingress
+      - name: Deploy and verify the botonly telemetry and signed live webhook ingress
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: pnpm exec wrangler deploy --config wrangler.telemetry.jsonc
+        run: node scripts/deploy-native-ingress.mjs
