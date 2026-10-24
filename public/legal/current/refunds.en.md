@@ -1,11 +1,13 @@
 # Nexa Refund, Trial and Subscription Policy
 
-**Version: 1.0**  
-**Effective: September 26, 2026**
+**Version: 1.1**\
+**Effective: October 24, 2026**
 
 English translation of the original Chinese policy, available from the legal documents page.
 
-This Policy covers directly supplied paid digital products/services, including Cloud+, cloud storage, AI allowances and other clearly identified Nexa products when available. It excludes the unopened paid third-party NexaStore Marketplace, which will require separate trading and developer commercial rules.
+This Policy covers directly supplied paid digital products/services, including Cloud+, cloud storage, AI allowances and other clearly identified Nexa products when available. Sections 1–27 retain the existing directly supplied plan, trial, subscription and refund terms. Section 28 separately covers third-party NexaStore plugins, themes and in-app products; section 29 covers N Token top-ups. This Policy does not automatically put third-party products or N Token top-ups through Paddle: the actual transaction provider is identified by the relevant order or top-up record.
+
+The ordinary rules below do not exclude mandatory, non-waivable rights under applicable law or more favorable non-waivable rights in an applicable transaction provider's terms. This revision does not retrospectively worsen the core commercial conditions of completed orders. Unavailable purchase, top-up or refund-execution features remain subject to their actual availability and pre-purchase disclosures.
 
 ## 1. Seller and payment
 
@@ -128,3 +130,28 @@ Privacy: `privacy@pcln.top`
 Legal: `legal@pcln.top`
 
 Operator: **Xie Jiangmao (谢江懋), an individual operating as Nexa / PCL N**.
+
+
+## 28. Third-party store products and in-app purchases
+
+Third-party NexaStore plugins, themes and in-app products do not offer ordinary discretionary refunds. These rules are separate from the existing trial, cancellation and refund terms for directly supplied Cloud+ and other plans; they do not replace existing plan refund commitments.
+
+Statutory refunds and remedies for quality issues, non-delivery, incorrect charges, fraud or other legally protected circumstances remain available where applicable. Send the relevant order and issue to `support@pcln.top` for manual review under the applicable rules.
+
+Ordinary delisting stops new purchases; existing owners retain the relevant downloads and use. Confirmed malicious plugins may be blocked from downloading, entitlement authorization and launcher loading. Security blocking does not exclude legally protected remedies.
+
+## 29. N Token top-ups and refunds of unused portions
+
+The top-up ratio is **CNY 1 = 10 N Tokens**. Customer balances, product prices and requested token refunds use whole tokens; fractional tokens are not offered.
+
+Only the **unused portion of an original top-up** may be requested for refund. Eligibility is checked against the original top-up lot, consumption allocations, prior refunds and tokens reserved by other requests. Spent tokens are not automatically restored as refundable balance.
+
+Refunds require manual approval and return to the **original payment method and transaction**, not another recipient selected by the applicant. A request reserves the relevant tokens to prevent duplicate refunds or concurrent spending. Application, approval, provider execution and receipt of funds are separate stages; a submitted or approved request does not mean the refund has been paid.
+
+Where applicable law and the actual transaction provider's rules permit, the refund deducts verifiable **payment-provider fees or commission** attributable to the original transaction. This is separate from the marketplace's 20% platform revenue share; that share must not be substituted for actual payment fees. Any applicable right to a full refund under law or provider rules is preserved.
+
+For a wholly unused original top-up, the original amount less verified actual payment fees can be calculated. Allocation of fees to a partial amount or a partly consumed top-up remains unconfirmed. Until the rule and actual fees are verified, fees are not silently prorated, the full original fee is not repeatedly deducted on each request, and an unknown fee is not treated as zero. The related net amount cannot yet be approved.
+
+This revision adds no universal application deadline, review duration or time-to-receipt promise. Mandatory requirements of applicable law or the actual provider still apply. Manual review identifies the verified original transaction, gross amount, applicable deduction and expected refund; unavailable actual refund execution is clearly identified.
+
+Reference: [Paddle Buyer Terms](https://www.paddle.com/legal/checkout-buyer-terms) for transactions actually sold through Paddle. Legal applicability and provider terms must be checked for the actual transaction, region and current rules; this Policy gives no unconditional assurance of legal compliance.
