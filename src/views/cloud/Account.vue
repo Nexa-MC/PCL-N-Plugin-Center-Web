@@ -116,11 +116,7 @@
             <p v-if="portalError" class="form-error" role="alert">{{ $ui(portalError) }}</p>
             <p class="login-fine">{{ $ui('支付方式、取消与发票在 Paddle 客户门户管理。') }}<router-link to="/legal/refunds">{{ $ui('退款政策') }}</router-link></p>
           </template>
-          <div v-else class="wallet-tokens">
-            <div class="section-heading"><h3>{{ $ui('N代币') }}</h3><span class="status-pill">{{ $ui('暂未开放') }}</span></div>
-            <p>{{ $ui('N代币购买暂未开放。') }}</p>
-            <button class="primary-button" type="button" disabled>{{ $ui('购买（暂未开放）') }}</button>
-          </div>
+          <StoreWallet v-else />
         </section>
       </template>
 
@@ -225,6 +221,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { platform, ApiError, isTestSession, SESSION_EVENT, type Session, type Ticket, type LinkedIdentity, type PolicyStatus, type DeletionRequest, type PrivacyRequest, type Entitlements, type MfaFactors, type MinecraftProfile } from '@/api/platform';
 import type { AccountProgression, AccountConnection, ConnectionProvider } from '@/api/platform';
 import AccountProgress from '@/components/AccountProgress.vue';
+import StoreWallet from '@/components/StoreWallet.vue';
 import { pluginCenterApi } from '@/api/pluginCenter';
 import { createPasskey } from '@/utils/webauthnClient';
 import SegmentedCode from '@/components/SegmentedCode.vue';

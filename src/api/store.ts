@@ -6,8 +6,9 @@ export interface StoreContent {
   state: 'draft' | 'pending_review' | 'published' | 'quarantined'; revision: number; version: string | null;
   base_product_id: string; token_price: number; product_revision: number; sha256: string | null;
   owner_count: number; rating_count: number; average_score: number | null; reporter_count: number;
+  regular_token_price?: number; security_status?: 'unflagged' | 'suspected' | 'confirmed_malicious'; security_revision?: number;
 }
-export interface StoreProduct { id: string; kind: 'content' | 'in_app'; sku: string; name: string; token_price: number; active: number; revision: number; owned: number }
+export interface StoreProduct { id: string; kind: 'content' | 'in_app'; sku: string; name: string; token_price: number; regular_token_price?: number; active: number; revision: number; owned: number }
 export interface StoreReview { author_name: string; score: number; body: string; created_at: string; updated_at: string }
 export interface StoreDetail { item: StoreContent; products: StoreProduct[]; owned: boolean; myReview: { score: number; body: string } | null; scan: { verdict: string; code: string; engine_count: number; checked_at: string } | null; paidCheckoutEnabled: false }
 export interface PublisherSummary { totals: { contents: number; published: number | null; pending: number | null; quarantined: number | null }; items: StoreContent[]; activity: { day: string; downloads: number }[]; generatedAt: string; paidCheckoutEnabled: false; preview?: boolean }
