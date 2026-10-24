@@ -1,0 +1,62 @@
+{
+  "lite": {
+    "existing_code_environment": "sandbox",
+    "existing_code_prices_verified_in_sandbox": false,
+    "existing_code_price_ids": {
+      "month": "pri_01m3e0z6ggepqw2wegf3xgt1w6",
+      "year": "pri_01m3e0z6mx9mdsbbqtw0q0tm6y"
+    },
+    "production_product_id": "pro_01m5nh7c55ym98b44frhts15x5",
+    "production_price_ids": {
+      "month": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+      "year": "pri_01m5nha4dx3pxv59wtsg31edm8"
+    },
+    "production_verified_on": "2026-10-23",
+    "production_price_preview_verified": true
+  },
+  "standard": {
+    "existing_code_environment": "sandbox",
+    "existing_code_prices_verified_in_sandbox": false,
+    "existing_code_price_ids": {
+      "month": "pri_01m3e0z6rsgpc0t00w74w3taxx",
+      "year": "pri_01m3e0z6xw2sh7xax1s1hr0vgg"
+    },
+    "production_product_id": "pro_01m5nha7fbd0n69j862eqyvee0",
+    "production_price_ids": {
+      "month": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+      "year": "pri_01m5nha7zdh4abfmabq61v4cnn"
+    },
+    "production_verified_on": "2026-10-23",
+    "production_price_preview_verified": true
+  },
+  "advanced": {
+    "existing_code_environment": "sandbox",
+    "existing_code_prices_verified_in_sandbox": false,
+    "existing_code_price_ids": {
+      "month": "pri_01m3e0z73c36e9kn5kbj4b3z7f",
+      "year": "pri_01m3e0z779tb5tkj92z7yb5v30"
+    },
+    "production_product_id": "pro_01m5nhb3afhntzayvawsem00mg",
+    "production_price_ids": {
+      "month": "pri_01m5nhb3gak4qafrssj64mn7k7",
+      "year": "pri_01m5nhb3sfk4at9kj3rx9s3768"
+    },
+    "production_verified_on": "2026-10-23",
+    "production_price_preview_verified": true
+  },
+  "ultimate": {
+    "existing_code_environment": "sandbox",
+    "existing_code_prices_verified_in_sandbox": false,
+    "existing_code_price_ids": {
+      "month": "pri_01m3e0z7akgat4mwpcvyph3aya",
+      "year": "pri_01m3e0z7e1tpn0c4188b62pcg5"
+    },
+    "production_product_id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+    "production_price_ids": {
+      "month": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+      "year": "pri_01m5nhb76c2are695yct25ffvj"
+    },
+    "production_verified_on": "2026-10-23",
+    "production_price_preview_verified": true
+  }
+}

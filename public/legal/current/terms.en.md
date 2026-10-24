@@ -1,7 +1,7 @@
 # Nexa Cloud Terms of Service
 
-**Version: 1.1**  
-**Effective: October 1, 2026**
+**Version: 1.2**\
+**Effective: October 23, 2026**
 
 English translation of the Chinese version supplied with your acceptance record. The original document remains available from the legal documents page.
 
@@ -17,13 +17,15 @@ These Terms cover services actually available, including accounts, NexaStore, Ne
 
 Nexa and PCL N are not official Microsoft, Xbox, Minecraft or Mojang products. Without express authorization, no endorsement, sponsorship or guarantee by those parties is implied.
 
+When enabled, contact mailboxes can send automatic receipt templates. Receipts acknowledge arrival; they do not mean refunds, deletion, security fixes or acceptance of legal claims have been completed or promised. Our team handles follow-up. The independent noreply@pcln.top mailbox sends codes and account notifications and does not participate in contact-mailbox automatic replies.
+
 ## 2. Acceptance
 
 We provide these Terms before account creation, joining an organization, submitting resources, buying paid services or other actions requiring acceptance. You accept through an explicit checkbox, confirmation or another clearly identified affirmative action.
 
 Visiting public pages or browsing NexaStore without an account does not mean accepting automatic renewal, waiving statutory consumer rights, agreeing to unnecessary data processing or agreeing to unavailable services. The Privacy Policy describes personal information processing. Accepting these Terms does not replace separate consent where required.
 
-Revision 1.1 adds account security, community connections, levels, experience and badges. Existing 1.0 acceptance records are retained. Account functions requiring current Terms require explicit confirmation of 1.1; old acceptance is not migrated into new acceptance. Delivery or acknowledgment of the Privacy Policy is recorded separately and is not blanket consent to all processing, cross-border transfers, marketing or future features.
+Revision 1.2 adds email-code sign-in, direct sign-in with device-verified passkeys and contact-mailbox receipt templates. Existing 1.0 and 1.1 acceptance records are retained. Functions requiring current Terms require explicit confirmation of 1.2; older acceptance is not converted. Privacy notice delivery or acknowledgment remains separate.
 
 ## 3. Eligibility and minors
 
@@ -36,6 +38,8 @@ Personal information of children under 14 in mainland China is subject to applic
 GitHub, Microsoft and Google currently support sign-in and identity linking. We do not obtain their passwords. Stable provider identifiers, email and basic profiles may be connected to one Nexa account, but **accounts are not automatically merged solely because provider accounts share an email address**.
 
 You may link multiple identities and must currently retain at least one third-party sign-in identity. After registration you may set a Nexa user ID and password. Password sign-in also requires a registered passkey, authenticator code or unused recovery code. Without an available verification method, use third-party sign-in to configure security first.
+
+When email sign-in is configured, a registered, active account uniquely associated with its current email may use a one-time email code. Accounts with enrolled MFA must still complete it. Codes expire after five minutes, allow up to five attempts and can be used once. Matching email addresses do not automatically register or merge accounts. A discoverable passkey with successful device user verification may sign in directly without an additional password, email code or TOTP. Private keys and biometrics are not sent to Nexa.
 
 Passkey private keys stay with your device or credential provider. Protect authenticator keys and recovery codes. Unused recovery codes can currently be viewed again on the account page: accounts with a password must verify it; accounts using only third-party sign-in require a valid session. Regeneration invalidates previous unused codes. Each code works once. These settings cannot protect third-party credentials that have already leaked.
 

@@ -1,0 +1,373 @@
+{
+  "environment": "production",
+  "permissions": [
+    "account.read",
+    "account.write",
+    "address.read",
+    "address.write",
+    "adjustment.read",
+    "adjustment.write",
+    "balance_currency.read",
+    "balance_currency.write",
+    "business.read",
+    "business.write",
+    "checkout_domain.read",
+    "checkout_domain.write",
+    "checkout_settings.read",
+    "checkout_settings.write",
+    "client_token.read",
+    "client_token.write",
+    "currency_conversion.read",
+    "currency_conversion.write",
+    "customer.read",
+    "customer.write",
+    "customer_auth_token.write",
+    "customer_portal_session.write",
+    "discount.read",
+    "discount.write",
+    "metrics.read",
+    "notification.read",
+    "notification.write",
+    "notification_setting.read",
+    "notification_setting.write",
+    "notification_simulation.read",
+    "notification_simulation.write",
+    "payment_method.read",
+    "payment_method.write",
+    "price.read",
+    "price.write",
+    "product.read",
+    "product.write",
+    "report.read",
+    "report.write",
+    "statement_descriptor.read",
+    "statement_descriptor.write",
+    "subscription.read",
+    "subscription.write",
+    "tax_settings.read",
+    "tax_settings.write",
+    "transaction.read",
+    "transaction.write"
+  ],
+  "catalog": {
+    "products_pagination": {
+      "hasMore": false,
+      "estimatedTotal": 4
+    },
+    "prices_pagination": {
+      "hasMore": false,
+      "estimatedTotal": 8
+    },
+    "products": [
+      {
+        "id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+        "name": "Cloud+ Ultimate",
+        "status": "active",
+        "tax_category": "saas",
+        "custom_data": {
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "ultimate"
+        }
+      },
+      {
+        "id": "pro_01m5nhb3afhntzayvawsem00mg",
+        "name": "Cloud+ Advanced",
+        "status": "active",
+        "tax_category": "saas",
+        "custom_data": {
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "advanced"
+        }
+      },
+      {
+        "id": "pro_01m5nha7fbd0n69j862eqyvee0",
+        "name": "Cloud+ Standard",
+        "status": "active",
+        "tax_category": "saas",
+        "custom_data": {
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "standard"
+        }
+      },
+      {
+        "id": "pro_01m5nh7c55ym98b44frhts15x5",
+        "name": "Cloud+ Lite",
+        "status": "active",
+        "tax_category": "saas",
+        "custom_data": {
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "lite"
+        }
+      }
+    ],
+    "prices": [
+      {
+        "id": "pri_01m5nhb76c2are695yct25ffvj",
+        "product_id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "year",
+          "frequency": 1
+        },
+        "trial_period": null,
+        "unit_price": {
+          "amount": "17999",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "year",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "ultimate"
+        }
+      },
+      {
+        "id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+        "product_id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "trial_period": null,
+        "unit_price": {
+          "amount": "1799",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "month",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "ultimate"
+        }
+      },
+      {
+        "id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+        "product_id": "pro_01m5nhb3afhntzayvawsem00mg",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "year",
+          "frequency": 1
+        },
+        "trial_period": null,
+        "unit_price": {
+          "amount": "7999",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "year",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "advanced"
+        }
+      },
+      {
+        "id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+        "product_id": "pro_01m5nhb3afhntzayvawsem00mg",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "trial_period": null,
+        "unit_price": {
+          "amount": "799",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "month",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "advanced"
+        }
+      },
+      {
+        "id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+        "product_id": "pro_01m5nha7fbd0n69j862eqyvee0",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "year",
+          "frequency": 1
+        },
+        "trial_period": null,
+        "unit_price": {
+          "amount": "2999",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "year",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "standard"
+        }
+      },
+      {
+        "id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+        "product_id": "pro_01m5nha7fbd0n69j862eqyvee0",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "trial_period": null,
+        "unit_price": {
+          "amount": "299",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "month",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "standard"
+        }
+      },
+      {
+        "id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+        "product_id": "pro_01m5nh7c55ym98b44frhts15x5",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "year",
+          "frequency": 1
+        },
+        "trial_period": {
+          "interval": "day",
+          "frequency": 7,
+          "requires_payment_method": true
+        },
+        "unit_price": {
+          "amount": "990",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "year",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "lite"
+        }
+      },
+      {
+        "id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+        "product_id": "pro_01m5nh7c55ym98b44frhts15x5",
+        "status": "active",
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "trial_period": {
+          "interval": "day",
+          "frequency": 7,
+          "requires_payment_method": true
+        },
+        "unit_price": {
+          "amount": "99",
+          "currency_code": "USD"
+        },
+        "tax_mode": "location",
+        "quantity": {
+          "minimum": 1,
+          "maximum": 1
+        },
+        "override_groups": 36,
+        "override_countries": 228,
+        "custom_data": {
+          "nexa_billing_cycle": "month",
+          "nexa_catalog": "regional-2026-10-23",
+          "nexa_plan": "lite"
+        }
+      }
+    ]
+  },
+  "client_tokens": {
+    "ok": true,
+    "value": []
+  },
+  "checkout_url": {
+    "ok": true,
+    "value": {
+      "default_url": null
+    }
+  },
+  "destinations": {
+    "ok": true,
+    "value": []
+  },
+  "checkout_domains": {
+    "ok": true,
+    "value": []
+  },
+  "onboarding_verification": {
+    "ok": true,
+    "value": [
+      {
+        "id": "slrvrf_01m3dw88z9h0qk6rhgzrqabhdn",
+        "status": "pending",
+        "open_steps": [
+          {
+            "key": "account_setup",
+            "status": "pending"
+          },
+          {
+            "key": "domain_review",
+            "status": "pending"
+          },
+          {
+            "key": "identity_verification",
+            "status": "pending"
+          },
+          {
+            "key": "final_review",
+            "status": "pending"
+          }
+        ]
+      }
+    ]
+  },
+  "tax": {
+    "ok": true,
+    "value": {
+      "default_tax_mode": "location"
+    }
+  }
+}

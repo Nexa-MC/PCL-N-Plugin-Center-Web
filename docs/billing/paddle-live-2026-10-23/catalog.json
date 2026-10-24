@@ -1,0 +1,4494 @@
+{
+  "schema_version": 1,
+  "environment": "production",
+  "status": "created_readback_and_regional_previews_verified",
+  "source_document": "source-prices.md",
+  "prepared_on": "2026-10-23",
+  "product_id_binding": "Production product and price IDs have been filled from API responses. This catalog already exists; reconcile before any future create calls.",
+  "creation_policy": "Re-read live products and prices before each product group. Reuse matching entities. Stop on conflicts. Do not update or archive existing entities.",
+  "required_permissions": [
+    "product.write",
+    "price.write"
+  ],
+  "trial_policy": "Lite: seven-day free trial with a payment method required; Standard, Advanced and Ultimate: no trial. Per-account eligibility is application-side and has not been validated in this task.",
+  "tax_policy": "Requests used account_setting. Paddle persisted location, matching the account default_tax_mode observed before, during and after creation. No global tax settings were changed. Recheck persisted tax_mode when changing account tax settings later.",
+  "validation": {
+    "source_sha256": "c3087cb390f9e4e9be22d23818f9a569a69564a72883e572264143777091499f",
+    "environment": "production",
+    "product_count": 4,
+    "price_count": 8,
+    "override_groups_per_price": 36,
+    "maximum_override_groups_per_price": 250,
+    "override_country_count": 228,
+    "base_country": "US",
+    "supported_sales_country_count": 229,
+    "currency_count": 32,
+    "amount_checks": 296,
+    "all_amounts_have_valid_precision": true,
+    "all_amounts_meet_minimum_payment": true,
+    "no_duplicate_country_codes": true,
+    "all_current_supported_sales_countries_covered": true,
+    "frontend_backend_existing_price_ids_match": true,
+    "purchasing_power_or_exchange_rates_verified": false,
+    "live_api_creation_verified": true,
+    "live_price_previews_verified": true,
+    "live_catalog_readback_verified": true,
+    "live_price_preview_country_count": 37,
+    "live_price_preview_override_group_count": 36,
+    "live_price_preview_amount_comparisons": 296,
+    "live_checkout_payment_verified": false,
+    "live_webhook_fulfillment_verified": false,
+    "tax_mode_requested": "account_setting",
+    "tax_mode_persisted": "location",
+    "effective_tax_mode_matches_current_account_setting": true
+  },
+  "products": [
+    {
+      "key": "lite",
+      "id": "pro_01m5nh7c55ym98b44frhts15x5",
+      "create_body": {
+        "name": "Cloud+ Lite",
+        "tax_category": "saas",
+        "type": "standard",
+        "custom_data": {
+          "nexa_plan": "lite",
+          "nexa_catalog": "regional-2026-10-23"
+        }
+      },
+      "prices": [
+        {
+          "key": "lite_month",
+          "id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "create_body": {
+            "product_id": "pro_01m5nh7c55ym98b44frhts15x5",
+            "name": "Monthly",
+            "description": "Cloud+ Lite monthly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "month",
+              "frequency": 1
+            },
+            "trial_period": {
+              "interval": "day",
+              "frequency": 7,
+              "requires_payment_method": true
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "99",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "99",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "79",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "69",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "79",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "129",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "149",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "149",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "99",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "100",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "990",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "590",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "790",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "129",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "2900",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "900",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "700",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "900",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "299",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "1900",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "29900",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "299",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "6900",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "2900",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "25000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "2999",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "499",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "1490",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "99000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "990",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "299000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "299",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "1490",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "2900",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "79",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "79",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "99",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "lite",
+              "nexa_billing_cycle": "month",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        },
+        {
+          "key": "lite_year",
+          "id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "create_body": {
+            "product_id": "pro_01m5nh7c55ym98b44frhts15x5",
+            "name": "Yearly",
+            "description": "Cloud+ Lite yearly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "year",
+              "frequency": 1
+            },
+            "trial_period": {
+              "interval": "day",
+              "frequency": 7,
+              "requires_payment_method": true
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "990",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "990",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "790",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "690",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "790",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "1290",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "1490",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "1490",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "990",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "1000",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "9900",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "5900",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "7900",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "1290",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "29000",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "9000",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "7000",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "9000",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "2999",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "19000",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "299000",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "2999",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "69000",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "29000",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "250000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "29990",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "4990",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "14900",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "990000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "9900",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "2990000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "2990",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "14900",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "29000",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "790",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "790",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "990",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "lite",
+              "nexa_billing_cycle": "year",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        }
+      ]
+    },
+    {
+      "key": "standard",
+      "id": "pro_01m5nha7fbd0n69j862eqyvee0",
+      "create_body": {
+        "name": "Cloud+ Standard",
+        "tax_category": "saas",
+        "type": "standard",
+        "custom_data": {
+          "nexa_plan": "standard",
+          "nexa_catalog": "regional-2026-10-23"
+        }
+      },
+      "prices": [
+        {
+          "key": "standard_month",
+          "id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "create_body": {
+            "product_id": "pro_01m5nha7fbd0n69j862eqyvee0",
+            "name": "Monthly",
+            "description": "Cloud+ Standard monthly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "month",
+              "frequency": 1
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "299",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "299",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "199",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "199",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "249",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "399",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "449",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "499",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "299",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "390",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "2990",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "1290",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "2290",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "399",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "6900",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "2900",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "1900",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "2900",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "899",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "5900",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "69900",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "999",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "14900",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "5900",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "39000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "5999",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "899",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "2900",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "149000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "1490",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "590000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "599",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "2900",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "5900",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "249",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "149",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "299",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "standard",
+              "nexa_billing_cycle": "month",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        },
+        {
+          "key": "standard_year",
+          "id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "create_body": {
+            "product_id": "pro_01m5nha7fbd0n69j862eqyvee0",
+            "name": "Yearly",
+            "description": "Cloud+ Standard yearly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "year",
+              "frequency": 1
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "2999",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "2999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "1999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "1999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "2499",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "3999",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "4499",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "4999",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "2999",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "3900",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "29900",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "12900",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "22900",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "3999",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "69000",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "29000",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "19000",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "29000",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "8999",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "59000",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "699000",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "9999",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "149000",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "59000",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "390000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "59999",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "8999",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "29000",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "1490000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "14900",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "5900000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "5999",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "29000",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "59000",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "2499",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "1499",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "2999",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "standard",
+              "nexa_billing_cycle": "year",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        }
+      ]
+    },
+    {
+      "key": "advanced",
+      "id": "pro_01m5nhb3afhntzayvawsem00mg",
+      "create_body": {
+        "name": "Cloud+ Advanced",
+        "tax_category": "saas",
+        "type": "standard",
+        "custom_data": {
+          "nexa_plan": "advanced",
+          "nexa_catalog": "regional-2026-10-23"
+        }
+      },
+      "prices": [
+        {
+          "key": "advanced_month",
+          "id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "create_body": {
+            "product_id": "pro_01m5nhb3afhntzayvawsem00mg",
+            "name": "Monthly",
+            "description": "Cloud+ Advanced monthly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "month",
+              "frequency": 1
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "799",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "799",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "599",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "499",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "649",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "999",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "1199",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "1299",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "799",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "990",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "7990",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "3290",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "5990",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "999",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "16900",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "7900",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "5900",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "7900",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "2499",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "14900",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "199000",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "2499",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "39900",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "14900",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "99000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "14999",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "2499",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "7900",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "399000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "3990",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "1590000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "1599",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "7900",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "14900",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "649",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "399",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "799",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "advanced",
+              "nexa_billing_cycle": "month",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        },
+        {
+          "key": "advanced_year",
+          "id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "create_body": {
+            "product_id": "pro_01m5nhb3afhntzayvawsem00mg",
+            "name": "Yearly",
+            "description": "Cloud+ Advanced yearly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "year",
+              "frequency": 1
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "7999",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "7999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "5999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "4999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "6499",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "9999",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "11999",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "12999",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "7999",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "9900",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "79900",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "32900",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "59900",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "9999",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "169000",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "79000",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "59000",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "79000",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "24999",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "149000",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "1990000",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "24999",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "399000",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "149000",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "990000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "149999",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "24999",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "79000",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "3990000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "39900",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "15900000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "15999",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "79000",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "149000",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "6499",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "3999",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "7999",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "advanced",
+              "nexa_billing_cycle": "year",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        }
+      ]
+    },
+    {
+      "key": "ultimate",
+      "id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+      "create_body": {
+        "name": "Cloud+ Ultimate",
+        "tax_category": "saas",
+        "type": "standard",
+        "custom_data": {
+          "nexa_plan": "ultimate",
+          "nexa_catalog": "regional-2026-10-23"
+        }
+      },
+      "prices": [
+        {
+          "key": "ultimate_month",
+          "id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "create_body": {
+            "product_id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+            "name": "Monthly",
+            "description": "Cloud+ Ultimate monthly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "month",
+              "frequency": 1
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "1799",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "1799",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "1299",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "1499",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "2499",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "2799",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "2999",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "1799",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "2490",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "19900",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "7990",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "13990",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "2299",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "39900",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "17900",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "12900",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "17900",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "5999",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "34900",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "449000",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "5999",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "89900",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "34900",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "229000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "34999",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "5999",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "17900",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "899000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "8990",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "3590000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "3599",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "17900",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "34900",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "1499",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "899",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "1799",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "ultimate",
+              "nexa_billing_cycle": "month",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        },
+        {
+          "key": "ultimate_year",
+          "id": "pri_01m5nhb76c2are695yct25ffvj",
+          "create_body": {
+            "product_id": "pro_01m5nhb6qhc8gnf713y2em4dcc",
+            "name": "Yearly",
+            "description": "Cloud+ Ultimate yearly with regional pricing (2026-10-23)",
+            "billing_cycle": {
+              "interval": "year",
+              "frequency": 1
+            },
+            "tax_mode": "account_setting",
+            "unit_price": {
+              "amount": "17999",
+              "currency_code": "USD"
+            },
+            "unit_price_overrides": [
+              {
+                "country_codes": [
+                  "AD",
+                  "AT",
+                  "AX",
+                  "BE",
+                  "BL",
+                  "CY",
+                  "DE",
+                  "ES",
+                  "FI",
+                  "FR",
+                  "GF",
+                  "GP",
+                  "IE",
+                  "IT",
+                  "LU",
+                  "MC",
+                  "MF",
+                  "MQ",
+                  "MT",
+                  "NL",
+                  "PM",
+                  "RE",
+                  "SM",
+                  "TF",
+                  "VA",
+                  "YT"
+                ],
+                "unit_price": {
+                  "amount": "17999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GR",
+                  "PT"
+                ],
+                "unit_price": {
+                  "amount": "12999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "BG",
+                  "EE",
+                  "HR",
+                  "LT",
+                  "LV",
+                  "ME",
+                  "SI",
+                  "SK",
+                  "XK"
+                ],
+                "unit_price": {
+                  "amount": "9999",
+                  "currency_code": "EUR"
+                }
+              },
+              {
+                "country_codes": [
+                  "GB",
+                  "GG",
+                  "GI",
+                  "IM",
+                  "JE"
+                ],
+                "unit_price": {
+                  "amount": "14999",
+                  "currency_code": "GBP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CA"
+                ],
+                "unit_price": {
+                  "amount": "24999",
+                  "currency_code": "CAD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AU",
+                  "CC",
+                  "CX",
+                  "HM",
+                  "NF"
+                ],
+                "unit_price": {
+                  "amount": "27999",
+                  "currency_code": "AUD"
+                }
+              },
+              {
+                "country_codes": [
+                  "NZ",
+                  "CK",
+                  "NU",
+                  "PN",
+                  "TK"
+                ],
+                "unit_price": {
+                  "amount": "29999",
+                  "currency_code": "NZD"
+                }
+              },
+              {
+                "country_codes": [
+                  "CH",
+                  "LI"
+                ],
+                "unit_price": {
+                  "amount": "17999",
+                  "currency_code": "CHF"
+                }
+              },
+              {
+                "country_codes": [
+                  "JP"
+                ],
+                "unit_price": {
+                  "amount": "24900",
+                  "currency_code": "JPY"
+                }
+              },
+              {
+                "country_codes": [
+                  "KR"
+                ],
+                "unit_price": {
+                  "amount": "199000",
+                  "currency_code": "KRW"
+                }
+              },
+              {
+                "country_codes": [
+                  "CN"
+                ],
+                "unit_price": {
+                  "amount": "79900",
+                  "currency_code": "CNY"
+                }
+              },
+              {
+                "country_codes": [
+                  "HK"
+                ],
+                "unit_price": {
+                  "amount": "139900",
+                  "currency_code": "HKD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SG"
+                ],
+                "unit_price": {
+                  "amount": "22999",
+                  "currency_code": "SGD"
+                }
+              },
+              {
+                "country_codes": [
+                  "TW"
+                ],
+                "unit_price": {
+                  "amount": "399000",
+                  "currency_code": "TWD"
+                }
+              },
+              {
+                "country_codes": [
+                  "SE"
+                ],
+                "unit_price": {
+                  "amount": "179000",
+                  "currency_code": "SEK"
+                }
+              },
+              {
+                "country_codes": [
+                  "DK",
+                  "FO",
+                  "GL"
+                ],
+                "unit_price": {
+                  "amount": "129000",
+                  "currency_code": "DKK"
+                }
+              },
+              {
+                "country_codes": [
+                  "NO",
+                  "BV",
+                  "SJ"
+                ],
+                "unit_price": {
+                  "amount": "179000",
+                  "currency_code": "NOK"
+                }
+              },
+              {
+                "country_codes": [
+                  "PL"
+                ],
+                "unit_price": {
+                  "amount": "59999",
+                  "currency_code": "PLN"
+                }
+              },
+              {
+                "country_codes": [
+                  "CZ"
+                ],
+                "unit_price": {
+                  "amount": "349000",
+                  "currency_code": "CZK"
+                }
+              },
+              {
+                "country_codes": [
+                  "HU"
+                ],
+                "unit_price": {
+                  "amount": "4490000",
+                  "currency_code": "HUF"
+                }
+              },
+              {
+                "country_codes": [
+                  "IL"
+                ],
+                "unit_price": {
+                  "amount": "59999",
+                  "currency_code": "ILS"
+                }
+              },
+              {
+                "country_codes": [
+                  "IN"
+                ],
+                "unit_price": {
+                  "amount": "899000",
+                  "currency_code": "INR"
+                }
+              },
+              {
+                "country_codes": [
+                  "TH"
+                ],
+                "unit_price": {
+                  "amount": "349000",
+                  "currency_code": "THB"
+                }
+              },
+              {
+                "country_codes": [
+                  "VN"
+                ],
+                "unit_price": {
+                  "amount": "2290000",
+                  "currency_code": "VND"
+                }
+              },
+              {
+                "country_codes": [
+                  "TR"
+                ],
+                "unit_price": {
+                  "amount": "349999",
+                  "currency_code": "TRY"
+                }
+              },
+              {
+                "country_codes": [
+                  "BR"
+                ],
+                "unit_price": {
+                  "amount": "59999",
+                  "currency_code": "BRL"
+                }
+              },
+              {
+                "country_codes": [
+                  "MX"
+                ],
+                "unit_price": {
+                  "amount": "179000",
+                  "currency_code": "MXN"
+                }
+              },
+              {
+                "country_codes": [
+                  "AR"
+                ],
+                "unit_price": {
+                  "amount": "8990000",
+                  "currency_code": "ARS"
+                }
+              },
+              {
+                "country_codes": [
+                  "CL"
+                ],
+                "unit_price": {
+                  "amount": "89900",
+                  "currency_code": "CLP"
+                }
+              },
+              {
+                "country_codes": [
+                  "CO"
+                ],
+                "unit_price": {
+                  "amount": "35900000",
+                  "currency_code": "COP"
+                }
+              },
+              {
+                "country_codes": [
+                  "PE"
+                ],
+                "unit_price": {
+                  "amount": "35999",
+                  "currency_code": "PEN"
+                }
+              },
+              {
+                "country_codes": [
+                  "ZA"
+                ],
+                "unit_price": {
+                  "amount": "179000",
+                  "currency_code": "ZAR"
+                }
+              },
+              {
+                "country_codes": [
+                  "UA"
+                ],
+                "unit_price": {
+                  "amount": "349000",
+                  "currency_code": "UAH"
+                }
+              },
+              {
+                "country_codes": [
+                  "AL",
+                  "AM",
+                  "AZ",
+                  "BA",
+                  "BO",
+                  "BW",
+                  "BZ",
+                  "CR",
+                  "CV",
+                  "DO",
+                  "DZ",
+                  "EC",
+                  "FJ",
+                  "GA",
+                  "GE",
+                  "GQ",
+                  "GT",
+                  "GY",
+                  "IQ",
+                  "JM",
+                  "JO",
+                  "KZ",
+                  "LB",
+                  "LC",
+                  "MK",
+                  "MN",
+                  "MU",
+                  "MV",
+                  "MY",
+                  "NA",
+                  "PA",
+                  "RO",
+                  "RS",
+                  "SC",
+                  "SR",
+                  "TT",
+                  "UY"
+                ],
+                "unit_price": {
+                  "amount": "14999",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AO",
+                  "BD",
+                  "BF",
+                  "BI",
+                  "BJ",
+                  "BT",
+                  "CG",
+                  "CI",
+                  "CM",
+                  "DJ",
+                  "EG",
+                  "EH",
+                  "ER",
+                  "ET",
+                  "GH",
+                  "GM",
+                  "GN",
+                  "GW",
+                  "HN",
+                  "ID",
+                  "KE",
+                  "KG",
+                  "KH",
+                  "KM",
+                  "LA",
+                  "LK",
+                  "LR",
+                  "LS",
+                  "MA",
+                  "MD",
+                  "MG",
+                  "MR",
+                  "MW",
+                  "MZ",
+                  "NE",
+                  "NG",
+                  "NP",
+                  "PG",
+                  "PH",
+                  "PK",
+                  "PS",
+                  "PY",
+                  "RW",
+                  "SB",
+                  "SL",
+                  "SN",
+                  "ST",
+                  "SV",
+                  "SZ",
+                  "TD",
+                  "TG",
+                  "TJ",
+                  "TL",
+                  "TM",
+                  "TN",
+                  "TZ",
+                  "UG",
+                  "UZ",
+                  "ZM"
+                ],
+                "unit_price": {
+                  "amount": "8999",
+                  "currency_code": "USD"
+                }
+              },
+              {
+                "country_codes": [
+                  "AE",
+                  "AG",
+                  "AI",
+                  "AS",
+                  "AW",
+                  "BB",
+                  "BH",
+                  "BM",
+                  "BN",
+                  "BQ",
+                  "BS",
+                  "CW",
+                  "DM",
+                  "FK",
+                  "FM",
+                  "GD",
+                  "GS",
+                  "GU",
+                  "IO",
+                  "IS",
+                  "KI",
+                  "KN",
+                  "KW",
+                  "KY",
+                  "MH",
+                  "MO",
+                  "MP",
+                  "MS",
+                  "NC",
+                  "NR",
+                  "OM",
+                  "PF",
+                  "PR",
+                  "PW",
+                  "QA",
+                  "SA",
+                  "SH",
+                  "SX",
+                  "TC",
+                  "TO",
+                  "TV",
+                  "UM",
+                  "VC",
+                  "VG",
+                  "VI",
+                  "VU",
+                  "WF",
+                  "WS"
+                ],
+                "unit_price": {
+                  "amount": "17999",
+                  "currency_code": "USD"
+                }
+              }
+            ],
+            "quantity": {
+              "minimum": 1,
+              "maximum": 1
+            },
+            "custom_data": {
+              "nexa_plan": "ultimate",
+              "nexa_billing_cycle": "year",
+              "nexa_catalog": "regional-2026-10-23"
+            }
+          },
+          "observed_tax_mode": "location",
+          "readback_effective_matches_manifest": true
+        }
+      ]
+    }
+  ],
+  "created_on": "2026-10-23"
+}

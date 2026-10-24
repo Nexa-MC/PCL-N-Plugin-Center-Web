@@ -1,0 +1,4342 @@
+{
+  "summary": {
+    "environment": "production",
+    "sample_countries": 37,
+    "override_groups_checked": 36,
+    "base_country_checked": true,
+    "amount_comparisons": 296,
+    "all_passed": true
+  },
+  "previews": [
+    {
+      "country_code": "US",
+      "group_index": null,
+      "currency_code": "USD",
+      "tax_mode": "external",
+      "address": {
+        "country_code": "US",
+        "postal_code": "10001"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "99",
+          "observed_amount": "99",
+          "unit_totals": {
+            "subtotal": "99",
+            "discount": "0",
+            "tax": "9",
+            "total": "108"
+          },
+          "formatted_total": "$1.08"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "990",
+          "observed_amount": "990",
+          "unit_totals": {
+            "subtotal": "990",
+            "discount": "0",
+            "tax": "88",
+            "total": "1078"
+          },
+          "formatted_total": "$10.78"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "299",
+          "observed_amount": "299",
+          "unit_totals": {
+            "subtotal": "299",
+            "discount": "0",
+            "tax": "27",
+            "total": "326"
+          },
+          "formatted_total": "$3.26"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2999",
+            "discount": "0",
+            "tax": "266",
+            "total": "3265"
+          },
+          "formatted_total": "$32.65"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "799",
+          "observed_amount": "799",
+          "unit_totals": {
+            "subtotal": "799",
+            "discount": "0",
+            "tax": "71",
+            "total": "870"
+          },
+          "formatted_total": "$8.70"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "7999",
+          "observed_amount": "7999",
+          "unit_totals": {
+            "subtotal": "7999",
+            "discount": "0",
+            "tax": "710",
+            "total": "8709"
+          },
+          "formatted_total": "$87.09"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "1799",
+          "observed_amount": "1799",
+          "unit_totals": {
+            "subtotal": "1799",
+            "discount": "0",
+            "tax": "160",
+            "total": "1959"
+          },
+          "formatted_total": "$19.59"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "17999",
+          "observed_amount": "17999",
+          "unit_totals": {
+            "subtotal": "17999",
+            "discount": "0",
+            "tax": "1597",
+            "total": "19596"
+          },
+          "formatted_total": "$195.96"
+        }
+      ]
+    },
+    {
+      "country_code": "AD",
+      "group_index": 0,
+      "currency_code": "EUR",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "AD"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "99",
+          "observed_amount": "99",
+          "unit_totals": {
+            "subtotal": "99",
+            "discount": "0",
+            "tax": "0",
+            "total": "99"
+          },
+          "formatted_total": "€0.99"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "990",
+          "observed_amount": "990",
+          "unit_totals": {
+            "subtotal": "990",
+            "discount": "0",
+            "tax": "0",
+            "total": "990"
+          },
+          "formatted_total": "€9.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "299",
+          "observed_amount": "299",
+          "unit_totals": {
+            "subtotal": "299",
+            "discount": "0",
+            "tax": "0",
+            "total": "299"
+          },
+          "formatted_total": "€2.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2999",
+            "discount": "0",
+            "tax": "0",
+            "total": "2999"
+          },
+          "formatted_total": "€29.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "799",
+          "observed_amount": "799",
+          "unit_totals": {
+            "subtotal": "799",
+            "discount": "0",
+            "tax": "0",
+            "total": "799"
+          },
+          "formatted_total": "€7.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "7999",
+          "observed_amount": "7999",
+          "unit_totals": {
+            "subtotal": "7999",
+            "discount": "0",
+            "tax": "0",
+            "total": "7999"
+          },
+          "formatted_total": "€79.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "1799",
+          "observed_amount": "1799",
+          "unit_totals": {
+            "subtotal": "1799",
+            "discount": "0",
+            "tax": "0",
+            "total": "1799"
+          },
+          "formatted_total": "€17.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "17999",
+          "observed_amount": "17999",
+          "unit_totals": {
+            "subtotal": "17999",
+            "discount": "0",
+            "tax": "0",
+            "total": "17999"
+          },
+          "formatted_total": "€179.99"
+        }
+      ]
+    },
+    {
+      "country_code": "GR",
+      "group_index": 1,
+      "currency_code": "EUR",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "GR"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "79",
+          "observed_amount": "79",
+          "unit_totals": {
+            "subtotal": "64",
+            "discount": "0",
+            "tax": "15",
+            "total": "79"
+          },
+          "formatted_total": "€0.79"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "790",
+          "observed_amount": "790",
+          "unit_totals": {
+            "subtotal": "637",
+            "discount": "0",
+            "tax": "153",
+            "total": "790"
+          },
+          "formatted_total": "€7.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "199",
+          "observed_amount": "199",
+          "unit_totals": {
+            "subtotal": "160",
+            "discount": "0",
+            "tax": "39",
+            "total": "199"
+          },
+          "formatted_total": "€1.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "1999",
+          "observed_amount": "1999",
+          "unit_totals": {
+            "subtotal": "1612",
+            "discount": "0",
+            "tax": "387",
+            "total": "1999"
+          },
+          "formatted_total": "€19.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "599",
+          "observed_amount": "599",
+          "unit_totals": {
+            "subtotal": "483",
+            "discount": "0",
+            "tax": "116",
+            "total": "599"
+          },
+          "formatted_total": "€5.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "5999",
+          "observed_amount": "5999",
+          "unit_totals": {
+            "subtotal": "4838",
+            "discount": "0",
+            "tax": "1161",
+            "total": "5999"
+          },
+          "formatted_total": "€59.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "1299",
+          "observed_amount": "1299",
+          "unit_totals": {
+            "subtotal": "1048",
+            "discount": "0",
+            "tax": "251",
+            "total": "1299"
+          },
+          "formatted_total": "€12.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "12999",
+          "observed_amount": "12999",
+          "unit_totals": {
+            "subtotal": "10483",
+            "discount": "0",
+            "tax": "2516",
+            "total": "12999"
+          },
+          "formatted_total": "€129.99"
+        }
+      ]
+    },
+    {
+      "country_code": "BG",
+      "group_index": 2,
+      "currency_code": "EUR",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "BG"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "69",
+          "observed_amount": "69",
+          "unit_totals": {
+            "subtotal": "58",
+            "discount": "0",
+            "tax": "11",
+            "total": "69"
+          },
+          "formatted_total": "€0.69"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "690",
+          "observed_amount": "690",
+          "unit_totals": {
+            "subtotal": "575",
+            "discount": "0",
+            "tax": "115",
+            "total": "690"
+          },
+          "formatted_total": "€6.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "199",
+          "observed_amount": "199",
+          "unit_totals": {
+            "subtotal": "166",
+            "discount": "0",
+            "tax": "33",
+            "total": "199"
+          },
+          "formatted_total": "€1.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "1999",
+          "observed_amount": "1999",
+          "unit_totals": {
+            "subtotal": "1666",
+            "discount": "0",
+            "tax": "333",
+            "total": "1999"
+          },
+          "formatted_total": "€19.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "499",
+          "observed_amount": "499",
+          "unit_totals": {
+            "subtotal": "416",
+            "discount": "0",
+            "tax": "83",
+            "total": "499"
+          },
+          "formatted_total": "€4.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "4999",
+          "observed_amount": "4999",
+          "unit_totals": {
+            "subtotal": "4166",
+            "discount": "0",
+            "tax": "833",
+            "total": "4999"
+          },
+          "formatted_total": "€49.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "999",
+          "observed_amount": "999",
+          "unit_totals": {
+            "subtotal": "833",
+            "discount": "0",
+            "tax": "166",
+            "total": "999"
+          },
+          "formatted_total": "€9.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "9999",
+          "observed_amount": "9999",
+          "unit_totals": {
+            "subtotal": "8333",
+            "discount": "0",
+            "tax": "1666",
+            "total": "9999"
+          },
+          "formatted_total": "€99.99"
+        }
+      ]
+    },
+    {
+      "country_code": "GB",
+      "group_index": 3,
+      "currency_code": "GBP",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "GB"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "79",
+          "observed_amount": "79",
+          "unit_totals": {
+            "subtotal": "66",
+            "discount": "0",
+            "tax": "13",
+            "total": "79"
+          },
+          "formatted_total": "£0.79"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "790",
+          "observed_amount": "790",
+          "unit_totals": {
+            "subtotal": "658",
+            "discount": "0",
+            "tax": "132",
+            "total": "790"
+          },
+          "formatted_total": "£7.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "249",
+          "observed_amount": "249",
+          "unit_totals": {
+            "subtotal": "208",
+            "discount": "0",
+            "tax": "41",
+            "total": "249"
+          },
+          "formatted_total": "£2.49"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "2499",
+          "observed_amount": "2499",
+          "unit_totals": {
+            "subtotal": "2083",
+            "discount": "0",
+            "tax": "416",
+            "total": "2499"
+          },
+          "formatted_total": "£24.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "649",
+          "observed_amount": "649",
+          "unit_totals": {
+            "subtotal": "541",
+            "discount": "0",
+            "tax": "108",
+            "total": "649"
+          },
+          "formatted_total": "£6.49"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "6499",
+          "observed_amount": "6499",
+          "unit_totals": {
+            "subtotal": "5416",
+            "discount": "0",
+            "tax": "1083",
+            "total": "6499"
+          },
+          "formatted_total": "£64.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "1499",
+          "observed_amount": "1499",
+          "unit_totals": {
+            "subtotal": "1249",
+            "discount": "0",
+            "tax": "250",
+            "total": "1499"
+          },
+          "formatted_total": "£14.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "14999",
+          "observed_amount": "14999",
+          "unit_totals": {
+            "subtotal": "12499",
+            "discount": "0",
+            "tax": "2500",
+            "total": "14999"
+          },
+          "formatted_total": "£149.99"
+        }
+      ]
+    },
+    {
+      "country_code": "CA",
+      "group_index": 4,
+      "currency_code": "CAD",
+      "tax_mode": "external",
+      "address": {
+        "country_code": "CA"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "129",
+          "observed_amount": "129",
+          "unit_totals": {
+            "subtotal": "129",
+            "discount": "0",
+            "tax": "6",
+            "total": "135"
+          },
+          "formatted_total": "$1.35"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "1290",
+          "observed_amount": "1290",
+          "unit_totals": {
+            "subtotal": "1290",
+            "discount": "0",
+            "tax": "64",
+            "total": "1354"
+          },
+          "formatted_total": "$13.54"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "399",
+          "observed_amount": "399",
+          "unit_totals": {
+            "subtotal": "399",
+            "discount": "0",
+            "tax": "20",
+            "total": "419"
+          },
+          "formatted_total": "$4.19"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "3999",
+          "observed_amount": "3999",
+          "unit_totals": {
+            "subtotal": "3999",
+            "discount": "0",
+            "tax": "200",
+            "total": "4199"
+          },
+          "formatted_total": "$41.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "999",
+          "observed_amount": "999",
+          "unit_totals": {
+            "subtotal": "999",
+            "discount": "0",
+            "tax": "50",
+            "total": "1049"
+          },
+          "formatted_total": "$10.49"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "9999",
+          "observed_amount": "9999",
+          "unit_totals": {
+            "subtotal": "9999",
+            "discount": "0",
+            "tax": "500",
+            "total": "10499"
+          },
+          "formatted_total": "$104.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "2499",
+          "observed_amount": "2499",
+          "unit_totals": {
+            "subtotal": "2499",
+            "discount": "0",
+            "tax": "125",
+            "total": "2624"
+          },
+          "formatted_total": "$26.24"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "24999",
+          "observed_amount": "24999",
+          "unit_totals": {
+            "subtotal": "24999",
+            "discount": "0",
+            "tax": "1250",
+            "total": "26249"
+          },
+          "formatted_total": "$262.49"
+        }
+      ]
+    },
+    {
+      "country_code": "AU",
+      "group_index": 5,
+      "currency_code": "AUD",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "AU"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "149",
+          "observed_amount": "149",
+          "unit_totals": {
+            "subtotal": "135",
+            "discount": "0",
+            "tax": "14",
+            "total": "149"
+          },
+          "formatted_total": "A$1.49"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "1490",
+          "observed_amount": "1490",
+          "unit_totals": {
+            "subtotal": "1355",
+            "discount": "0",
+            "tax": "135",
+            "total": "1490"
+          },
+          "formatted_total": "A$14.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "449",
+          "observed_amount": "449",
+          "unit_totals": {
+            "subtotal": "408",
+            "discount": "0",
+            "tax": "41",
+            "total": "449"
+          },
+          "formatted_total": "A$4.49"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "4499",
+          "observed_amount": "4499",
+          "unit_totals": {
+            "subtotal": "4090",
+            "discount": "0",
+            "tax": "409",
+            "total": "4499"
+          },
+          "formatted_total": "A$44.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "1199",
+          "observed_amount": "1199",
+          "unit_totals": {
+            "subtotal": "1090",
+            "discount": "0",
+            "tax": "109",
+            "total": "1199"
+          },
+          "formatted_total": "A$11.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "11999",
+          "observed_amount": "11999",
+          "unit_totals": {
+            "subtotal": "10908",
+            "discount": "0",
+            "tax": "1091",
+            "total": "11999"
+          },
+          "formatted_total": "A$119.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "2799",
+          "observed_amount": "2799",
+          "unit_totals": {
+            "subtotal": "2545",
+            "discount": "0",
+            "tax": "254",
+            "total": "2799"
+          },
+          "formatted_total": "A$27.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "27999",
+          "observed_amount": "27999",
+          "unit_totals": {
+            "subtotal": "25454",
+            "discount": "0",
+            "tax": "2545",
+            "total": "27999"
+          },
+          "formatted_total": "A$279.99"
+        }
+      ]
+    },
+    {
+      "country_code": "NZ",
+      "group_index": 6,
+      "currency_code": "NZD",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "NZ"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "149",
+          "observed_amount": "149",
+          "unit_totals": {
+            "subtotal": "130",
+            "discount": "0",
+            "tax": "19",
+            "total": "149"
+          },
+          "formatted_total": "$1.49"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "1490",
+          "observed_amount": "1490",
+          "unit_totals": {
+            "subtotal": "1296",
+            "discount": "0",
+            "tax": "194",
+            "total": "1490"
+          },
+          "formatted_total": "$14.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "499",
+          "observed_amount": "499",
+          "unit_totals": {
+            "subtotal": "434",
+            "discount": "0",
+            "tax": "65",
+            "total": "499"
+          },
+          "formatted_total": "$4.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "4999",
+          "observed_amount": "4999",
+          "unit_totals": {
+            "subtotal": "4347",
+            "discount": "0",
+            "tax": "652",
+            "total": "4999"
+          },
+          "formatted_total": "$49.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "1299",
+          "observed_amount": "1299",
+          "unit_totals": {
+            "subtotal": "1130",
+            "discount": "0",
+            "tax": "169",
+            "total": "1299"
+          },
+          "formatted_total": "$12.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "12999",
+          "observed_amount": "12999",
+          "unit_totals": {
+            "subtotal": "11303",
+            "discount": "0",
+            "tax": "1696",
+            "total": "12999"
+          },
+          "formatted_total": "$129.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2608",
+            "discount": "0",
+            "tax": "391",
+            "total": "2999"
+          },
+          "formatted_total": "$29.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "29999",
+          "observed_amount": "29999",
+          "unit_totals": {
+            "subtotal": "26086",
+            "discount": "0",
+            "tax": "3913",
+            "total": "29999"
+          },
+          "formatted_total": "$299.99"
+        }
+      ]
+    },
+    {
+      "country_code": "CH",
+      "group_index": 7,
+      "currency_code": "CHF",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "CH"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "99",
+          "observed_amount": "99",
+          "unit_totals": {
+            "subtotal": "92",
+            "discount": "0",
+            "tax": "7",
+            "total": "99"
+          },
+          "formatted_total": "0.99 CHF"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "990",
+          "observed_amount": "990",
+          "unit_totals": {
+            "subtotal": "916",
+            "discount": "0",
+            "tax": "74",
+            "total": "990"
+          },
+          "formatted_total": "9.90 CHF"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "299",
+          "observed_amount": "299",
+          "unit_totals": {
+            "subtotal": "277",
+            "discount": "0",
+            "tax": "22",
+            "total": "299"
+          },
+          "formatted_total": "2.99 CHF"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2774",
+            "discount": "0",
+            "tax": "225",
+            "total": "2999"
+          },
+          "formatted_total": "29.99 CHF"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "799",
+          "observed_amount": "799",
+          "unit_totals": {
+            "subtotal": "739",
+            "discount": "0",
+            "tax": "60",
+            "total": "799"
+          },
+          "formatted_total": "7.99 CHF"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "7999",
+          "observed_amount": "7999",
+          "unit_totals": {
+            "subtotal": "7400",
+            "discount": "0",
+            "tax": "599",
+            "total": "7999"
+          },
+          "formatted_total": "79.99 CHF"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "1799",
+          "observed_amount": "1799",
+          "unit_totals": {
+            "subtotal": "1664",
+            "discount": "0",
+            "tax": "135",
+            "total": "1799"
+          },
+          "formatted_total": "17.99 CHF"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "17999",
+          "observed_amount": "17999",
+          "unit_totals": {
+            "subtotal": "16650",
+            "discount": "0",
+            "tax": "1349",
+            "total": "17999"
+          },
+          "formatted_total": "179.99 CHF"
+        }
+      ]
+    },
+    {
+      "country_code": "JP",
+      "group_index": 8,
+      "currency_code": "JPY",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "JP"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "100",
+          "observed_amount": "100",
+          "unit_totals": {
+            "subtotal": "91",
+            "discount": "0",
+            "tax": "9",
+            "total": "100"
+          },
+          "formatted_total": "¥100"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "1000",
+          "observed_amount": "1000",
+          "unit_totals": {
+            "subtotal": "909",
+            "discount": "0",
+            "tax": "91",
+            "total": "1000"
+          },
+          "formatted_total": "¥1,000"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "390",
+          "observed_amount": "390",
+          "unit_totals": {
+            "subtotal": "355",
+            "discount": "0",
+            "tax": "35",
+            "total": "390"
+          },
+          "formatted_total": "¥390"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "3900",
+          "observed_amount": "3900",
+          "unit_totals": {
+            "subtotal": "3545",
+            "discount": "0",
+            "tax": "355",
+            "total": "3900"
+          },
+          "formatted_total": "¥3,900"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "990",
+          "observed_amount": "990",
+          "unit_totals": {
+            "subtotal": "900",
+            "discount": "0",
+            "tax": "90",
+            "total": "990"
+          },
+          "formatted_total": "¥990"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "9900",
+          "observed_amount": "9900",
+          "unit_totals": {
+            "subtotal": "9000",
+            "discount": "0",
+            "tax": "900",
+            "total": "9900"
+          },
+          "formatted_total": "¥9,900"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "2490",
+          "observed_amount": "2490",
+          "unit_totals": {
+            "subtotal": "2264",
+            "discount": "0",
+            "tax": "226",
+            "total": "2490"
+          },
+          "formatted_total": "¥2,490"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "24900",
+          "observed_amount": "24900",
+          "unit_totals": {
+            "subtotal": "22636",
+            "discount": "0",
+            "tax": "2264",
+            "total": "24900"
+          },
+          "formatted_total": "¥24,900"
+        }
+      ]
+    },
+    {
+      "country_code": "KR",
+      "group_index": 9,
+      "currency_code": "KRW",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "KR"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "990",
+          "observed_amount": "990",
+          "unit_totals": {
+            "subtotal": "900",
+            "discount": "0",
+            "tax": "90",
+            "total": "990"
+          },
+          "formatted_total": "₩990"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "9900",
+          "observed_amount": "9900",
+          "unit_totals": {
+            "subtotal": "9000",
+            "discount": "0",
+            "tax": "900",
+            "total": "9900"
+          },
+          "formatted_total": "₩9,900"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "2990",
+          "observed_amount": "2990",
+          "unit_totals": {
+            "subtotal": "2718",
+            "discount": "0",
+            "tax": "272",
+            "total": "2990"
+          },
+          "formatted_total": "₩2,990"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "29900",
+          "observed_amount": "29900",
+          "unit_totals": {
+            "subtotal": "27182",
+            "discount": "0",
+            "tax": "2718",
+            "total": "29900"
+          },
+          "formatted_total": "₩29,900"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "7990",
+          "observed_amount": "7990",
+          "unit_totals": {
+            "subtotal": "7264",
+            "discount": "0",
+            "tax": "726",
+            "total": "7990"
+          },
+          "formatted_total": "₩7,990"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "79900",
+          "observed_amount": "79900",
+          "unit_totals": {
+            "subtotal": "72636",
+            "discount": "0",
+            "tax": "7264",
+            "total": "79900"
+          },
+          "formatted_total": "₩79,900"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "19900",
+          "observed_amount": "19900",
+          "unit_totals": {
+            "subtotal": "18091",
+            "discount": "0",
+            "tax": "1809",
+            "total": "19900"
+          },
+          "formatted_total": "₩19,900"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "199000",
+          "observed_amount": "199000",
+          "unit_totals": {
+            "subtotal": "180909",
+            "discount": "0",
+            "tax": "18091",
+            "total": "199000"
+          },
+          "formatted_total": "₩199,000"
+        }
+      ]
+    },
+    {
+      "country_code": "CN",
+      "group_index": 10,
+      "currency_code": "CNY",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "CN"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "590",
+          "observed_amount": "590",
+          "unit_totals": {
+            "subtotal": "590",
+            "discount": "0",
+            "tax": "0",
+            "total": "590"
+          },
+          "formatted_total": "5.90 元"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "5900",
+          "observed_amount": "5900",
+          "unit_totals": {
+            "subtotal": "5900",
+            "discount": "0",
+            "tax": "0",
+            "total": "5900"
+          },
+          "formatted_total": "59.00 元"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "1290",
+          "observed_amount": "1290",
+          "unit_totals": {
+            "subtotal": "1290",
+            "discount": "0",
+            "tax": "0",
+            "total": "1290"
+          },
+          "formatted_total": "12.90 元"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "12900",
+          "observed_amount": "12900",
+          "unit_totals": {
+            "subtotal": "12900",
+            "discount": "0",
+            "tax": "0",
+            "total": "12900"
+          },
+          "formatted_total": "129.00 元"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "3290",
+          "observed_amount": "3290",
+          "unit_totals": {
+            "subtotal": "3290",
+            "discount": "0",
+            "tax": "0",
+            "total": "3290"
+          },
+          "formatted_total": "32.90 元"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "32900",
+          "observed_amount": "32900",
+          "unit_totals": {
+            "subtotal": "32900",
+            "discount": "0",
+            "tax": "0",
+            "total": "32900"
+          },
+          "formatted_total": "329.00 元"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "7990",
+          "observed_amount": "7990",
+          "unit_totals": {
+            "subtotal": "7990",
+            "discount": "0",
+            "tax": "0",
+            "total": "7990"
+          },
+          "formatted_total": "79.90 元"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "79900",
+          "observed_amount": "79900",
+          "unit_totals": {
+            "subtotal": "79900",
+            "discount": "0",
+            "tax": "0",
+            "total": "79900"
+          },
+          "formatted_total": "799.00 元"
+        }
+      ]
+    },
+    {
+      "country_code": "HK",
+      "group_index": 11,
+      "currency_code": "HKD",
+      "tax_mode": "external",
+      "address": {
+        "country_code": "HK"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "790",
+          "observed_amount": "790",
+          "unit_totals": {
+            "subtotal": "790",
+            "discount": "0",
+            "tax": "0",
+            "total": "790"
+          },
+          "formatted_total": "HK$7.90"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "7900",
+          "observed_amount": "7900",
+          "unit_totals": {
+            "subtotal": "7900",
+            "discount": "0",
+            "tax": "0",
+            "total": "7900"
+          },
+          "formatted_total": "HK$79.00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "2290",
+          "observed_amount": "2290",
+          "unit_totals": {
+            "subtotal": "2290",
+            "discount": "0",
+            "tax": "0",
+            "total": "2290"
+          },
+          "formatted_total": "HK$22.90"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "22900",
+          "observed_amount": "22900",
+          "unit_totals": {
+            "subtotal": "22900",
+            "discount": "0",
+            "tax": "0",
+            "total": "22900"
+          },
+          "formatted_total": "HK$229.00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "5990",
+          "observed_amount": "5990",
+          "unit_totals": {
+            "subtotal": "5990",
+            "discount": "0",
+            "tax": "0",
+            "total": "5990"
+          },
+          "formatted_total": "HK$59.90"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "59900",
+          "observed_amount": "59900",
+          "unit_totals": {
+            "subtotal": "59900",
+            "discount": "0",
+            "tax": "0",
+            "total": "59900"
+          },
+          "formatted_total": "HK$599.00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "13990",
+          "observed_amount": "13990",
+          "unit_totals": {
+            "subtotal": "13990",
+            "discount": "0",
+            "tax": "0",
+            "total": "13990"
+          },
+          "formatted_total": "HK$139.90"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "139900",
+          "observed_amount": "139900",
+          "unit_totals": {
+            "subtotal": "139900",
+            "discount": "0",
+            "tax": "0",
+            "total": "139900"
+          },
+          "formatted_total": "HK$1,399.00"
+        }
+      ]
+    },
+    {
+      "country_code": "SG",
+      "group_index": 12,
+      "currency_code": "SGD",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "SG"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "129",
+          "observed_amount": "129",
+          "unit_totals": {
+            "subtotal": "118",
+            "discount": "0",
+            "tax": "11",
+            "total": "129"
+          },
+          "formatted_total": "S$1.29"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "1290",
+          "observed_amount": "1290",
+          "unit_totals": {
+            "subtotal": "1183",
+            "discount": "0",
+            "tax": "107",
+            "total": "1290"
+          },
+          "formatted_total": "S$12.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "399",
+          "observed_amount": "399",
+          "unit_totals": {
+            "subtotal": "366",
+            "discount": "0",
+            "tax": "33",
+            "total": "399"
+          },
+          "formatted_total": "S$3.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "3999",
+          "observed_amount": "3999",
+          "unit_totals": {
+            "subtotal": "3669",
+            "discount": "0",
+            "tax": "330",
+            "total": "3999"
+          },
+          "formatted_total": "S$39.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "999",
+          "observed_amount": "999",
+          "unit_totals": {
+            "subtotal": "917",
+            "discount": "0",
+            "tax": "82",
+            "total": "999"
+          },
+          "formatted_total": "S$9.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "9999",
+          "observed_amount": "9999",
+          "unit_totals": {
+            "subtotal": "9173",
+            "discount": "0",
+            "tax": "826",
+            "total": "9999"
+          },
+          "formatted_total": "S$99.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "2299",
+          "observed_amount": "2299",
+          "unit_totals": {
+            "subtotal": "2109",
+            "discount": "0",
+            "tax": "190",
+            "total": "2299"
+          },
+          "formatted_total": "S$22.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "22999",
+          "observed_amount": "22999",
+          "unit_totals": {
+            "subtotal": "21100",
+            "discount": "0",
+            "tax": "1899",
+            "total": "22999"
+          },
+          "formatted_total": "S$229.99"
+        }
+      ]
+    },
+    {
+      "country_code": "TW",
+      "group_index": 13,
+      "currency_code": "TWD",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "TW"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "2900",
+          "observed_amount": "2900",
+          "unit_totals": {
+            "subtotal": "2762",
+            "discount": "0",
+            "tax": "138",
+            "total": "2900"
+          },
+          "formatted_total": "NT$29.00"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "29000",
+          "observed_amount": "29000",
+          "unit_totals": {
+            "subtotal": "27619",
+            "discount": "0",
+            "tax": "1381",
+            "total": "29000"
+          },
+          "formatted_total": "NT$290.00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "6900",
+          "observed_amount": "6900",
+          "unit_totals": {
+            "subtotal": "6571",
+            "discount": "0",
+            "tax": "329",
+            "total": "6900"
+          },
+          "formatted_total": "NT$69.00"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "69000",
+          "observed_amount": "69000",
+          "unit_totals": {
+            "subtotal": "65714",
+            "discount": "0",
+            "tax": "3286",
+            "total": "69000"
+          },
+          "formatted_total": "NT$690.00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "16900",
+          "observed_amount": "16900",
+          "unit_totals": {
+            "subtotal": "16095",
+            "discount": "0",
+            "tax": "805",
+            "total": "16900"
+          },
+          "formatted_total": "NT$169.00"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "169000",
+          "observed_amount": "169000",
+          "unit_totals": {
+            "subtotal": "160952",
+            "discount": "0",
+            "tax": "8048",
+            "total": "169000"
+          },
+          "formatted_total": "NT$1,690.00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "39900",
+          "observed_amount": "39900",
+          "unit_totals": {
+            "subtotal": "38000",
+            "discount": "0",
+            "tax": "1900",
+            "total": "39900"
+          },
+          "formatted_total": "NT$399.00"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "399000",
+          "observed_amount": "399000",
+          "unit_totals": {
+            "subtotal": "380000",
+            "discount": "0",
+            "tax": "19000",
+            "total": "399000"
+          },
+          "formatted_total": "NT$3,990.00"
+        }
+      ]
+    },
+    {
+      "country_code": "SE",
+      "group_index": 14,
+      "currency_code": "SEK",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "SE"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "900",
+          "observed_amount": "900",
+          "unit_totals": {
+            "subtotal": "720",
+            "discount": "0",
+            "tax": "180",
+            "total": "900"
+          },
+          "formatted_total": "9.00 kr"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "9000",
+          "observed_amount": "9000",
+          "unit_totals": {
+            "subtotal": "7200",
+            "discount": "0",
+            "tax": "1800",
+            "total": "9000"
+          },
+          "formatted_total": "90.00 kr"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "2900",
+          "observed_amount": "2900",
+          "unit_totals": {
+            "subtotal": "2320",
+            "discount": "0",
+            "tax": "580",
+            "total": "2900"
+          },
+          "formatted_total": "29.00 kr"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "29000",
+          "observed_amount": "29000",
+          "unit_totals": {
+            "subtotal": "23200",
+            "discount": "0",
+            "tax": "5800",
+            "total": "29000"
+          },
+          "formatted_total": "290.00 kr"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "7900",
+          "observed_amount": "7900",
+          "unit_totals": {
+            "subtotal": "6320",
+            "discount": "0",
+            "tax": "1580",
+            "total": "7900"
+          },
+          "formatted_total": "79.00 kr"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "79000",
+          "observed_amount": "79000",
+          "unit_totals": {
+            "subtotal": "63200",
+            "discount": "0",
+            "tax": "15800",
+            "total": "79000"
+          },
+          "formatted_total": "790.00 kr"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "17900",
+          "observed_amount": "17900",
+          "unit_totals": {
+            "subtotal": "14320",
+            "discount": "0",
+            "tax": "3580",
+            "total": "17900"
+          },
+          "formatted_total": "179.00 kr"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "179000",
+          "observed_amount": "179000",
+          "unit_totals": {
+            "subtotal": "143200",
+            "discount": "0",
+            "tax": "35800",
+            "total": "179000"
+          },
+          "formatted_total": "1,790.00 kr"
+        }
+      ]
+    },
+    {
+      "country_code": "DK",
+      "group_index": 15,
+      "currency_code": "DKK",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "DK"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "700",
+          "observed_amount": "700",
+          "unit_totals": {
+            "subtotal": "560",
+            "discount": "0",
+            "tax": "140",
+            "total": "700"
+          },
+          "formatted_total": "kr 7,00"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "7000",
+          "observed_amount": "7000",
+          "unit_totals": {
+            "subtotal": "5600",
+            "discount": "0",
+            "tax": "1400",
+            "total": "7000"
+          },
+          "formatted_total": "kr 70,00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "1900",
+          "observed_amount": "1900",
+          "unit_totals": {
+            "subtotal": "1520",
+            "discount": "0",
+            "tax": "380",
+            "total": "1900"
+          },
+          "formatted_total": "kr 19,00"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "19000",
+          "observed_amount": "19000",
+          "unit_totals": {
+            "subtotal": "15200",
+            "discount": "0",
+            "tax": "3800",
+            "total": "19000"
+          },
+          "formatted_total": "kr 190,00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "5900",
+          "observed_amount": "5900",
+          "unit_totals": {
+            "subtotal": "4720",
+            "discount": "0",
+            "tax": "1180",
+            "total": "5900"
+          },
+          "formatted_total": "kr 59,00"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "59000",
+          "observed_amount": "59000",
+          "unit_totals": {
+            "subtotal": "47200",
+            "discount": "0",
+            "tax": "11800",
+            "total": "59000"
+          },
+          "formatted_total": "kr 590,00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "12900",
+          "observed_amount": "12900",
+          "unit_totals": {
+            "subtotal": "10320",
+            "discount": "0",
+            "tax": "2580",
+            "total": "12900"
+          },
+          "formatted_total": "kr 129,00"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "129000",
+          "observed_amount": "129000",
+          "unit_totals": {
+            "subtotal": "103200",
+            "discount": "0",
+            "tax": "25800",
+            "total": "129000"
+          },
+          "formatted_total": "kr 1.290,00"
+        }
+      ]
+    },
+    {
+      "country_code": "NO",
+      "group_index": 16,
+      "currency_code": "NOK",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "NO"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "900",
+          "observed_amount": "900",
+          "unit_totals": {
+            "subtotal": "720",
+            "discount": "0",
+            "tax": "180",
+            "total": "900"
+          },
+          "formatted_total": "9.00 kr"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "9000",
+          "observed_amount": "9000",
+          "unit_totals": {
+            "subtotal": "7200",
+            "discount": "0",
+            "tax": "1800",
+            "total": "9000"
+          },
+          "formatted_total": "90.00 kr"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "2900",
+          "observed_amount": "2900",
+          "unit_totals": {
+            "subtotal": "2320",
+            "discount": "0",
+            "tax": "580",
+            "total": "2900"
+          },
+          "formatted_total": "29.00 kr"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "29000",
+          "observed_amount": "29000",
+          "unit_totals": {
+            "subtotal": "23200",
+            "discount": "0",
+            "tax": "5800",
+            "total": "29000"
+          },
+          "formatted_total": "290.00 kr"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "7900",
+          "observed_amount": "7900",
+          "unit_totals": {
+            "subtotal": "6320",
+            "discount": "0",
+            "tax": "1580",
+            "total": "7900"
+          },
+          "formatted_total": "79.00 kr"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "79000",
+          "observed_amount": "79000",
+          "unit_totals": {
+            "subtotal": "63200",
+            "discount": "0",
+            "tax": "15800",
+            "total": "79000"
+          },
+          "formatted_total": "790.00 kr"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "17900",
+          "observed_amount": "17900",
+          "unit_totals": {
+            "subtotal": "14320",
+            "discount": "0",
+            "tax": "3580",
+            "total": "17900"
+          },
+          "formatted_total": "179.00 kr"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "179000",
+          "observed_amount": "179000",
+          "unit_totals": {
+            "subtotal": "143200",
+            "discount": "0",
+            "tax": "35800",
+            "total": "179000"
+          },
+          "formatted_total": "1,790.00 kr"
+        }
+      ]
+    },
+    {
+      "country_code": "PL",
+      "group_index": 17,
+      "currency_code": "PLN",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "PL"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "299",
+          "observed_amount": "299",
+          "unit_totals": {
+            "subtotal": "243",
+            "discount": "0",
+            "tax": "56",
+            "total": "299"
+          },
+          "formatted_total": "2.99 zł"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2438",
+            "discount": "0",
+            "tax": "561",
+            "total": "2999"
+          },
+          "formatted_total": "29.99 zł"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "899",
+          "observed_amount": "899",
+          "unit_totals": {
+            "subtotal": "731",
+            "discount": "0",
+            "tax": "168",
+            "total": "899"
+          },
+          "formatted_total": "8.99 zł"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "8999",
+          "observed_amount": "8999",
+          "unit_totals": {
+            "subtotal": "7316",
+            "discount": "0",
+            "tax": "1683",
+            "total": "8999"
+          },
+          "formatted_total": "89.99 zł"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "2499",
+          "observed_amount": "2499",
+          "unit_totals": {
+            "subtotal": "2032",
+            "discount": "0",
+            "tax": "467",
+            "total": "2499"
+          },
+          "formatted_total": "24.99 zł"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "24999",
+          "observed_amount": "24999",
+          "unit_totals": {
+            "subtotal": "20324",
+            "discount": "0",
+            "tax": "4675",
+            "total": "24999"
+          },
+          "formatted_total": "249.99 zł"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "5999",
+          "observed_amount": "5999",
+          "unit_totals": {
+            "subtotal": "4877",
+            "discount": "0",
+            "tax": "1122",
+            "total": "5999"
+          },
+          "formatted_total": "59.99 zł"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "59999",
+          "observed_amount": "59999",
+          "unit_totals": {
+            "subtotal": "48780",
+            "discount": "0",
+            "tax": "11219",
+            "total": "59999"
+          },
+          "formatted_total": "599.99 zł"
+        }
+      ]
+    },
+    {
+      "country_code": "CZ",
+      "group_index": 18,
+      "currency_code": "CZK",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "CZ"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "1900",
+          "observed_amount": "1900",
+          "unit_totals": {
+            "subtotal": "1570",
+            "discount": "0",
+            "tax": "330",
+            "total": "1900"
+          },
+          "formatted_total": "19.00 Kč"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "19000",
+          "observed_amount": "19000",
+          "unit_totals": {
+            "subtotal": "15702",
+            "discount": "0",
+            "tax": "3298",
+            "total": "19000"
+          },
+          "formatted_total": "190.00 Kč"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "5900",
+          "observed_amount": "5900",
+          "unit_totals": {
+            "subtotal": "4876",
+            "discount": "0",
+            "tax": "1024",
+            "total": "5900"
+          },
+          "formatted_total": "59.00 Kč"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "59000",
+          "observed_amount": "59000",
+          "unit_totals": {
+            "subtotal": "48760",
+            "discount": "0",
+            "tax": "10240",
+            "total": "59000"
+          },
+          "formatted_total": "590.00 Kč"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "14900",
+          "observed_amount": "14900",
+          "unit_totals": {
+            "subtotal": "12314",
+            "discount": "0",
+            "tax": "2586",
+            "total": "14900"
+          },
+          "formatted_total": "149.00 Kč"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "149000",
+          "observed_amount": "149000",
+          "unit_totals": {
+            "subtotal": "123140",
+            "discount": "0",
+            "tax": "25860",
+            "total": "149000"
+          },
+          "formatted_total": "1,490.00 Kč"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "34900",
+          "observed_amount": "34900",
+          "unit_totals": {
+            "subtotal": "28843",
+            "discount": "0",
+            "tax": "6057",
+            "total": "34900"
+          },
+          "formatted_total": "349.00 Kč"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "349000",
+          "observed_amount": "349000",
+          "unit_totals": {
+            "subtotal": "288430",
+            "discount": "0",
+            "tax": "60570",
+            "total": "349000"
+          },
+          "formatted_total": "3,490.00 Kč"
+        }
+      ]
+    },
+    {
+      "country_code": "HU",
+      "group_index": 19,
+      "currency_code": "HUF",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "HU"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "29900",
+          "observed_amount": "29900",
+          "unit_totals": {
+            "subtotal": "23543",
+            "discount": "0",
+            "tax": "6357",
+            "total": "29900"
+          },
+          "formatted_total": "299,00 Ft"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "299000",
+          "observed_amount": "299000",
+          "unit_totals": {
+            "subtotal": "235433",
+            "discount": "0",
+            "tax": "63567",
+            "total": "299000"
+          },
+          "formatted_total": "2.990,00 Ft"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "69900",
+          "observed_amount": "69900",
+          "unit_totals": {
+            "subtotal": "55039",
+            "discount": "0",
+            "tax": "14861",
+            "total": "69900"
+          },
+          "formatted_total": "699,00 Ft"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "699000",
+          "observed_amount": "699000",
+          "unit_totals": {
+            "subtotal": "550394",
+            "discount": "0",
+            "tax": "148606",
+            "total": "699000"
+          },
+          "formatted_total": "6.990,00 Ft"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "199000",
+          "observed_amount": "199000",
+          "unit_totals": {
+            "subtotal": "156693",
+            "discount": "0",
+            "tax": "42307",
+            "total": "199000"
+          },
+          "formatted_total": "1.990,00 Ft"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "1990000",
+          "observed_amount": "1990000",
+          "unit_totals": {
+            "subtotal": "1566929",
+            "discount": "0",
+            "tax": "423071",
+            "total": "1990000"
+          },
+          "formatted_total": "19.900,00 Ft"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "449000",
+          "observed_amount": "449000",
+          "unit_totals": {
+            "subtotal": "353543",
+            "discount": "0",
+            "tax": "95457",
+            "total": "449000"
+          },
+          "formatted_total": "4.490,00 Ft"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "4490000",
+          "observed_amount": "4490000",
+          "unit_totals": {
+            "subtotal": "3535433",
+            "discount": "0",
+            "tax": "954567",
+            "total": "4490000"
+          },
+          "formatted_total": "44.900,00 Ft"
+        }
+      ]
+    },
+    {
+      "country_code": "IL",
+      "group_index": 20,
+      "currency_code": "ILS",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "IL"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "299",
+          "observed_amount": "299",
+          "unit_totals": {
+            "subtotal": "299",
+            "discount": "0",
+            "tax": "0",
+            "total": "299"
+          },
+          "formatted_total": "₪2.99"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2999",
+            "discount": "0",
+            "tax": "0",
+            "total": "2999"
+          },
+          "formatted_total": "₪29.99"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "999",
+          "observed_amount": "999",
+          "unit_totals": {
+            "subtotal": "999",
+            "discount": "0",
+            "tax": "0",
+            "total": "999"
+          },
+          "formatted_total": "₪9.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "9999",
+          "observed_amount": "9999",
+          "unit_totals": {
+            "subtotal": "9999",
+            "discount": "0",
+            "tax": "0",
+            "total": "9999"
+          },
+          "formatted_total": "₪99.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "2499",
+          "observed_amount": "2499",
+          "unit_totals": {
+            "subtotal": "2499",
+            "discount": "0",
+            "tax": "0",
+            "total": "2499"
+          },
+          "formatted_total": "₪24.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "24999",
+          "observed_amount": "24999",
+          "unit_totals": {
+            "subtotal": "24999",
+            "discount": "0",
+            "tax": "0",
+            "total": "24999"
+          },
+          "formatted_total": "₪249.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "5999",
+          "observed_amount": "5999",
+          "unit_totals": {
+            "subtotal": "5999",
+            "discount": "0",
+            "tax": "0",
+            "total": "5999"
+          },
+          "formatted_total": "₪59.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "59999",
+          "observed_amount": "59999",
+          "unit_totals": {
+            "subtotal": "59999",
+            "discount": "0",
+            "tax": "0",
+            "total": "59999"
+          },
+          "formatted_total": "₪599.99"
+        }
+      ]
+    },
+    {
+      "country_code": "IN",
+      "group_index": 21,
+      "currency_code": "INR",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "IN"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "6900",
+          "observed_amount": "6900",
+          "unit_totals": {
+            "subtotal": "5847",
+            "discount": "0",
+            "tax": "1053",
+            "total": "6900"
+          },
+          "formatted_total": "₹69.00"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "69000",
+          "observed_amount": "69000",
+          "unit_totals": {
+            "subtotal": "58475",
+            "discount": "0",
+            "tax": "10525",
+            "total": "69000"
+          },
+          "formatted_total": "₹690.00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "14900",
+          "observed_amount": "14900",
+          "unit_totals": {
+            "subtotal": "12627",
+            "discount": "0",
+            "tax": "2273",
+            "total": "14900"
+          },
+          "formatted_total": "₹149.00"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "149000",
+          "observed_amount": "149000",
+          "unit_totals": {
+            "subtotal": "126271",
+            "discount": "0",
+            "tax": "22729",
+            "total": "149000"
+          },
+          "formatted_total": "₹1,490.00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "39900",
+          "observed_amount": "39900",
+          "unit_totals": {
+            "subtotal": "33814",
+            "discount": "0",
+            "tax": "6086",
+            "total": "39900"
+          },
+          "formatted_total": "₹399.00"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "399000",
+          "observed_amount": "399000",
+          "unit_totals": {
+            "subtotal": "338136",
+            "discount": "0",
+            "tax": "60864",
+            "total": "399000"
+          },
+          "formatted_total": "₹3,990.00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "89900",
+          "observed_amount": "89900",
+          "unit_totals": {
+            "subtotal": "76186",
+            "discount": "0",
+            "tax": "13714",
+            "total": "89900"
+          },
+          "formatted_total": "₹899.00"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "899000",
+          "observed_amount": "899000",
+          "unit_totals": {
+            "subtotal": "761864",
+            "discount": "0",
+            "tax": "137136",
+            "total": "899000"
+          },
+          "formatted_total": "₹8,990.00"
+        }
+      ]
+    },
+    {
+      "country_code": "TH",
+      "group_index": 22,
+      "currency_code": "THB",
+      "tax_mode": "external",
+      "address": {
+        "country_code": "TH"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "2900",
+          "observed_amount": "2900",
+          "unit_totals": {
+            "subtotal": "2900",
+            "discount": "0",
+            "tax": "203",
+            "total": "3103"
+          },
+          "formatted_total": "฿31.03"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "29000",
+          "observed_amount": "29000",
+          "unit_totals": {
+            "subtotal": "29000",
+            "discount": "0",
+            "tax": "2030",
+            "total": "31030"
+          },
+          "formatted_total": "฿310.30"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "5900",
+          "observed_amount": "5900",
+          "unit_totals": {
+            "subtotal": "5900",
+            "discount": "0",
+            "tax": "413",
+            "total": "6313"
+          },
+          "formatted_total": "฿63.13"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "59000",
+          "observed_amount": "59000",
+          "unit_totals": {
+            "subtotal": "59000",
+            "discount": "0",
+            "tax": "4130",
+            "total": "63130"
+          },
+          "formatted_total": "฿631.30"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "14900",
+          "observed_amount": "14900",
+          "unit_totals": {
+            "subtotal": "14900",
+            "discount": "0",
+            "tax": "1043",
+            "total": "15943"
+          },
+          "formatted_total": "฿159.43"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "149000",
+          "observed_amount": "149000",
+          "unit_totals": {
+            "subtotal": "149000",
+            "discount": "0",
+            "tax": "10430",
+            "total": "159430"
+          },
+          "formatted_total": "฿1,594.30"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "34900",
+          "observed_amount": "34900",
+          "unit_totals": {
+            "subtotal": "34900",
+            "discount": "0",
+            "tax": "2443",
+            "total": "37343"
+          },
+          "formatted_total": "฿373.43"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "349000",
+          "observed_amount": "349000",
+          "unit_totals": {
+            "subtotal": "349000",
+            "discount": "0",
+            "tax": "24430",
+            "total": "373430"
+          },
+          "formatted_total": "฿3,734.30"
+        }
+      ]
+    },
+    {
+      "country_code": "VN",
+      "group_index": 23,
+      "currency_code": "VND",
+      "tax_mode": "external",
+      "address": {
+        "country_code": "VN"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "25000",
+          "observed_amount": "25000",
+          "unit_totals": {
+            "subtotal": "25000",
+            "discount": "0",
+            "tax": "6250",
+            "total": "31250"
+          },
+          "formatted_total": "31,250 ₫"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "250000",
+          "observed_amount": "250000",
+          "unit_totals": {
+            "subtotal": "250000",
+            "discount": "0",
+            "tax": "62500",
+            "total": "312500"
+          },
+          "formatted_total": "312,500 ₫"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "39000",
+          "observed_amount": "39000",
+          "unit_totals": {
+            "subtotal": "39000",
+            "discount": "0",
+            "tax": "9750",
+            "total": "48750"
+          },
+          "formatted_total": "48,750 ₫"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "390000",
+          "observed_amount": "390000",
+          "unit_totals": {
+            "subtotal": "390000",
+            "discount": "0",
+            "tax": "97500",
+            "total": "487500"
+          },
+          "formatted_total": "487,500 ₫"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "99000",
+          "observed_amount": "99000",
+          "unit_totals": {
+            "subtotal": "99000",
+            "discount": "0",
+            "tax": "24750",
+            "total": "123750"
+          },
+          "formatted_total": "123,750 ₫"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "990000",
+          "observed_amount": "990000",
+          "unit_totals": {
+            "subtotal": "990000",
+            "discount": "0",
+            "tax": "247500",
+            "total": "1237500"
+          },
+          "formatted_total": "1,237,500 ₫"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "229000",
+          "observed_amount": "229000",
+          "unit_totals": {
+            "subtotal": "229000",
+            "discount": "0",
+            "tax": "57250",
+            "total": "286250"
+          },
+          "formatted_total": "286,250 ₫"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "2290000",
+          "observed_amount": "2290000",
+          "unit_totals": {
+            "subtotal": "2290000",
+            "discount": "0",
+            "tax": "572500",
+            "total": "2862500"
+          },
+          "formatted_total": "2,862,500 ₫"
+        }
+      ]
+    },
+    {
+      "country_code": "TR",
+      "group_index": 24,
+      "currency_code": "TRY",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "TR"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2499",
+            "discount": "0",
+            "tax": "500",
+            "total": "2999"
+          },
+          "formatted_total": "₺29.99"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "29990",
+          "observed_amount": "29990",
+          "unit_totals": {
+            "subtotal": "24992",
+            "discount": "0",
+            "tax": "4998",
+            "total": "29990"
+          },
+          "formatted_total": "₺299.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "5999",
+          "observed_amount": "5999",
+          "unit_totals": {
+            "subtotal": "4999",
+            "discount": "0",
+            "tax": "1000",
+            "total": "5999"
+          },
+          "formatted_total": "₺59.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "59999",
+          "observed_amount": "59999",
+          "unit_totals": {
+            "subtotal": "49999",
+            "discount": "0",
+            "tax": "10000",
+            "total": "59999"
+          },
+          "formatted_total": "₺599.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "14999",
+          "observed_amount": "14999",
+          "unit_totals": {
+            "subtotal": "12499",
+            "discount": "0",
+            "tax": "2500",
+            "total": "14999"
+          },
+          "formatted_total": "₺149.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "149999",
+          "observed_amount": "149999",
+          "unit_totals": {
+            "subtotal": "124999",
+            "discount": "0",
+            "tax": "25000",
+            "total": "149999"
+          },
+          "formatted_total": "₺1,499.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "34999",
+          "observed_amount": "34999",
+          "unit_totals": {
+            "subtotal": "29166",
+            "discount": "0",
+            "tax": "5833",
+            "total": "34999"
+          },
+          "formatted_total": "₺349.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "349999",
+          "observed_amount": "349999",
+          "unit_totals": {
+            "subtotal": "291666",
+            "discount": "0",
+            "tax": "58333",
+            "total": "349999"
+          },
+          "formatted_total": "₺3,499.99"
+        }
+      ]
+    },
+    {
+      "country_code": "BR",
+      "group_index": 25,
+      "currency_code": "BRL",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "BR"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "499",
+          "observed_amount": "499",
+          "unit_totals": {
+            "subtotal": "499",
+            "discount": "0",
+            "tax": "0",
+            "total": "499"
+          },
+          "formatted_total": "R$4,99"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "4990",
+          "observed_amount": "4990",
+          "unit_totals": {
+            "subtotal": "4990",
+            "discount": "0",
+            "tax": "0",
+            "total": "4990"
+          },
+          "formatted_total": "R$49,90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "899",
+          "observed_amount": "899",
+          "unit_totals": {
+            "subtotal": "899",
+            "discount": "0",
+            "tax": "0",
+            "total": "899"
+          },
+          "formatted_total": "R$8,99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "8999",
+          "observed_amount": "8999",
+          "unit_totals": {
+            "subtotal": "8999",
+            "discount": "0",
+            "tax": "0",
+            "total": "8999"
+          },
+          "formatted_total": "R$89,99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "2499",
+          "observed_amount": "2499",
+          "unit_totals": {
+            "subtotal": "2499",
+            "discount": "0",
+            "tax": "0",
+            "total": "2499"
+          },
+          "formatted_total": "R$24,99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "24999",
+          "observed_amount": "24999",
+          "unit_totals": {
+            "subtotal": "24999",
+            "discount": "0",
+            "tax": "0",
+            "total": "24999"
+          },
+          "formatted_total": "R$249,99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "5999",
+          "observed_amount": "5999",
+          "unit_totals": {
+            "subtotal": "5999",
+            "discount": "0",
+            "tax": "0",
+            "total": "5999"
+          },
+          "formatted_total": "R$59,99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "59999",
+          "observed_amount": "59999",
+          "unit_totals": {
+            "subtotal": "59999",
+            "discount": "0",
+            "tax": "0",
+            "total": "59999"
+          },
+          "formatted_total": "R$599,99"
+        }
+      ]
+    },
+    {
+      "country_code": "MX",
+      "group_index": 26,
+      "currency_code": "MXN",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "MX"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "1490",
+          "observed_amount": "1490",
+          "unit_totals": {
+            "subtotal": "1284",
+            "discount": "0",
+            "tax": "206",
+            "total": "1490"
+          },
+          "formatted_total": "$14.90"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "14900",
+          "observed_amount": "14900",
+          "unit_totals": {
+            "subtotal": "12845",
+            "discount": "0",
+            "tax": "2055",
+            "total": "14900"
+          },
+          "formatted_total": "$149.00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "2900",
+          "observed_amount": "2900",
+          "unit_totals": {
+            "subtotal": "2500",
+            "discount": "0",
+            "tax": "400",
+            "total": "2900"
+          },
+          "formatted_total": "$29.00"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "29000",
+          "observed_amount": "29000",
+          "unit_totals": {
+            "subtotal": "25000",
+            "discount": "0",
+            "tax": "4000",
+            "total": "29000"
+          },
+          "formatted_total": "$290.00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "7900",
+          "observed_amount": "7900",
+          "unit_totals": {
+            "subtotal": "6810",
+            "discount": "0",
+            "tax": "1090",
+            "total": "7900"
+          },
+          "formatted_total": "$79.00"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "79000",
+          "observed_amount": "79000",
+          "unit_totals": {
+            "subtotal": "68103",
+            "discount": "0",
+            "tax": "10897",
+            "total": "79000"
+          },
+          "formatted_total": "$790.00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "17900",
+          "observed_amount": "17900",
+          "unit_totals": {
+            "subtotal": "15431",
+            "discount": "0",
+            "tax": "2469",
+            "total": "17900"
+          },
+          "formatted_total": "$179.00"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "179000",
+          "observed_amount": "179000",
+          "unit_totals": {
+            "subtotal": "154310",
+            "discount": "0",
+            "tax": "24690",
+            "total": "179000"
+          },
+          "formatted_total": "$1,790.00"
+        }
+      ]
+    },
+    {
+      "country_code": "AR",
+      "group_index": 27,
+      "currency_code": "ARS",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "AR"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "99000",
+          "observed_amount": "99000",
+          "unit_totals": {
+            "subtotal": "99000",
+            "discount": "0",
+            "tax": "0",
+            "total": "99000"
+          },
+          "formatted_total": "$990,00"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "990000",
+          "observed_amount": "990000",
+          "unit_totals": {
+            "subtotal": "990000",
+            "discount": "0",
+            "tax": "0",
+            "total": "990000"
+          },
+          "formatted_total": "$9.900,00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "149000",
+          "observed_amount": "149000",
+          "unit_totals": {
+            "subtotal": "149000",
+            "discount": "0",
+            "tax": "0",
+            "total": "149000"
+          },
+          "formatted_total": "$1.490,00"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "1490000",
+          "observed_amount": "1490000",
+          "unit_totals": {
+            "subtotal": "1490000",
+            "discount": "0",
+            "tax": "0",
+            "total": "1490000"
+          },
+          "formatted_total": "$14.900,00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "399000",
+          "observed_amount": "399000",
+          "unit_totals": {
+            "subtotal": "399000",
+            "discount": "0",
+            "tax": "0",
+            "total": "399000"
+          },
+          "formatted_total": "$3.990,00"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "3990000",
+          "observed_amount": "3990000",
+          "unit_totals": {
+            "subtotal": "3990000",
+            "discount": "0",
+            "tax": "0",
+            "total": "3990000"
+          },
+          "formatted_total": "$39.900,00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "899000",
+          "observed_amount": "899000",
+          "unit_totals": {
+            "subtotal": "899000",
+            "discount": "0",
+            "tax": "0",
+            "total": "899000"
+          },
+          "formatted_total": "$8.990,00"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "8990000",
+          "observed_amount": "8990000",
+          "unit_totals": {
+            "subtotal": "8990000",
+            "discount": "0",
+            "tax": "0",
+            "total": "8990000"
+          },
+          "formatted_total": "$89.900,00"
+        }
+      ]
+    },
+    {
+      "country_code": "CL",
+      "group_index": 28,
+      "currency_code": "CLP",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "CL"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "990",
+          "observed_amount": "990",
+          "unit_totals": {
+            "subtotal": "832",
+            "discount": "0",
+            "tax": "158",
+            "total": "990"
+          },
+          "formatted_total": "$990"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "9900",
+          "observed_amount": "9900",
+          "unit_totals": {
+            "subtotal": "8319",
+            "discount": "0",
+            "tax": "1581",
+            "total": "9900"
+          },
+          "formatted_total": "$9.900"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "1490",
+          "observed_amount": "1490",
+          "unit_totals": {
+            "subtotal": "1252",
+            "discount": "0",
+            "tax": "238",
+            "total": "1490"
+          },
+          "formatted_total": "$1.490"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "14900",
+          "observed_amount": "14900",
+          "unit_totals": {
+            "subtotal": "12521",
+            "discount": "0",
+            "tax": "2379",
+            "total": "14900"
+          },
+          "formatted_total": "$14.900"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "3990",
+          "observed_amount": "3990",
+          "unit_totals": {
+            "subtotal": "3353",
+            "discount": "0",
+            "tax": "637",
+            "total": "3990"
+          },
+          "formatted_total": "$3.990"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "39900",
+          "observed_amount": "39900",
+          "unit_totals": {
+            "subtotal": "33529",
+            "discount": "0",
+            "tax": "6371",
+            "total": "39900"
+          },
+          "formatted_total": "$39.900"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "8990",
+          "observed_amount": "8990",
+          "unit_totals": {
+            "subtotal": "7555",
+            "discount": "0",
+            "tax": "1435",
+            "total": "8990"
+          },
+          "formatted_total": "$8.990"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "89900",
+          "observed_amount": "89900",
+          "unit_totals": {
+            "subtotal": "75546",
+            "discount": "0",
+            "tax": "14354",
+            "total": "89900"
+          },
+          "formatted_total": "$89.900"
+        }
+      ]
+    },
+    {
+      "country_code": "CO",
+      "group_index": 29,
+      "currency_code": "COP",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "CO"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "299000",
+          "observed_amount": "299000",
+          "unit_totals": {
+            "subtotal": "299000",
+            "discount": "0",
+            "tax": "0",
+            "total": "299000"
+          },
+          "formatted_total": "$2.990,00"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "2990000",
+          "observed_amount": "2990000",
+          "unit_totals": {
+            "subtotal": "2990000",
+            "discount": "0",
+            "tax": "0",
+            "total": "2990000"
+          },
+          "formatted_total": "$29.900,00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "590000",
+          "observed_amount": "590000",
+          "unit_totals": {
+            "subtotal": "590000",
+            "discount": "0",
+            "tax": "0",
+            "total": "590000"
+          },
+          "formatted_total": "$5.900,00"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "5900000",
+          "observed_amount": "5900000",
+          "unit_totals": {
+            "subtotal": "5900000",
+            "discount": "0",
+            "tax": "0",
+            "total": "5900000"
+          },
+          "formatted_total": "$59.000,00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "1590000",
+          "observed_amount": "1590000",
+          "unit_totals": {
+            "subtotal": "1590000",
+            "discount": "0",
+            "tax": "0",
+            "total": "1590000"
+          },
+          "formatted_total": "$15.900,00"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "15900000",
+          "observed_amount": "15900000",
+          "unit_totals": {
+            "subtotal": "15900000",
+            "discount": "0",
+            "tax": "0",
+            "total": "15900000"
+          },
+          "formatted_total": "$159.000,00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "3590000",
+          "observed_amount": "3590000",
+          "unit_totals": {
+            "subtotal": "3590000",
+            "discount": "0",
+            "tax": "0",
+            "total": "3590000"
+          },
+          "formatted_total": "$35.900,00"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "35900000",
+          "observed_amount": "35900000",
+          "unit_totals": {
+            "subtotal": "35900000",
+            "discount": "0",
+            "tax": "0",
+            "total": "35900000"
+          },
+          "formatted_total": "$359.000,00"
+        }
+      ]
+    },
+    {
+      "country_code": "PE",
+      "group_index": 30,
+      "currency_code": "PEN",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "PE"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "299",
+          "observed_amount": "299",
+          "unit_totals": {
+            "subtotal": "253",
+            "discount": "0",
+            "tax": "46",
+            "total": "299"
+          },
+          "formatted_total": "S/2.99"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "2990",
+          "observed_amount": "2990",
+          "unit_totals": {
+            "subtotal": "2534",
+            "discount": "0",
+            "tax": "456",
+            "total": "2990"
+          },
+          "formatted_total": "S/29.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "599",
+          "observed_amount": "599",
+          "unit_totals": {
+            "subtotal": "508",
+            "discount": "0",
+            "tax": "91",
+            "total": "599"
+          },
+          "formatted_total": "S/5.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "5999",
+          "observed_amount": "5999",
+          "unit_totals": {
+            "subtotal": "5084",
+            "discount": "0",
+            "tax": "915",
+            "total": "5999"
+          },
+          "formatted_total": "S/59.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "1599",
+          "observed_amount": "1599",
+          "unit_totals": {
+            "subtotal": "1355",
+            "discount": "0",
+            "tax": "244",
+            "total": "1599"
+          },
+          "formatted_total": "S/15.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "15999",
+          "observed_amount": "15999",
+          "unit_totals": {
+            "subtotal": "13558",
+            "discount": "0",
+            "tax": "2441",
+            "total": "15999"
+          },
+          "formatted_total": "S/159.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "3599",
+          "observed_amount": "3599",
+          "unit_totals": {
+            "subtotal": "3050",
+            "discount": "0",
+            "tax": "549",
+            "total": "3599"
+          },
+          "formatted_total": "S/35.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "35999",
+          "observed_amount": "35999",
+          "unit_totals": {
+            "subtotal": "30508",
+            "discount": "0",
+            "tax": "5491",
+            "total": "35999"
+          },
+          "formatted_total": "S/359.99"
+        }
+      ]
+    },
+    {
+      "country_code": "ZA",
+      "group_index": 31,
+      "currency_code": "ZAR",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "ZA"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "1490",
+          "observed_amount": "1490",
+          "unit_totals": {
+            "subtotal": "1296",
+            "discount": "0",
+            "tax": "194",
+            "total": "1490"
+          },
+          "formatted_total": "R14.90"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "14900",
+          "observed_amount": "14900",
+          "unit_totals": {
+            "subtotal": "12957",
+            "discount": "0",
+            "tax": "1943",
+            "total": "14900"
+          },
+          "formatted_total": "R149.00"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "2900",
+          "observed_amount": "2900",
+          "unit_totals": {
+            "subtotal": "2522",
+            "discount": "0",
+            "tax": "378",
+            "total": "2900"
+          },
+          "formatted_total": "R29.00"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "29000",
+          "observed_amount": "29000",
+          "unit_totals": {
+            "subtotal": "25217",
+            "discount": "0",
+            "tax": "3783",
+            "total": "29000"
+          },
+          "formatted_total": "R290.00"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "7900",
+          "observed_amount": "7900",
+          "unit_totals": {
+            "subtotal": "6870",
+            "discount": "0",
+            "tax": "1030",
+            "total": "7900"
+          },
+          "formatted_total": "R79.00"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "79000",
+          "observed_amount": "79000",
+          "unit_totals": {
+            "subtotal": "68696",
+            "discount": "0",
+            "tax": "10304",
+            "total": "79000"
+          },
+          "formatted_total": "R790.00"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "17900",
+          "observed_amount": "17900",
+          "unit_totals": {
+            "subtotal": "15565",
+            "discount": "0",
+            "tax": "2335",
+            "total": "17900"
+          },
+          "formatted_total": "R179.00"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "179000",
+          "observed_amount": "179000",
+          "unit_totals": {
+            "subtotal": "155652",
+            "discount": "0",
+            "tax": "23348",
+            "total": "179000"
+          },
+          "formatted_total": "R1,790.00"
+        }
+      ]
+    },
+    {
+      "country_code": "UA",
+      "group_index": 32,
+      "currency_code": "UAH",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "UA"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "2900",
+          "observed_amount": "2900",
+          "unit_totals": {
+            "subtotal": "2417",
+            "discount": "0",
+            "tax": "483",
+            "total": "2900"
+          },
+          "formatted_total": "29.00 ₴"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "29000",
+          "observed_amount": "29000",
+          "unit_totals": {
+            "subtotal": "24167",
+            "discount": "0",
+            "tax": "4833",
+            "total": "29000"
+          },
+          "formatted_total": "290.00 ₴"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "5900",
+          "observed_amount": "5900",
+          "unit_totals": {
+            "subtotal": "4917",
+            "discount": "0",
+            "tax": "983",
+            "total": "5900"
+          },
+          "formatted_total": "59.00 ₴"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "59000",
+          "observed_amount": "59000",
+          "unit_totals": {
+            "subtotal": "49167",
+            "discount": "0",
+            "tax": "9833",
+            "total": "59000"
+          },
+          "formatted_total": "590.00 ₴"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "14900",
+          "observed_amount": "14900",
+          "unit_totals": {
+            "subtotal": "12417",
+            "discount": "0",
+            "tax": "2483",
+            "total": "14900"
+          },
+          "formatted_total": "149.00 ₴"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "149000",
+          "observed_amount": "149000",
+          "unit_totals": {
+            "subtotal": "124167",
+            "discount": "0",
+            "tax": "24833",
+            "total": "149000"
+          },
+          "formatted_total": "1,490.00 ₴"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "34900",
+          "observed_amount": "34900",
+          "unit_totals": {
+            "subtotal": "29083",
+            "discount": "0",
+            "tax": "5817",
+            "total": "34900"
+          },
+          "formatted_total": "349.00 ₴"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "349000",
+          "observed_amount": "349000",
+          "unit_totals": {
+            "subtotal": "290833",
+            "discount": "0",
+            "tax": "58167",
+            "total": "349000"
+          },
+          "formatted_total": "3,490.00 ₴"
+        }
+      ]
+    },
+    {
+      "country_code": "AL",
+      "group_index": 33,
+      "currency_code": "USD",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "AL"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "79",
+          "observed_amount": "79",
+          "unit_totals": {
+            "subtotal": "79",
+            "discount": "0",
+            "tax": "0",
+            "total": "79"
+          },
+          "formatted_total": "$0.79"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "790",
+          "observed_amount": "790",
+          "unit_totals": {
+            "subtotal": "790",
+            "discount": "0",
+            "tax": "0",
+            "total": "790"
+          },
+          "formatted_total": "$7.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "249",
+          "observed_amount": "249",
+          "unit_totals": {
+            "subtotal": "249",
+            "discount": "0",
+            "tax": "0",
+            "total": "249"
+          },
+          "formatted_total": "$2.49"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "2499",
+          "observed_amount": "2499",
+          "unit_totals": {
+            "subtotal": "2499",
+            "discount": "0",
+            "tax": "0",
+            "total": "2499"
+          },
+          "formatted_total": "$24.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "649",
+          "observed_amount": "649",
+          "unit_totals": {
+            "subtotal": "649",
+            "discount": "0",
+            "tax": "0",
+            "total": "649"
+          },
+          "formatted_total": "$6.49"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "6499",
+          "observed_amount": "6499",
+          "unit_totals": {
+            "subtotal": "6499",
+            "discount": "0",
+            "tax": "0",
+            "total": "6499"
+          },
+          "formatted_total": "$64.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "1499",
+          "observed_amount": "1499",
+          "unit_totals": {
+            "subtotal": "1499",
+            "discount": "0",
+            "tax": "0",
+            "total": "1499"
+          },
+          "formatted_total": "$14.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "14999",
+          "observed_amount": "14999",
+          "unit_totals": {
+            "subtotal": "14999",
+            "discount": "0",
+            "tax": "0",
+            "total": "14999"
+          },
+          "formatted_total": "$149.99"
+        }
+      ]
+    },
+    {
+      "country_code": "AO",
+      "group_index": 34,
+      "currency_code": "USD",
+      "tax_mode": "external",
+      "address": {
+        "country_code": "AO"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "79",
+          "observed_amount": "79",
+          "unit_totals": {
+            "subtotal": "79",
+            "discount": "0",
+            "tax": "0",
+            "total": "79"
+          },
+          "formatted_total": "$0.79"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "790",
+          "observed_amount": "790",
+          "unit_totals": {
+            "subtotal": "790",
+            "discount": "0",
+            "tax": "0",
+            "total": "790"
+          },
+          "formatted_total": "$7.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "149",
+          "observed_amount": "149",
+          "unit_totals": {
+            "subtotal": "149",
+            "discount": "0",
+            "tax": "0",
+            "total": "149"
+          },
+          "formatted_total": "$1.49"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "1499",
+          "observed_amount": "1499",
+          "unit_totals": {
+            "subtotal": "1499",
+            "discount": "0",
+            "tax": "0",
+            "total": "1499"
+          },
+          "formatted_total": "$14.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "399",
+          "observed_amount": "399",
+          "unit_totals": {
+            "subtotal": "399",
+            "discount": "0",
+            "tax": "0",
+            "total": "399"
+          },
+          "formatted_total": "$3.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "3999",
+          "observed_amount": "3999",
+          "unit_totals": {
+            "subtotal": "3999",
+            "discount": "0",
+            "tax": "0",
+            "total": "3999"
+          },
+          "formatted_total": "$39.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "899",
+          "observed_amount": "899",
+          "unit_totals": {
+            "subtotal": "899",
+            "discount": "0",
+            "tax": "0",
+            "total": "899"
+          },
+          "formatted_total": "$8.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "8999",
+          "observed_amount": "8999",
+          "unit_totals": {
+            "subtotal": "8999",
+            "discount": "0",
+            "tax": "0",
+            "total": "8999"
+          },
+          "formatted_total": "$89.99"
+        }
+      ]
+    },
+    {
+      "country_code": "AE",
+      "group_index": 35,
+      "currency_code": "USD",
+      "tax_mode": "internal",
+      "address": {
+        "country_code": "AE"
+      },
+      "ok": true,
+      "line_checks": 8,
+      "lines": [
+        {
+          "key": "lite_month",
+          "price_id": "pri_01m5nh7cbd1r1khpvm0mp345e5",
+          "expected_amount": "99",
+          "observed_amount": "99",
+          "unit_totals": {
+            "subtotal": "94",
+            "discount": "0",
+            "tax": "5",
+            "total": "99"
+          },
+          "formatted_total": "$0.99"
+        },
+        {
+          "key": "lite_year",
+          "price_id": "pri_01m5nha4dx3pxv59wtsg31edm8",
+          "expected_amount": "990",
+          "observed_amount": "990",
+          "unit_totals": {
+            "subtotal": "943",
+            "discount": "0",
+            "tax": "47",
+            "total": "990"
+          },
+          "formatted_total": "$9.90"
+        },
+        {
+          "key": "standard_month",
+          "price_id": "pri_01m5nha7ng5fmkanptfj0e6rr0",
+          "expected_amount": "299",
+          "observed_amount": "299",
+          "unit_totals": {
+            "subtotal": "285",
+            "discount": "0",
+            "tax": "14",
+            "total": "299"
+          },
+          "formatted_total": "$2.99"
+        },
+        {
+          "key": "standard_year",
+          "price_id": "pri_01m5nha7zdh4abfmabq61v4cnn",
+          "expected_amount": "2999",
+          "observed_amount": "2999",
+          "unit_totals": {
+            "subtotal": "2856",
+            "discount": "0",
+            "tax": "143",
+            "total": "2999"
+          },
+          "formatted_total": "$29.99"
+        },
+        {
+          "key": "advanced_month",
+          "price_id": "pri_01m5nhb3gak4qafrssj64mn7k7",
+          "expected_amount": "799",
+          "observed_amount": "799",
+          "unit_totals": {
+            "subtotal": "761",
+            "discount": "0",
+            "tax": "38",
+            "total": "799"
+          },
+          "formatted_total": "$7.99"
+        },
+        {
+          "key": "advanced_year",
+          "price_id": "pri_01m5nhb3sfk4at9kj3rx9s3768",
+          "expected_amount": "7999",
+          "observed_amount": "7999",
+          "unit_totals": {
+            "subtotal": "7618",
+            "discount": "0",
+            "tax": "381",
+            "total": "7999"
+          },
+          "formatted_total": "$79.99"
+        },
+        {
+          "key": "ultimate_month",
+          "price_id": "pri_01m5nhb6xg79ffbsdepk04z5dn",
+          "expected_amount": "1799",
+          "observed_amount": "1799",
+          "unit_totals": {
+            "subtotal": "1713",
+            "discount": "0",
+            "tax": "86",
+            "total": "1799"
+          },
+          "formatted_total": "$17.99"
+        },
+        {
+          "key": "ultimate_year",
+          "price_id": "pri_01m5nhb76c2are695yct25ffvj",
+          "expected_amount": "17999",
+          "observed_amount": "17999",
+          "unit_totals": {
+            "subtotal": "17142",
+            "discount": "0",
+            "tax": "857",
+            "total": "17999"
+          },
+          "formatted_total": "$179.99"
+        }
+      ]
+    }
+  ]
+}

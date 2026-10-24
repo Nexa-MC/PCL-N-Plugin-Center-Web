@@ -23,10 +23,10 @@ test('legal download bytes match published version, date and SHA-256 for every c
   });
 });
 
-test('1.1 account entry version follows terms and privacy while supplemental policies remain 1.0', async () => {
+test('1.2 account entry version follows terms and privacy while supplemental policies remain 1.0', async () => {
   const source = await readFile(new URL('src/api/platform.ts', root), 'utf8');
   const version = source.match(/export const POLICY_VERSION = '([^']+)'/)?.[1];
-  assert.equal(version, '1.1');
+  assert.equal(version, '1.2');
   assert.equal(documents.find(d => d.key === 'terms').version, version);
   assert.equal(documents.find(d => d.key === 'privacy').version, version);
   assert.equal(documents.find(d => d.key === 'publisher').version, '1.0');
@@ -45,4 +45,14 @@ test('1.0 archives preserve the original accepted document bytes and are reachab
     assert.equal(bytes.toString('utf8').match(/\*\*版本：([^*]+)\*\*/)?.[1], '1.0');
     assert.ok(page.includes(`href="${path}"`), 'the original document must remain available to users');
   });
+});
+
+test('1.1 archives preserve the preceding published Chinese and English documents', async () => {
+  const hashes = { terms: '9033b50cfb0e14f4f4758adf610bb063529ec2443d879420105479cf067729f5', privacy: '8e45f1f498b955232abc6e149acc5c7f71fb5e70f5e1b1e8b1c5eeb28911520b' };
+  for (const [kind, expected] of Object.entries(hashes)) {
+    const path = `/legal/archive/1.1/${kind}.zh-CN.md`;
+    assert.equal(sha256(await readFile(new URL('public' + path, root))), expected);
+    assert.ok(page.includes(`href="${path}"`));
+    assert.match(await readFile(new URL(`public/legal/archive/1.1/${kind}.en.md`, root), 'utf8'), /Version: 1\.1/);
+  }
 });

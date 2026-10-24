@@ -138,7 +138,7 @@ test('current English legal translations retain section identifiers and key publ
     const english = await readFile(new URL(`public/legal/current/${doc}.en.md`, root), 'utf8');
     const sections = text => [...text.matchAll(/^#{2,3} (\d+(?:\.\d+)?)\.? /gm)].map(m => m[1]);
     assert.deepEqual(sections(english), sections(chinese), doc);
-    assert.match(english, new RegExp(`Version: ${['terms', 'privacy'].includes(doc) ? '1\\.1' : '1\\.0'}`));
+    assert.match(english, new RegExp(`Version: ${['terms', 'privacy'].includes(doc) ? '1\\.2' : '1\\.0'}`));
     assert.match(english, /support@pcln\.top/);
     assert.match(english, /privacy@pcln\.top/);
   }

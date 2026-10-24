@@ -1,11 +1,11 @@
 # Nexa Cloud Privacy Policy
 
-**Version: 1.1**  
-**Effective: October 1, 2026**
+**Version: 1.2**\
+**Effective: October 23, 2026**
 
 English translation of the Chinese version supplied with your policy record. The original document remains available from the legal documents page.
 
-This Policy explains personal information processing by Xie Jiangmao, operating as Nexa / PCL N, for Nexa Cloud, NexaStore and related online services. Version 1.1 adds account security, Microsoft game connections, community accounts, levels, experience, badges and interface themes, and distinguishes anonymous telemetry from account activity.
+This Policy explains personal information processing by Xie Jiangmao, operating as Nexa / PCL N, for Nexa Cloud, NexaStore and related services. Version 1.2 adds email-code sign-in, direct passkey sign-in and SMTP/IMAP receipt processing for independent contact mailboxes.
 
 ## 1. Personal information processor
 
@@ -31,7 +31,11 @@ Standard sign-in scopes are GitHub `read:user user:email`, Microsoft `openid pro
 
 If you set a Nexa password, we store a salted hash, not plaintext. Password sign-in requires a registered passkey, authenticator or unused recovery code.
 
+For enabled email-code sign-in, we process the submitted email, network rate-limit identifier, random challenge, keyed code MAC, attempt count, expiry and consumption status. Plaintext codes are only used to generate and send email, not stored in databases or logs. Codes last five minutes, allow five attempts and are single use. Unknown, disabled, incomplete and duplicate-email accounts receive the same response structure; accounts are not merged. Changed emails, disabled accounts and expiry prevent old codes from signing in. Enrolled MFA still applies.
+
 For passkeys we store credential IDs, public keys, algorithms, signature counters, your chosen names and creation/use times. Private keys and device biometrics used to unlock credentials remain with your device or credential service and are not sent to Nexa.
+
+Direct passkey sign-in uses an anonymous, single-use challenge and checks the credential, user handle, origin, relying party, signature, counter, presence and device user verification before creating a session without additional login verification. New registration requires a discoverable, user-verified credential. Incompatible older credentials can retain their previous MFA use.
 
 For authenticators we store device names, TOTP secrets, confirmation times and replay-prevention state. Production configuration encrypts TOTP secrets with a server-side key. During enrollment the secret and QR payload are delivered to your browser for adding to the authenticator.
 
@@ -146,7 +150,11 @@ Paddle currently supports sandbox tests. For actual direct Nexa sales it acts as
 
 ### 7.4 Email and support
 
-When configured, notification code may use Resend with recipient email, subject and necessary content. Without configuration it does not send to Resend; account pages still show outcomes. Email delivery is not the sole proof of an action's success. Email providers and third-party channels you actively use handle their communications. Important new providers will be disclosed.
+Configured mail uses Feishu SMTP first for codes, account notifications and automatic receipts, transmitting the recipient, sender identity, subject and necessary content. The independent noreply@pcln.top mailbox sends system mail and is excluded from automatic replies. Each of the four contact mailboxes uses its own account. Other deployments with an existing Resend configuration retain API compatibility; unconfigured providers receive no mail and messages are not sent through both transports.
+
+When receipts are enabled, Cloudflare Workers use IMAP to inspect new contact mail headers: sender, recipients, message identifiers and loop-prevention headers. They do not read bodies or attachments or mark messages as read. We retain mailbox categories, sender and source-message digests, delivery states, reply identifiers and timestamps for deduplication and diagnostics, without original message bodies. Original mail remains with Feishu and the correspondents’ mail providers. Initial connection starts with new mail and does not send receipts for an old backlog.
+
+Without mail configuration, email-code sign-in is unavailable. SMTP acceptance does not prove final delivery, and an automatic receipt does not mean a request has been resolved.
 
 ### 7.5 Legal disclosures
 
@@ -168,7 +176,10 @@ Validity is the period a credential or challenge can be used, not a promise all 
 | Console / Operations sessions | Up to about 24 hours / 1 hour; sign-out revokes; maintenance cleans expired hashes |
 | Sign-in OAuth state/nonce | About 10 minutes; new authorizations and maintenance clear used/expired state |
 | Afdian linking state | About 10 minutes; maintenance clears used/expired state; unlinking clears unfinished state |
-| Password sign-in / passkey enrollment challenges | About five minutes; expired records older than one day enter daily cleanup |
+| Password, passkey enrollment/direct sign-in and email-code challenges | About five minutes; expired records older than one day enter daily cleanup; consumed challenges cannot be reused |
+| Automatic receipt deduplication records | Enter daily cleanup after 30 days; exclude original bodies and attachments |
+| SMTP quota reservations | Random identifier, sender digest and timestamp only; enter daily cleanup after 24 hours; no recipient or body |
+| Mailbox polling progress | Account digest and UID progress only; enters cleanup after 30 days without updates |
 | Unconfirmed TOTP enrollment | About 15 minutes; maintenance clears expiry |
 | Confirmed TOTP, passkeys, recovery codes and password hashes | While used; processed on removal, replacement of unused codes or final deletion |
 | Microsoft profiles and encrypted refresh tokens | While linked; removed on Microsoft unlinking or final deletion |
@@ -246,7 +257,7 @@ Nexa does not sell personal information as its business model or conduct cross-c
 
 Important changes to purposes, data, providers, transfers, AI, advertising, retention or rights update this Policy with appropriate notice. Processing requiring new consent is not authorized merely by editing text. Old 1.0 acceptance and notice records remain tied to that version.
 
-The legal page provides 1.1 content, original downloads and SHA-256 digests; 1.0 and earlier versions are archived. Digests trace supplied content and do not replace valid consent.
+The legal page provides 1.2 content, original downloads and SHA-256 digests; 1.1, 1.0 and earlier versions are archived. Digests trace supplied content and do not replace valid consent.
 
 ## 21. Contact
 

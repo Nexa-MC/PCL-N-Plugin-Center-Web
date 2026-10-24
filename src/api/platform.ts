@@ -32,7 +32,7 @@ export class ApiError extends Error { constructor(message: string, public status
 
 // 开发环境走同源相对路径（vite 代理 → 本地 nexa-auth :5733）；生产仍直连认证域。
 const AUTH_BASE = import.meta.env.DEV ? '' : 'https://auth.pcln.top';
-export const POLICY_VERSION = '1.1';
+export const POLICY_VERSION = '1.2';
 export interface RegisterCompletePayload { name: string; handle: string; password?: string; totpId?: string; totpCode?: string }
 
 let accessToken = '', currentUser: Session | undefined, restoring: Promise<Session | undefined> | undefined;
@@ -352,6 +352,19 @@ export const platform = {
       throw new ApiError(body.code === 'mfa_enrollment_required' ? '该账户尚未注册两步验证：请先用第三方方式登录一次，并在「安全性与登录」中注册 passkey 或验证器应用。' : (body.detail || '用户 ID 或密码不正确'), response.status);
     }
     return await response.json() as LoginChallenge;
+  },
+  loginMethods: () => authJson<{ emailCode: boolean; passkey: boolean }>(authFetch('/auth/v1/login/methods'), '读取登录方式失败'),
+  requestEmailLogin: (email: string) => authJson<{ challenge: string; expiresIn: number; retryAfter: number }>(authFetch('/auth/v1/login/email/request', { method: 'POST', body: JSON.stringify({ email }) }), '发送验证码失败'),
+  verifyEmailLogin: async (challenge: string, code: string) => {
+    const result = await authJson<(LoginChallenge & { mfaRequired: true }) | { ok: true; user: { id: string; name: string } }>(authFetch('/auth/v1/login/email/verify', { method: 'POST', body: JSON.stringify({ challenge, code }) }), '邮箱验证码无效或已过期');
+    if (!('mfaRequired' in result)) { accessToken = ''; currentUser = undefined; restoring = undefined; notifySessionChange(); }
+    return result;
+  },
+  directPasskeyOptions: () => authJson<AssertOptions & { loginChallenge: string }>(authFetch('/auth/v1/login/passkey/direct/options', { method: 'POST', body: '{}' }), '获取 Passkey 登录选项失败'),
+  directPasskeyLogin: async (payload: { challenge: string } & PasskeyAssertion) => {
+    const result = await authJson<{ ok: true; user: { id: string; name: string } }>(authFetch('/auth/v1/login/passkey/direct', { method: 'POST', body: JSON.stringify(payload) }), 'Passkey 校验失败');
+    accessToken = ''; currentUser = undefined; restoring = undefined; notifySessionChange();
+    return result;
   },
   loginWithCode: async (challenge: string, code: string) => {
     const result = await authJson<{ ok: boolean; method: string; recovery?: { remaining: number }; user: { id: string; name: string } }>(authFetch('/auth/v1/login/totp', { method: 'POST', body: JSON.stringify({ challenge, code }) }), '验证码不正确或挑战已过期');

@@ -21,13 +21,15 @@
         <router-link to="/legal/terms">{{ $ui('服务条款') }}</router-link>
         <router-link to="/legal/privacy">{{ $ui('隐私政策') }}</router-link>
         <router-link to="/legal/refunds">{{ $ui('退款与取消政策') }}</router-link>
-        <a href="mailto:support@pcln.top">{{ $ui('联系支持') }}</a>
+        <router-link to="/contact">{{ $ui('联系我们') }}</router-link>
+        <a v-for="contact in CONTACTS" :key="contact.key" :href="`mailto:${contact.address}`">{{ $ui(contact.label) }}</a>
       </nav>
     </footer>
   </div>
 </template>
 <script setup lang="ts">
 import BrandIcon from '@/components/BrandIcon.vue';
+import { CONTACTS } from '@/config/contact';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, SESSION_EVENT, type Session } from '@/api/platform';
