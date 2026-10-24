@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 // Public and management Workers share a bundle, but have separate domains.
 // Shared-only pushes retain the previous management deployment behavior.
 export function deploymentTargets(paths) {
-  const web = paths.some(path => /^(public\/|src\/views\/(cloud|site)\/|src\/config\/(publicPricing|pricing)\.ts$|wrangler\.jsonc$)/.test(path));
+  const web = paths.some(path => /^(public\/|src\/views\/(cloud|site)\/|src\/config\/(publicPricing|pricing)\.ts$|scripts\/public-release\.mjs$|wrangler\.jsonc$)/.test(path));
   const manage = paths.some(path => /^(src\/views\/manage\/|src\/styles\/management\.css$|src\/api\/management\.ts$|wrangler\.manage\.jsonc$)/.test(path));
   return [...(web ? ['web'] : []), ...(manage || !web ? ['manage'] : [])];
 }

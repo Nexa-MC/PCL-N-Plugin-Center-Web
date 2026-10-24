@@ -41,7 +41,13 @@ if (command === 'prepare') {
       if (attempt < 5) await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }
-  if (lastError) throw lastError;
+  if (lastError) {
+    const detail = String(lastError.message).replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
+    console.error(`::error title=Online public release verification::${detail}`);
+    if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY,
+      `Deployment completed for ${sha}, but online verification failed:\n\n\`\`\`text\n${lastError.message}\n\`\`\`\n`);
+    throw lastError;
+  }
   const receipt = `Published and verified ${sha}\n${origin}/plans\n${origin}/legal/refunds\nRefund documents and page bundles match the release SHA-256 manifest.\n`;
   console.log(receipt);
   if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, receipt);

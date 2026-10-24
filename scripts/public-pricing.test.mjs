@@ -28,6 +28,7 @@ test('public page works without payment SDK/configuration and keeps purchases cl
 test('release selects the affected site while preserving existing management-only deployments', () => {
   assert.deepEqual(deploymentTargets(['src/views/cloud/PublicPlans.vue', 'src/routers/index.ts', 'src/languages/uiMessages.json']), ['web']);
   assert.deepEqual(deploymentTargets(['public/legal/current/refunds.en.md']), ['web']);
+  assert.deepEqual(deploymentTargets(['scripts/public-release.mjs']), ['web']);
   assert.deepEqual(deploymentTargets(['src/views/manage/Users.vue']), ['manage']);
   assert.deepEqual(deploymentTargets(['src/languages/uiMessages.json']), ['manage']);
   assert.deepEqual(deploymentTargets(['src/views/cloud/Home.vue', 'wrangler.manage.jsonc']), ['web', 'manage']);
