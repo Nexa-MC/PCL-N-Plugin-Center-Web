@@ -16,7 +16,7 @@
       <button class="primary-button" :disabled="disabled" @click="subscribe(plan.name)">{{ busy === plan.name ? copy.opening : label(plan.name) }}</button>
     </article></div>
     <p v-if="hasLowerPlans" class="more-plans"><a href="#subscription-plans" :aria-expanded="expanded" aria-controls="subscription-plans" @click.prevent="expanded = !expanded">{{ expanded ? copy.less : copy.more }}</a></p>
-    <p class="login-fine">{{ copy.payment }} <router-link class="text-link" to="/legal/refunds">{{ copy.refunds }}</router-link></p>
+    <p class="login-fine"><button v-if="readiness?.portalEnabled" class="text-link" :disabled="Boolean(busy)" @click="manage">{{ copy.actions.current }}</button> {{ copy.payment }} <router-link class="text-link" to="/legal/refunds">{{ copy.refunds }}</router-link></p>
   </section>
 </template>
 <script setup lang="ts">
@@ -36,11 +36,12 @@ const region = browserRegionalPricing(navigator.languages?.length ? navigator.la
 const currency = region.currency, cycle = ref<BillingCycle>('month');
 const session = ref<Session>(), current = ref<CurrentPlan | null>(null), loading = ref(true), unavailable = ref(false), expanded = ref(false);
 const readiness = ref<WaffoReadiness>(), busy = ref(''), error = ref('');
+const paddleSubscription = ref(false);
 const ranks = computed(() => visiblePlanRanks(current.value, expanded.value));
 const rank = (name: Tier['name']) => plans.findIndex(plan => plan.name === name) + 1;
 const visiblePlans = computed(() => plans.filter(plan => ranks.value.includes(rank(plan.name))));
 const hasLowerPlans = computed(() => Boolean(current.value && current.value.rank > 1));
-const disabled = computed(() => loading.value || Boolean(busy.value) || Boolean(session.value && (!current.value || isTestSession() || !readiness.value?.checkoutEnabled || !readiness.value.currencies.includes(currency))));
+const disabled = computed(() => loading.value || Boolean(busy.value) || Boolean(session.value && (!current.value || isTestSession() || (current.value.rank > 0 ? !paddleSubscription.value && !readiness.value?.portalEnabled : !readiness.value?.checkoutEnabled || !readiness.value.currencies.includes(currency)))));
 const copy = computed(() => uiLocale.value.startsWith('en') ? {
   title: 'Choose your Cloud+ plan', description: 'Flexible monthly and annual plans.', cycle: 'Billing period', month: 'Monthly', year: 'Annual', monthUnit: 'month', yearUnit: 'year', currency: 'Billing currency', fallback: 'Subscriptions in this region are billed in USD',
   tax: 'Prices follow your browser region settings. Final taxes and the total are shown before payment.', loading: 'Checking subscription…', unavailable: 'Payment is temporarily unavailable. Please try again later.', annual: 'Billed annually at ten months of the monthly price', monthly: 'Billed monthly',
@@ -57,12 +58,13 @@ const amount = (name: Tier['name']) => new Intl.NumberFormat(uiLocale.value, { s
 const keys = new Map<string, string>();
 let generation = 0;
 async function loadMembership() {
-  const step = ++generation; current.value = null; session.value = undefined; readiness.value = undefined; loading.value = true; unavailable.value = false; expanded.value = false; error.value = ''; keys.clear();
+  const step = ++generation; current.value = null; session.value = undefined; readiness.value = undefined; paddleSubscription.value = false; loading.value = true; unavailable.value = false; expanded.value = false; error.value = ''; keys.clear();
   try {
     const user = await platform.session(); if (step !== generation) return; session.value = user;
     if (user) {
       const [membership, availability] = await Promise.all([platform.entitlements(), request<unknown>('/billing/waffo/status').then(waffoReadiness).catch(() => undefined)]);
       if (step !== generation) return; current.value = confirmedPlan(membership.membership); readiness.value = availability;
+      paddleSubscription.value = membership.billingProvider !== 'waffo' && /^ctm_[a-z0-9]{26}$/.test(membership.paddleCustomerId || '');
       unavailable.value = !current.value || !availability?.checkoutEnabled;
     }
   } catch { if (step === generation) unavailable.value = true; }
@@ -71,16 +73,25 @@ async function loadMembership() {
 async function subscribe(name: Tier['name']) {
   if (disabled.value) return;
   if (!session.value) { await router.push({ path: '/login', query: { return: '/pricing' } }); return; }
+  if (current.value && current.value.rank > 0) { await manage(); return; }
   const userId = session.value.id, step = generation; busy.value = name; error.value = '';
   try {
     if (isTestSession()) throw new Error(copy.value.unavailable);
-    let target: string;
-    if (current.value && current.value.rank > 0) target = waffoRedirect(await request('/billing/waffo/portal', { method: 'POST', body: '{}' }), 'portal');
-    else {
-      const offerId = `cloud-plus:${name.toLowerCase()}:${cycle.value}`, offerKey = `${offerId}:${currency}`;
-      const key = keys.get(offerKey) || crypto.randomUUID(); keys.set(offerKey, key);
-      target = waffoRedirect(await request('/billing/waffo/checkout', { method: 'POST', body: JSON.stringify({ offerId, currency }), headers: { 'Idempotency-Key': key } }), 'checkout');
-    }
+    const offerId = `cloud-plus:${name.toLowerCase()}:${cycle.value}`, offerKey = `${offerId}:${currency}`;
+    const key = keys.get(offerKey) || crypto.randomUUID(); keys.set(offerKey, key);
+    const target = waffoRedirect(await request('/billing/waffo/checkout', { method: 'POST', body: JSON.stringify({ offerId, currency }), headers: { 'Idempotency-Key': key } }), 'checkout');
+    const user = await platform.refreshSession();
+    if (step !== generation || user?.id !== userId) throw new Error(copy.value.unavailable);
+    window.location.assign(target);
+  } catch { if (step === generation) error.value = copy.value.failed; }
+  finally { busy.value = ''; }
+}
+async function manage() {
+  if (busy.value || !session.value || isTestSession()) return;
+  if (paddleSubscription.value) { await router.push('/account?section=wallet'); return; }
+  const userId = session.value.id, step = generation; busy.value = 'portal'; error.value = '';
+  try {
+    const target = waffoRedirect(await request('/billing/waffo/portal', { method: 'POST', body: '{}' }), 'portal');
     const user = await platform.refreshSession();
     if (step !== generation || user?.id !== userId) throw new Error(copy.value.unavailable);
     window.location.assign(target);

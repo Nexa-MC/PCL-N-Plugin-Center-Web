@@ -1,9 +1,9 @@
 const currencies = new Set(['USD', 'EUR', 'GBP', 'JPY', 'HKD']);
-export interface WaffoReadiness { provider: 'waffo'; mode: 'prod'; checkoutEnabled: boolean; currencies: string[] }
+export interface WaffoReadiness { provider: 'waffo'; mode: 'prod'; checkoutEnabled: boolean; portalEnabled?: boolean; currencies: string[] }
 export function waffoReadiness(value: unknown): WaffoReadiness {
   const row = value as Partial<WaffoReadiness> | null;
   if (row?.provider !== 'waffo' || row.mode !== 'prod' || typeof row.checkoutEnabled !== 'boolean' || !Array.isArray(row.currencies)
-    || row.currencies.some(currency => !currencies.has(currency))) throw new Error('Invalid payment availability');
+    || row.currencies.some(currency => !currencies.has(currency)) || row.portalEnabled !== undefined && typeof row.portalEnabled !== 'boolean') throw new Error('Invalid payment availability');
   return row as WaffoReadiness;
 }
 export function waffoRedirect(value: unknown, kind: 'checkout' | 'portal'): string {
