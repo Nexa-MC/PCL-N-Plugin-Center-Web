@@ -6,8 +6,8 @@ import { deploymentTargets } from './deployment-targets.mjs';
 
 test('public reference prices contain the confirmed eight USD amounts without checkout IDs', () => {
   assert.deepEqual(CONFIRMED_USD_PRICES, {
-    Lite: { month: '99', year: '990' }, Standard: { month: '299', year: '2999' },
-    Advanced: { month: '799', year: '7999' }, Ultimate: { month: '1799', year: '17999' }
+    Lite: { month: '199', year: '1990' }, Standard: { month: '399', year: '3990' },
+    Advanced: { month: '999', year: '9990' }, Ultimate: { month: '1999', year: '19990' }
   });
   assert.deepEqual(PUBLIC_PLANS.map(plan => plan.trialDays), [7, null, null, null]);
   for (const plan of PUBLIC_PLANS) {

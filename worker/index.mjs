@@ -31,6 +31,28 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url), path = url.pathname;
     try {
+      if (path.startsWith('/webhooks/wp_wh/')) {
+        const unavailable = () => Response.json({ type: 'about:blank', title: 'Service Unavailable', status: 503, detail: 'waffo_test_handler_unavailable' },
+          { status: 503, headers: { 'cache-control': 'no-store', 'retry-after': '30', 'x-nexa-webhook': 'waffo-test' } });
+        const problem = (status, detail, extra = {}) => Response.json({ type: 'about:blank', status, detail },
+          { status, headers: { 'cache-control': 'no-store', 'x-nexa-webhook': 'waffo-test', ...extra } });
+        if (url.hostname !== 'pcln.top' || path !== '/webhooks/wp_wh/test') return problem(404, 'webhook_not_found');
+        if (request.method !== 'POST') return problem(405, 'webhook_post_required', { allow: 'POST' });
+        if (!request.headers.get('content-type')?.startsWith('application/json')) return problem(415, 'waffo_raw_json_required');
+        const signature = request.headers.get('x-waffo-signature');
+        if (!signature) return problem(401, 'waffo_test_signature_required');
+        if (Number(request.headers.get('content-length')) > 65536) return problem(413, 'webhook_body_too_large');
+        if (!env.API) return unavailable();
+        const target = new URL('/api/webhooks/waffo-test', url);
+        // Do not parse or reserialize the signed bytes, and do not forward
+        // browser authority or internal launcher gateway headers.
+        const headers = new Headers({ 'content-type': request.headers.get('content-type'), 'x-waffo-signature': signature });
+        const upstream = await env.API.fetch(new Request(target, new Request(request, { headers, redirect: 'manual' })));
+        if (upstream.status === 404 || upstream.status >= 300 && upstream.status < 400 || upstream.headers.get('content-type')?.includes('text/html')) return unavailable();
+        const reply = new Headers(upstream.headers);
+        reply.delete('set-cookie'); reply.delete('location'); reply.set('cache-control', 'no-store'); reply.set('x-nexa-webhook', 'waffo-test');
+        return new Response(upstream.body, { status: upstream.status, headers: reply });
+      }
       if (url.hostname === 'manage.pcln.top' && path === '/') {
         return new Response(null, { status: 302, headers: { location: new URL('/manage', url).href, 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
       }
