@@ -9,6 +9,7 @@ on:
       - src/views/site/**
       - src/config/publicPricing.ts
       - src/config/pricing.ts
+      - src/utils/checkoutResult.ts
       - src/views/manage/**
       - src/styles/management.css
       - src/api/management.ts

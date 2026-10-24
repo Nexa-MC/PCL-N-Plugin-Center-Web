@@ -35,6 +35,7 @@ const router = createRouter({
       { path: 'docs', component: () => import('@/views/cloud/Documentation.vue') },
       { path: 'plans', component: () => import('@/views/cloud/PublicPlans.vue') },
       { path: 'pricing', component: () => import('@/views/cloud/Pricing.vue') },
+      { path: 'checkout/result', component: () => import('@/views/cloud/CheckoutResult.vue') },
       { path: 'welcome', component: () => import('@/views/cloud/Welcome.vue') },
       { path: 'legal', component: () => import('@/views/cloud/LegalDocs.vue') },
       { path: 'legal/:doc', component: () => import('@/views/cloud/LegalDocs.vue') },
