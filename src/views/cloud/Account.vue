@@ -12,35 +12,45 @@
     </section>
   </div>
   <div v-else-if="session" class="account-layout">
-    <nav class="account-nav" :aria-label="$ui('账户分类')">
-      <button v-for="item in navItems" :key="item.key" type="button" :class="{ active: section === item.key }" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span>{{ $ui(item.label) }}</button>
-    </nav>
+    <aside class="account-navigation">
+      <nav class="account-nav" :aria-label="$ui('账户导航')">
+        <router-link :to="sectionLink('overview')" :class="{ active: section === 'overview' }" :aria-current="section === 'overview' ? 'page' : undefined"><span class="account-nav-icon" aria-hidden="true"><KoiIcon name="home" /></span>{{ $ui('账户概览') }}</router-link>
+        <div v-for="group in navGroups" :key="group.label" class="account-nav-group">
+          <p class="account-nav-label">{{ $ui(group.label) }}</p>
+          <router-link v-for="item in group.items" :key="item.key" :to="sectionLink(item.key)" :class="{ active: selectedSection === item.key }" :aria-current="selectedSection === item.key ? 'page' : undefined"><span class="account-nav-icon" aria-hidden="true"><KoiIcon :name="item.icon" /></span>{{ $ui(item.label) }}</router-link>
+        </div>
+      </nav>
+      <label class="account-mobile-nav">{{ $ui('账户导航') }}<select :value="selectedSection" @change="navigateSection"><option value="overview">{{ $ui('账户概览') }}</option><optgroup v-for="group in navGroups" :key="group.label" :label="$ui(group.label)"><option v-for="item in group.items" :key="item.key" :value="item.key">{{ $ui(item.label) }}</option></optgroup></select></label>
+    </aside>
     <div class="account-panel">
       <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
 
       <template v-if="section === 'overview'">
-        <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">{{ $ui("账户") }}</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || $ui("第三方身份账户") }}</p><span class="status-pill">{{ $ui("已登录") }}</span></div></div><div class="shortcut-grid"><button v-for="item in navItems.filter(i => i.key !== 'overview')" :key="item.key" type="button" @click="section = item.key"><span class="nav-icon" :style="{ background: item.color }" aria-hidden="true"><KoiIcon :name="item.icon" /></span><span>{{ $ui(item.label) }}</span></button></div></section>
+        <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">{{ $ui('账户概览') }}</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || $ui("第三方身份账户") }}</p></div></div><div class="account-shortcuts"><router-link v-for="item in shortcuts" :key="item.key" :to="sectionLink(item.key)"><span class="account-nav-icon" aria-hidden="true"><KoiIcon :name="item.icon" /></span><span><strong>{{ $ui(item.label) }}</strong><small>{{ $ui(item.description) }}</small></span></router-link></div></section>
         <AccountProgress :progression="progression" :busy="levelBusy" :error="levelError" @refresh="loadProgression" @select="selectDisplay" />
-        <section class="work-panel"><h2>{{ $ui("会话") }}</h2><p>{{ $ui("登录状态 24 小时有效。") }}</p><button class="danger-button" :disabled="busy" @click="logout">{{ $ui("退出登录") }}</button></section>
       </template>
 
       <template v-else-if="section === 'linked'">
-        <section class="work-panel"><h2>{{ $ui("关联的账号") }}</h2><p>{{ $ui("GitHub、Google 和 Microsoft 用于登录 Nexa；至少保留一个登录方式。") }}</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} {{ $ui("· 已关联") }}</small><small v-else>{{ $ui("尚未关联") }}</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">{{ $ui("关联") }} {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">{{ $ui("解除关联") }}</button><span v-else class="status-pill">{{ $ui("唯一登录方式") }}</span></div></section>
-        <section v-if="bound('microsoft')" class="work-panel">
+        <section class="work-panel">
           <h2>Minecraft</h2>
           <p>{{ $ui("单独授权 Xbox / Minecraft 权限，同步游戏拥有状况与档案。所选游戏账户独立关联到当前 Nexa 账户。") }}</p>
+          <p v-if="!identities && !error" role="status">{{ $ui('正在读取…') }}</p>
+          <template v-else-if="bound('microsoft')">
           <p v-if="minecraftLoading" role="status">{{ $ui("正在读取游戏档案…") }}</p>
           <p v-else>{{ minecraftText }}</p>
           <p v-if="minecraftError" class="form-error" role="alert">{{ $ui(minecraftError) }}</p>
           <p v-if="minecraftMessage" class="form-success" role="status">{{ $ui(minecraftMessage) }}</p>
           <div class="actions"><button class="secondary-button" :disabled="busy || minecraftLoading || testMode" @click="authorizeMinecraft">{{ $ui("授权 Minecraft") }}</button><button v-if="minecraft?.xboxAuthorized || minecraft?.checkedAt" class="danger-button" :disabled="busy || minecraftLoading || testMode" @click="revokeMinecraftAuthorization">{{ $ui("撤销游戏授权") }}</button></div>
+          </template>
+          <template v-else><p>{{ $ui('先在“登录与安全”中关联 Microsoft 账户，再授权 Minecraft。') }}</p><router-link class="secondary-button" :to="sectionLink('security')">{{ $ui('前往登录与安全') }}</router-link></template>
         </section>
         <section class="work-panel"><h2>{{ $ui("社区与赞助账户") }}</h2><div v-for="connection in connections" :key="connection.provider" class="identity-row"><div class="meta"><h3>{{ $ui(connection.label) }}</h3><small v-if="connection.account">{{ connection.account.name || connection.account.subject }} {{ $ui("· 已绑定") }}</small><small v-else>{{ connection.configured ? $ui("尚未绑定") : $ui("暂未开放") }}</small></div><button v-if="!connection.account" class="secondary-button" :disabled="busy || !connection.configured || testMode" @click="bindConnection(connection.provider)">{{ $ui("绑定") }}</button><button v-else class="danger-button" :disabled="busy" @click="removeConnection(connection.provider)">{{ $ui("解除绑定") }}</button></div><p v-if="connectionError" class="form-error" role="alert">{{ $ui(connectionError) }}</p><p v-if="connectionMessage" class="form-success" role="status">{{ $ui(connectionMessage) }}</p></section>
       </template>
 
       <template v-else-if="section === 'security'">
+        <section class="work-panel"><h2>{{ $ui('登录账号') }}</h2><p>{{ $ui("GitHub、Google 和 Microsoft 用于登录 Nexa；至少保留一个登录方式。") }}</p><div v-for="p in providers" :key="p.id" class="identity-row"><span class="identity-icon" aria-hidden="true" v-html="PROVIDER_SVG[p.id]"></span><div class="meta"><h3>{{ p.name }}</h3><small v-if="bound(p.id)">{{ identityMail(p.id) }} {{ $ui("· 已关联") }}</small><small v-else>{{ $ui("尚未关联") }}</small></div><button v-if="!bound(p.id)" class="secondary-button" :disabled="busy" @click="bind(p.id)">{{ $ui("关联") }} {{ p.name }}</button><button v-else-if="identities && identities.length > 1" class="danger-button" :disabled="busy" @click="unbind(p.id)">{{ $ui("解除关联") }}</button><span v-else class="status-pill">{{ $ui("唯一登录方式") }}</span></div></section>
         <section class="work-panel">
-          <h2>{{ $ui("安全性与登录") }}</h2>
+          <h2>{{ $ui('密码与会话') }}</h2>
           <div class="profile-row"><span>{{ $ui("登录方式") }}</span><strong>{{ factors?.passwordSet ? $ui("第三方 OAuth + 用户 ID 密码（强制两步验证）") : $ui("第三方 OAuth（GitHub / Google / Microsoft）") }}</strong></div>
           <div class="profile-row"><span>{{ $ui("登录密码") }}</span><strong>{{ factors ? (factors.passwordSet ? $ui("已设置") : $ui("未设置")) : $ui("正在读取…") }}</strong><button v-if="!testMode && factors" class="secondary-button row-action" :disabled="pwDialog.busy" @click="openPasswordDialog">{{ factors.passwordSet ? $ui("修改密码") : $ui("设置密码") }}</button></div>
           <div class="profile-row"><span>{{ $ui("会话有效期") }}</span><strong>{{ $ui("24 小时") }}</strong></div>
@@ -77,9 +87,11 @@
         <section class="work-panel"><h2>{{ $ui("政策确认记录") }}</h2><template v-if="policies.length"><div v-for="p in policies" :key="p.kind" class="profile-row"><span>{{ p.kind === 'terms' ? $ui("服务条款") : $ui("隐私政策") }} v{{ p.version }}</span><strong>{{ p.acceptedAt ? `${p.kind === 'privacy' ? $ui("已知悉") : $ui("已接受")} · ${new Date(p.acceptedAt).toLocaleString($locale)}` : (p.kind === 'privacy' ? $ui("未记录知悉") : $ui("未接受")) }}</strong></div><p class="legal-hashes">{{ $ui("文档哈希（SHA-256）：") }}{{ policies.map(p => `${p.kind}:${p.contentHash.slice(0, 16)}…`).join('　') }}</p></template><p v-else>{{ $ui("正在读取…") }}</p><p>{{ $ui("历史版本见") }} <router-link to="/legal">{{ $ui("法律文档索引") }}</router-link>{{ $ui("。") }}</p></section>
         <section class="work-panel"><h2>{{ $ui("数据导出") }}</h2><p>{{ $ui("导出账户资料、关联身份、会话状态、政策接受与隐私请求记录（JSON，不含凭据与哈希）。") }}</p><button class="primary-button" :disabled="busy" @click="exportData">{{ $ui("下载我的数据") }}</button></section>
         <section class="work-panel"><h2>{{ $ui("隐私请求") }}</h2><p>{{ $ui("根据《隐私政策》第 11 条，你可以在此提交查阅、更正、删除、可携带、限制或异议请求，我们会通过 privacy@pcln.top 处理。") }}</p><label class="privacy-select">{{ $ui("请求类型") }}<select v-model="privacyType"><option value="access">{{ $ui("查阅 / 复制") }}</option><option value="correction">{{ $ui("更正 / 补充") }}</option><option value="portability">{{ $ui("数据可携带副本") }}</option><option value="objection">{{ $ui("限制或异议") }}</option><option value="other">{{ $ui("其他") }}</option></select></label><button class="secondary-button" :disabled="busy" @click="submitPrivacy">{{ $ui("提交请求") }}</button><div v-if="privacyList.length" class="privacy-list"><div v-for="r in privacyList" :key="r.id" class="profile-row"><span>{{ $ui(privacyLabel(r.type)) }} · {{ new Date(r.createdAt).toLocaleDateString($locale) }}</span><span class="status-pill">{{ $ui(privacyState(r.state)) }}</span></div></div></section>
+        <section class="work-panel account-deletion-entry"><h2>{{ $ui('注销账户') }}</h2><p>{{ $ui('查看注销流程、7 天冷静期和账户数据的处理说明。') }}</p><router-link class="secondary-button" :to="sectionLink('delete')">{{ $ui('查看注销选项') }}</router-link></section>
       </template>
 
       <template v-else-if="section === 'delete'">
+        <router-link class="account-back-link" :to="sectionLink('privacy')">{{ $ui('返回隐私与数据') }}</router-link>
         <section class="work-panel"><h2>{{ $ui("删除账户") }}</h2><template v-if="deletion && deletion.state === 'pending'"><span class="status-pill">{{ $ui("注销已申请") }}</span><p>{{ $ui("注销将于") }} <strong>{{ new Date(deletion.executeAfter || 0).toLocaleString($locale) }}</strong> {{ $ui("生效（7 天冷静期）。在此之前登录并撤销，即可取消注销。") }}</p><button class="danger-button" :disabled="busy" @click="cancelDeletion">{{ $ui("撤销注销申请") }}</button></template><template v-else-if="deletion && deletion.state === 'finalized'"><span class="status-pill">{{ $ui("已注销") }}</span><p>{{ $ui("该账户已完成注销，个人资料已删除或匿名化。此页面仅为记录。") }}</p></template><template v-else><p>{{ $ui("注销申请设有") }} <strong>{{ $ui("7 天冷静期") }}</strong>{{ $ui("。生效后将撤销全部会话、解绑第三方身份、删除或匿名化账户资料；依法需要保留的记录将与普通账户分离受限保存。与组织或发布资源相关的关系将转移至不可登录的系统保管主体，资源立即下架。") }}</p><DeletionFinanceConfirmation :account-id="session.id" :required="Boolean(session.creator || session.developer || session.trustedDeveloper)" @change="deletionFinance = $event" /><label class="delete-confirm">{{ $ui("输入账户名") }} <strong>{{ session.name }}</strong> {{ $ui("以确认") }}<input v-model="deleteConfirm" :placeholder="session.name" /></label><p v-if="deleteError" class="form-error" role="alert">{{ $ui(deleteError) }}</p><button class="danger-button" :disabled="busy || deleteConfirm !== session.name || !deletionFinance.ready" @click="requestDeletion">{{ $ui("申请删除账户") }}</button></template></section>
       </template>
 
@@ -90,7 +102,7 @@
 
       <template v-else-if="section === 'profile'">
         <section class="work-panel">
-          <h2>{{ $ui("个人信息") }}</h2>
+          <h2>{{ $ui('个人资料') }}</h2>
           <div class="profile-row"><span>{{ $ui("账户名") }}</span><strong>{{ session.name }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="nameDialog.busy" @click="openNameDialog">{{ $ui("修改") }}</button></div>
           <div class="profile-row"><span>{{ $ui("用户 ID") }}</span><strong>{{ session.handle ? '@' + session.handle : $ui("未设置") }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="handleDialog.busy" @click="openHandleDialog">{{ session.handle ? $ui("修改") : $ui("设置") }}</button></div>
           <div class="profile-row"><span>{{ $ui("邮箱") }}</span><strong>{{ session.email || $ui("未提供") }}</strong></div>
@@ -236,31 +248,46 @@ async function logout(){ busy.value=true; error.value=''; await platform.logout(
 // 登录表单已独立为 /login 页（也为启动器设备流确认页做准备）。
 function gotoLogin() { void router.replace({ path: '/login', query: { return: route.fullPath } }); }
 
-const navItems = [
-  { key: 'overview', label: '概览', icon: 'home', color: '#1a73e8' },
-  { key: 'linked', label: '关联的账号', icon: 'arrow-left-right', color: '#1e8e3e' },
-  { key: 'security', label: '安全性与登录', icon: 'shield-tick', color: '#f2a100' },
-  { key: 'profile', label: '个人信息', icon: 'personal-card', color: '#9334e6' },
-  { key: 'privacy', label: '隐私与数据', icon: 'lock-circle', color: '#00897b' },
-  { key: 'wallet', label: '钱包与订阅', icon: 'card', color: '#c5221f' },
-  { key: 'tickets', label: '支持工单', icon: 'conversation-box', color: '#12a5af' },
-  { key: 'creator', label: '创作者控制台', icon: 'picture', color: '#a142f4' },
-  { key: 'developer', label: '开发者控制台', icon: 'console', color: '#3f51b5' },
-  { key: 'website', label: '网站管理', icon: 'setting', color: '#e8546e' },
-  { key: 'delete', label: '删除账户', icon: 'trash-square', color: '#5f6368' }
+interface AccountNavItem { key: string; label: string; icon: string; staffOnly?: boolean }
+const navigationGroups: { label: string; items: AccountNavItem[] }[] = [
+  { label: '账户设置', items: [
+    { key: 'profile', label: '个人资料', icon: 'personal-card' },
+    { key: 'security', label: '登录与安全', icon: 'shield-tick' },
+    { key: 'linked', label: '游戏与社区', icon: 'arrow-left-right' },
+    { key: 'privacy', label: '隐私与数据', icon: 'lock-circle' }
+  ] },
+  { label: '服务与支持', items: [
+    { key: 'wallet', label: '钱包与订阅', icon: 'card' },
+    { key: 'tickets', label: '支持工单', icon: 'conversation-box' }
+  ] },
+  { label: '创作与开发', items: [
+    { key: 'developer', label: '开发者控制台', icon: 'console' },
+    { key: 'creator', label: '创作者控制台', icon: 'picture' }
+  ] },
+  { label: '管理', items: [{ key: 'website', label: '网站管理', icon: 'setting', staffOnly: true }] }
 ];
-const validSections = navItems.map(i => i.key);
-const section = ref(validSections.includes(String(route.query.section)) ? String(route.query.section) : 'overview');
-watch(() => route.query.section, value => { if (validSections.includes(String(value))) section.value = String(value); });
+const navItems = navigationGroups.flatMap(group => group.items);
+const validSections = ['overview', ...navItems.map(item => item.key), 'delete'];
+const section = computed(() => typeof route.query.section === 'string' && validSections.includes(route.query.section) ? route.query.section : 'overview');
+const selectedSection = computed(() => section.value === 'delete' ? 'privacy' : section.value);
+const navGroups = computed(() => navigationGroups.map(group => ({ ...group, items: group.items.filter(item => !item.staffOnly || session.value?.staff || section.value === item.key) })).filter(group => group.items.length));
+const shortcuts = [
+  { key: 'profile', label: '个人资料', icon: 'personal-card', description: '账户名、用户 ID 与邮箱' },
+  { key: 'security', label: '登录与安全', icon: 'shield-tick', description: '登录账号、密码与两步验证' },
+  { key: 'wallet', label: '钱包与订阅', icon: 'card', description: '订阅套餐、账单与 N 代币' },
+  { key: 'tickets', label: '支持工单', icon: 'conversation-box', description: '提交问题与查看处理进度' }
+];
+function sectionLink(key: string) { return { path: '/account', query: key === 'overview' ? {} : { section: key } }; }
+function navigateSection(event: Event) { void router.push(sectionLink((event.target as HTMLSelectElement).value)); }
 watch(section, value => {
   if (value === 'overview') void loadProgression();
   if (value === 'tickets' && !ticketsLoaded.value) void loadTickets();
   if (value === 'privacy') { void loadPolicies(); void loadPrivacy(); }
   if (value === 'delete') void loadDeletion();
   if (value === 'wallet') void loadEntitlements();
-  if (value === 'linked') { void loadMinecraft(); void loadConnections(); }
+  if (value === 'linked') { void loadIdentities(); void loadMinecraft(); void loadConnections(); }
   if (value === 'website' && session.value?.staff && !summary.value && !summaryLoading.value) void loadSummary();
-  if (value === 'security' && session.value && !testMode.value && !factors.value) void refreshFactors();
+  if (value === 'security') { void loadIdentities(); if (session.value && !testMode.value && !factors.value) void refreshFactors(); }
 });
 
 // 网站管理：仅保留 7 天遥测摘要；完整控制台属于 manage.pcln.top 独立后台。
@@ -320,7 +347,7 @@ const minecraftText = computed(() => {
 async function loadMinecraft(){ minecraftLoading.value = true; try { minecraft.value = await platform.minecraftProfile(); } catch (e) { minecraft.value = null; minecraftError.value = e instanceof ApiError ? e.message : '暂时无法读取 Minecraft 档案，请稍后重试。'; } finally { minecraftLoading.value = false; } }
 async function authorizeMinecraft(){ busy.value = true; minecraftError.value = ''; minecraftMessage.value = ''; try { await platform.authorizeMinecraft(); } catch (e) { minecraftError.value = e instanceof ApiError ? e.message : '无法开始 Minecraft 授权，请稍后重试。'; } finally { busy.value = false; } }
 async function revokeMinecraftAuthorization(){ busy.value = true; minecraftError.value = ''; minecraftMessage.value = ''; try { await platform.revokeMinecraftAuthorization(); minecraftMessage.value = 'Minecraft 授权已撤销'; await loadMinecraft(); } catch (e) { minecraftError.value = e instanceof ApiError ? e.message : '撤销 Minecraft 授权失败，请稍后重试。'; } finally { busy.value = false; } }
-async function bind(id: LinkedIdentity['provider']){ busy.value = true; platform.oauthStart(id, '/account?section=linked', 'link'); }
+async function bind(id: LinkedIdentity['provider']){ busy.value = true; platform.oauthStart(id, '/account?section=security', 'link'); }
 async function unbind(id: LinkedIdentity['provider']){ busy.value = true; error.value = ''; try { await platform.unbind(id); await Promise.all([loadIdentities(), loadProgression()]); if (id === 'microsoft') { minecraft.value = null; minecraftError.value = ''; minecraftMessage.value = ''; } } catch (e) { error.value = e instanceof ApiError ? e.message : '解绑失败，请重试。'; } finally { busy.value = false; } }
 
 const policies = ref<PolicyStatus[]>([]);
@@ -540,6 +567,26 @@ onMounted(async () => {
 onUnmounted(() => { window.removeEventListener(SESSION_EVENT, syncSession); });
 </script>
 <style scoped>
+.account-layout{grid-template-columns:220px minmax(0,1fr);gap:32px}
+.account-navigation{position:sticky;top:20px;min-width:0}
+.account-nav{position:static;display:flex;flex-direction:column;gap:8px;overflow:visible;padding:0;margin:0}
+.account-nav-group{display:grid;gap:3px}
+.account-nav-label{font-size:11px;font-weight:600;color:var(--market-muted);padding:14px 12px 6px;letter-spacing:.04em}
+.account-nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;color:var(--market-text);font-size:13px;line-height:1.5;min-height:42px}
+.account-nav a:hover{background:var(--market-surface-soft)}
+.account-nav a.active{background:var(--market-accent-soft);color:var(--nc-accent);font-weight:600}
+.account-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;flex-shrink:0;font-size:17px;color:var(--market-muted)}
+.account-nav a.active .account-nav-icon{color:var(--nc-accent)}
+.account-mobile-nav{display:none}
+.account-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:26px}
+.account-shortcuts a{display:flex;align-items:center;gap:12px;padding:16px;border:1px solid var(--market-border);border-radius:12px;background:var(--market-surface)}
+.account-shortcuts a:hover{border-color:var(--nc-accent)}
+.account-shortcuts .account-nav-icon{width:32px;height:32px;color:var(--nc-accent)}
+.account-shortcuts strong{display:block;font-size:13px;font-weight:600;line-height:1.6}
+.account-shortcuts small{display:block;font-size:11px;color:var(--market-muted);line-height:1.6;margin-top:3px}
+.account-back-link{display:inline-flex;margin-bottom:8px;color:var(--nc-accent);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:800px){.account-layout{display:block}.account-navigation{position:static;margin-bottom:20px}.account-nav{display:none}.account-mobile-nav{display:grid;gap:8px;font-size:12px;font-weight:600;color:var(--market-muted)}.account-mobile-nav select{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--market-border);border-radius:10px;background:var(--market-surface);color:var(--market-text);font:inherit;font-size:14px}}
+@media(max-width:480px){.account-shortcuts{grid-template-columns:1fr}}
 .wallet-options{width:fit-content;max-width:100%;margin:20px 0}
 .wallet-tokens{padding:4px 0 8px}.wallet-tokens .section-heading{margin-bottom:12px}.wallet-tokens p{color:var(--market-muted);margin-bottom:20px}.wallet-tokens button:disabled{cursor:not-allowed}
 .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0 6px}
