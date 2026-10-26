@@ -40,3 +40,12 @@ export function browserRegionalPricing(languages: readonly string[]) {
   const currency = SUPPORTED_SUBSCRIPTION_CURRENCIES.has(requestedCurrency) ? requestedCurrency : 'USD';
   return { currency, fallback: currency !== requestedCurrency };
 }
+
+// These are presentment currencies selected by Waffo from the actual billing
+// country, not additional subscription price currencies or a merchant FX quote.
+export function browserPresentmentCurrency(languages: readonly string[]): RegionalCurrency {
+  for (const language of languages) {
+    try { const country = new Intl.Locale(language).maximize().region; if (country) return regionalCurrencyFor(country); } catch { /* next valid preference */ }
+  }
+  return 'USD';
+}

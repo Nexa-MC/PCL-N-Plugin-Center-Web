@@ -13,6 +13,10 @@
       <article v-for="order in orders" :key="order.intentId" class="result-order">
         <div><h2>{{ offerName(order.offerId) }}</h2><span class="status-pill" :class="{ confirmed: order.status === 'confirmed' }">{{ copy.status[order.status] }}</span></div>
         <p>{{ amount(order) }} · {{ copy.reference }}</p>
+        <div v-for="payment in payments[order.intentId] || []" :key="payment.id" class="payment-receipt">
+          <p>{{ uiLocale.startsWith('en') ? 'Actual payment' : '实际支付' }}：<strong>{{ payment.currency }} {{ payment.amount }}</strong> · {{ new Date(payment.paidAt).toLocaleDateString(uiLocale) }}</p>
+        </div>
+        <p v-if="paymentErrors[order.intentId]" class="pricing-note">{{ uiLocale.startsWith('en') ? 'Actual payment details are temporarily unavailable. Check the billing portal.' : '暂时无法读取实付金额，请到客户门户查看。' }}</p>
         <p v-if="order.canResume">{{ actions.unpaid }}</p>
         <p v-else-if="order.status === 'pending'">{{ copy.pending }}</p>
         <p v-else-if="order.status === 'confirmed'">{{ copy.confirmed }}</p>
@@ -33,6 +37,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { request, platform, ApiError, SESSION_EVENT } from '@/api/platform';
+import { paymentPresentments, type PaymentPresentment } from '@/utils/paymentPresentment';
 import { waffoRedirect } from '@/utils/waffoCheckout';
 import { uiLocale } from '@/languages/localize';
 import { parseBillingReturn, billingOrderResults, type BillingOrderResults } from '@/utils/checkoutResult';
@@ -69,6 +74,7 @@ function offerName(id: string) {
   return `Cloud+ ${plan[parts[1]] || ''} · ${cycle}`;
 }
 const amount = (order: BillingOrderResults['orders'][number]) => new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency: order.currency }).format(Number(order.amountMinor) / (order.currency === 'JPY' ? 1 : 100));
+const payments = ref<Record<string, PaymentPresentment[]>>({}), paymentErrors = ref<Record<string, boolean>>({});
 const acting = ref(''), actionMessage = ref('');
 const actions = computed(() => uiLocale.value.startsWith('en') ? {
   resume: 'Continue payment', cancel: 'Cancel order', portal: 'Open billing portal', unpaid: 'Payment has not been confirmed. You can continue the original checkout.',
@@ -109,6 +115,14 @@ async function load() {
     const result = billingOrderResults(await request<unknown>((parsed.mode === 'test' ? '/billing/test/orders' : '/billing/waffo/orders') + suffix), parsed.mode);
     if (generation !== current) return;
     orders.value = result.orders; state.value = 'ready';
+    if (parsed.mode === 'prod') await Promise.all(result.orders.map(async order => {
+      if (order.status === 'pending') return;
+      try {
+        const rows = paymentPresentments(await request(`/billing/waffo/orders/${encodeURIComponent(order.intentId)}/payments`));
+        if (generation === current) { payments.value[order.intentId] = rows; paymentErrors.value[order.intentId] = false; }
+      } catch { if (generation === current) paymentErrors.value[order.intentId] = true; }
+    }));
+    if (generation !== current) return;
     if (result.orders.some(order => order.status === 'pending') && ++attempts < 10) timer = setTimeout(load, 3000);
   } catch (error) {
     if (generation !== current) return;
@@ -117,7 +131,7 @@ async function load() {
       : error instanceof ApiError && error.status === 404 && ['waffo_test_order_not_found', 'waffo_live_order_not_found'].includes(error.message) ? 'missing' : 'unavailable';
   } finally { if (generation === current) busy.value = false; }
 }
-function reload() { actionMessage.value = ''; attempts = 0; orders.value = []; void load(); }
+function reload() { payments.value = {}; paymentErrors.value = {}; actionMessage.value = ''; attempts = 0; orders.value = []; void load(); }
 onMounted(() => { window.addEventListener(SESSION_EVENT, reload); void load(); });
 watch(() => route.fullPath, reload);
 onBeforeUnmount(() => { generation++; stop(); window.removeEventListener(SESSION_EVENT, reload); });

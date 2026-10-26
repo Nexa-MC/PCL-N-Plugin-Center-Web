@@ -4,6 +4,7 @@
     <div class="section-heading"><div><p class="eyebrow">CLOUD+</p><h1>{{ copy.title }}</h1><p class="pricing-note">{{ copy.description }}</p></div>
       <div class="billing-toggle" role="group" :aria-label="copy.cycle"><button :class="{ active: cycle === 'month' }" :aria-pressed="cycle === 'month'" @click="cycle = 'month'">{{ copy.month }}</button><button :class="{ active: cycle === 'year' }" :aria-pressed="cycle === 'year'" @click="cycle = 'year'">{{ copy.year }}</button></div>
     </div>
+    <p v-if="presentment !== currency" class="pricing-note" role="note">{{ uiLocale.startsWith('en') ? `Pay in ${presentment} when your billing country supports it. The prices below are in ${currency}; Waffo shows the converted total before payment, including its 2–4% conversion fee.` : `可按账单国家使用 ${presentment} 支付。下方为 ${currency} 定价，Waffo 会在付款前显示换算后的总额，其中包含 2–4% 的换汇费用。` }}</p>
     <p v-if="loading" class="pricing-note" role="status">{{ copy.loading }}</p>
     <p v-else-if="unavailable" class="pricing-note" role="status">{{ copy.unavailable }}</p>
     <p v-if="error" class="form-error" role="alert">{{ error }}</p>
@@ -22,7 +23,7 @@ import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 
 import { useRouter } from 'vue-router';
 import { platform, request, isTestSession, SESSION_EVENT, type Session } from '@/api/platform';
 import { PUBLIC_PLANS } from '@/config/publicPricing';
-import { browserRegionalPricing, regionalAmount } from '@/config/regionalPricing';
+import { browserRegionalPricing, browserPresentmentCurrency, regionalAmount } from '@/config/regionalPricing';
 import type { BillingCycle, Tier } from '@/config/pricing';
 import { confirmedPlan, planAction, visiblePlanRanks, hasLegacyPaddleSubscription, type CurrentPlan } from '@/utils/subscriptionPlan';
 import { waffoReadiness, waffoRedirect, type WaffoReadiness } from '@/utils/waffoCheckout';
@@ -31,6 +32,7 @@ const legacy = import.meta.env.VITE_BILLING_PROVIDER === 'paddle';
 const LegacyPricing = defineAsyncComponent(() => import('./Pricing.vue'));
 const router = useRouter(), plans = PUBLIC_PLANS;
 const currency = browserRegionalPricing(navigator.languages?.length ? navigator.languages : [navigator.language]).currency, cycle = ref<BillingCycle>('month');
+const presentment = browserPresentmentCurrency(navigator.languages?.length ? navigator.languages : [navigator.language]);
 const session = ref<Session>(), current = ref<CurrentPlan | null>(null), loading = ref(true), unavailable = ref(false), expanded = ref(false);
 const readiness = ref<WaffoReadiness>(), busy = ref(''), error = ref('');
 const paddleSubscription = ref(false);
