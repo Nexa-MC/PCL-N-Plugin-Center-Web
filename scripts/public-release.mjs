@@ -1,3 +1,4 @@
+import { canonicalPublicHtml } from './public-response.mjs';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile, readdir, appendFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
@@ -42,9 +43,10 @@ if (command === 'prepare') {
     try {
       assert.deepEqual(JSON.parse((await get('/public-release.json')).toString()), expected, 'Published commit differs');
       for (const [path, hash] of Object.entries(expected.hashes)) {
-        const actual = await get(path);
+        const received = await get(path);
+        const actual = expected.hashes[path] === expected.hashes['/plans'] ? canonicalPublicHtml(received) : received;
         if (digest(actual) !== hash) {
-          await writeFile('public-verification-failure.html', actual);
+          await writeFile('public-verification-failure.html', received);
           console.error(JSON.stringify({path,bytes:actual.length,scripts:[...actual.toString().matchAll(/<script[^>]*src=["']([^"']+)/g)].map(match=>match[1].slice(0,512))}));
         }
         assert.equal(digest(actual), hash, `${path}: published bytes differ`);

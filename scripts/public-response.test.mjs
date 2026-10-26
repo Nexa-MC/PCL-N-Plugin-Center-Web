@@ -1,0 +1,5 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {canonicalPublicHtml} from './public-response.mjs';
+const added="<script>window.__CF$cv$params={r:'a50631f5cd947650',t:'MTc5Mjk4MzQ2Mw==',u:'01a1762475cb71b68f93f03264dd7708',ut:'abc-1.2.1.1-def',i:60};(function(){if(!document.body)return;var s=document.createElement('script');s.src='/cdn-cgi/challenge-platform/scripts/precursor/main.js';document.head.appendChild(s);})();</script>";
+test('recognizes only the observed complete Cloudflare precursor at the body boundary',()=>{const original='<html><body><script src="/assets/app.js"></script></body></html>';assert.equal(canonicalPublicHtml(Buffer.from(original.replace('</body>',added+'</body>'))).toString(),original);for(const bad of [added.replace('abc-1.2.1.1-def',"x';alert(1);//"),added.replace('precursor/main.js','other.js'),added+added,'<script>alert(1)</script>']){const text=original.replace('</body>',bad+'</body>');assert.equal(canonicalPublicHtml(Buffer.from(text)).toString(),text);}assert.equal(canonicalPublicHtml(Buffer.from(original)).toString(),original);});
