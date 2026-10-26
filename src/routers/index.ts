@@ -18,6 +18,7 @@ const router = createRouter({
       { path: 'tickets', component: () => import('@/views/manage/Tickets.vue'), meta: { title: '支持工单' } },
       { path: 'applications', component: () => import('@/views/manage/Applications.vue'), meta: { title: '资格审批' } },
       { path: 'audit', component: () => import('@/views/manage/Audit.vue'), meta: { title: '操作审计' } },
+      { path: 'community', component: () => import('@/views/manage/Community.vue'), meta: { title: '公告与问卷' } },
       { path: 'telemetry', component: () => import('@/views/admin/telemetry/index.vue'), meta: { title: '启动器遥测' } }
     ] },
     { path: '/', component: CloudShell, children: [
@@ -39,6 +40,7 @@ const router = createRouter({
       { path: 'pricing', component: () => import('@/views/cloud/SubscriptionPricing.vue') },
       { path: 'checkout/result', component: () => import('@/views/cloud/CheckoutResult.vue') },
       { path: 'contact', component: () => import('@/views/cloud/Contact.vue') },
+      { path: 'feedback', component: () => import('@/views/cloud/Feedback.vue') },
       { path: 'welcome', component: () => import('@/views/cloud/Welcome.vue') },
       { path: 'legal', component: () => import('@/views/cloud/LegalDocs.vue') },
       { path: 'legal/:doc', component: () => import('@/views/cloud/LegalDocs.vue') },

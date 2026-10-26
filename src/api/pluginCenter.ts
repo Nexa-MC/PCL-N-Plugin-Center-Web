@@ -8,7 +8,7 @@ export interface LauncherDiagnostics {
   days: number; since: string; until: string; generatedAt: string;
   histograms: { metric: string; bucket: number; count: number; total: number; min: number; max: number }[];
   trends: { day: string; metric: string; mean: number; peak: number; count: number }[];
-  errors: { fingerprint: string; category: string; severity: string; code: string; stack: string; last_seen: string; count: number; issue_number: number | null; issue_state: string | null; issue_updated: string | null }[];
+  errors: { fingerprint: string; category: string; severity: string; code: string; stack: string; operation?: string; stage?: string; last_seen: string; count: number; issue_number: number | null; issue_state: string | null; issue_updated: string | null }[];
   features: { feature: string; event: string; count: number }[];
   sessions: number; sync: { last_attempt: string; last_success: string | null; status: string } | null;
   featureCatalog: string[]; metricCatalog: string[];

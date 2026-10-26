@@ -104,3 +104,12 @@ jobs:
       - name: Verify published public pages and release commit
         if: steps.targets.outputs.web == 'true'
         run: node scripts/public-release.mjs verify
+
+      - name: Retain public response mismatch for diagnosis
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-response-mismatch
+          path: public-verification-failure.html
+          if-no-files-found: ignore
+          retention-days: 3

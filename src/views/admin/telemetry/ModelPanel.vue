@@ -2,6 +2,7 @@
   <section class="model-panel" :aria-busy="loading">
     <header><div><h2>{{ $ui("预检模型") }}</h2><p>{{ $ui("查看模型状态与历史验证结果。") }}</p></div><button :disabled="loading" @click="load">{{ loading ? $ui("正在读取…") : $ui("刷新模型") }}</button></header>
     <p v-if="error" class="notice" role="status">{{ $ui(error) }}</p>
+    <div v-if="evidence" class="model-summary"><div><span>{{ $ui('近 30 天运行记录') }}</span><strong>{{ evidence.runs }}</strong></div><div><span>{{ $ui('有实际测量的窗口') }}</span><strong>{{ evidence.measuredWindows }}</strong></div><div><span>{{ $ui('正常结束且至少一分钟') }}</span><strong>{{ evidence.normalEndings }}</strong></div></div>
     <template v-if="model">
       <div class="model-summary">
         <div><span>{{ $ui("发布状态") }}</span><strong>{{ $ui("旧模型已停用") }}</strong></div>
@@ -32,10 +33,11 @@
 <script setup lang="ts">
 import { uiLocale } from '@/languages/localize';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import { isTestSession } from '@/api/platform';
+import { isTestSession, request as apiRequest } from '@/api/platform';
 type Cohort = { os: string; loader: string; samples: number; validationSamples: number; coverage: number; validationLossMiB: number; baselineLossMiB: number; featureMin: number[]; featureMax: number[] };
 type Model = { generatedAt: string; expiresAt: string; models: Cohort[] };
 const model = ref<Model>();
+const evidence = ref<{runs:number;measuredWindows:number;normalEndings:number}>();
 const loading = ref(false);
 const error = ref('');
 const now = ref(Date.now());
@@ -77,15 +79,10 @@ async function load() {
   const timeout = setTimeout(() => controller.abort(), 10000);
   loading.value = true; error.value = '';
   try {
-    const response = await fetch('/api/v1/telemetry/resource-model', { signal: controller.signal, credentials: 'same-origin', cache: 'no-cache' });
-    if (!response.ok) throw new Error(response.status === 503 ? 'unavailable' : 'network');
-    const reader = response.body?.getReader(); if (!reader) throw new Error('network');
-    const chunks: Uint8Array[] = []; let length = 0;
-    try {
-      for (;;) { const { value, done } = await reader.read(); if (done) break; length += value.length; if (length > 65536) throw new Error('invalid'); chunks.push(value); }
-    } finally { await reader.cancel(); reader.releaseLock(); }
-    const bytes = new Uint8Array(length); let offset = 0; for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
-    const next = validate(JSON.parse(new TextDecoder().decode(bytes)));
+    type Counts = {runs:number;measuredWindows:number;normalEndings:number};
+    const quality = await apiRequest<{cohorts:Counts[]}>('/telemetry/resource-evidence', { signal: controller.signal });
+    if (request === controller) evidence.value = quality.cohorts.reduce((sum, item) => ({runs:sum.runs+item.runs,measuredWindows:sum.measuredWindows+item.measuredWindows,normalEndings:sum.normalEndings+item.normalEndings}), {runs:0,measuredWindows:0,normalEndings:0});
+    const next = validate(await apiRequest('/telemetry/resource-model', { signal: controller.signal }));
     if (request === controller && !controller.signal.aborted) { model.value = next; now.value = Date.now(); }
   } catch (failure) {
     if (request === controller) error.value = failure instanceof Error && failure.message === 'unavailable'

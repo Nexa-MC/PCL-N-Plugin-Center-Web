@@ -39,6 +39,7 @@ const navigation = [
   { path: '/manage/store', label: '商店审核', icon: 'shield-tick' },
   { path: '/manage/tickets', label: '支持工单', icon: 'messages-bubbles' },
   { path: '/manage/applications', label: '资格审批', icon: 'shield-tick' },
+  { path: '/manage/community', label: '公告与问卷', icon: 'chart' },
   { path: '/manage/telemetry', label: '启动器遥测', icon: 'chart' },
   { path: '/manage/audit', label: '操作审计', icon: 'document' }
 ];
