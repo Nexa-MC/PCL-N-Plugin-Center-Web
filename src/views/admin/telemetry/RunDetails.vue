@@ -55,7 +55,7 @@ type Mod = {id:string;version:string;format:string;enabled:boolean;nested?:boole
 const mods = computed<Mod[]>(() => (detail.value?.mods ?? []).flatMap(page => {
   try { const value: unknown = JSON.parse(page.mods ?? '[]'); return Array.isArray(value) ? value : []; } catch { return []; }
 }));
-const partialInventory = computed(() => !detail.value?.mods.length || detail.value.mods.some(page=>page.complete !== '1' || Number(page.unknown) > 0) || mods.value.some(mod=>!mod.complete));
+const partialInventory = computed(() => !detail.value?.mods.length || detail.value.mods.length !== Number(detail.value.mods[0]?.pages) || detail.value.mods.some(page=>page.complete !== '1' || Number(page.unknown) > 0) || mods.value.some(mod=>!mod.complete));
 const fields = (values: [string, string, string?][]) => values.map(([key,label,unit])=>({key,label,unit}));
 const groups = [
   {event:'diagnostic.launch',title:'启动配置',fields:fields([
