@@ -1892,5 +1892,22 @@
   "正在提交…": "Submitting…",
   "近 30 天运行记录": "Runs in the last 30 days",
   "有实际测量的窗口": "Windows with measurements",
-  "正常结束且至少一分钟": "Normal endings after at least one minute"
+  "正常结束且至少一分钟": "Normal endings after at least one minute",
+  "各方面的体验（可选）": "Rate individual experiences (optional)",
+  "未使用的功能可以跳过，1 表示很差，5 表示很好。": "Skip unused features. 1 is very poor; 5 is excellent.",
+  "未使用 / 跳过": "Not used / skip",
+  "使用频率（可选）": "Usage frequency (optional)",
+  "跳过": "Skip",
+  "最希望新增或改进的功能（可选）": "Features you would most like added or improved (optional)",
+  "如遇到问题，请描述操作步骤、预期结果与实际结果。": "For problems, describe the steps, expected result and actual result.",
+  "启动器启动速度": "Launcher startup speed",
+  "游戏启动体验": "Game launch experience",
+  "安装、下载与更新": "Installation, downloads and updates",
+  "资源浏览与搜索": "Resource browsing and search",
+  "性能与内存占用": "Performance and memory usage",
+  "稳定性与错误恢复": "Stability and error recovery",
+  "每天使用": "Daily",
+  "每周使用数次": "Several times a week",
+  "偶尔使用": "Occasionally",
+  "首次体验": "First time"
 }
