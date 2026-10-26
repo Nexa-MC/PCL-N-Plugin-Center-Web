@@ -31,6 +31,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === '/webhooks/wp_wh/live' && !url.search) return liveWebhook(request, env);
+    if (url.pathname === '/v1/announcements' && !url.search) {
+      if (request.method !== 'GET') return problem(405, '方法不支持', { allow: 'GET' });
+      try { return await env.API.fetch(new Request('https://nexa-api.internal/api/v1/community/announcements')); }
+      catch { return problem(503, '公告暂时不可用'); }
+    }
     if (url.pathname !== '/v1/events' || url.search) return problem(404, '接口不存在');
     if (request.method !== 'POST') return problem(405, '方法不支持', { allow: 'POST' });
     // Do not grant credentials or browser authority through an anonymous ingress.

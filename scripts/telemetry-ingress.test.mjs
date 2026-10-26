@@ -81,3 +81,13 @@ test('native ingress preserves retry signals and does not reveal service failure
   assert.equal(failed.status, 503);
   assert.equal((await failed.text()).includes('private'), false);
 });
+
+test('announcements expose only a credential-free public read', async () => {
+  const response = await worker.fetch(new Request('https://botonly.pcln.top/v1/announcements', { headers: { cookie: 'private', authorization: 'Bearer private' } }), { API: { fetch(request) {
+    assert.equal(request.url, 'https://nexa-api.internal/api/v1/community/announcements');
+    assert.equal(request.headers.get('authorization'), null); assert.equal(request.headers.get('cookie'), null);
+    return Response.json({ announcements: [] });
+  } } });
+  assert.equal(response.status, 200);
+  assert.equal((await worker.fetch(new Request('https://botonly.pcln.top/v1/announcements', {method:'POST'}), {})).status,405);
+});
