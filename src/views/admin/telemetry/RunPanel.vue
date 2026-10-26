@@ -15,9 +15,11 @@
       <el-table :data="data.mods" :empty-text="$ui('样本尚不足')"><el-table-column prop="id" :label="$ui('模组')" min-width="190"/><el-table-column prop="version" :label="$ui('版本')"/><el-table-column prop="runs" :label="$ui('运行次数')"/></el-table>
       <p class="note">{{ $ui("环境最多展示前 40 组，设置最多展示前 20 组。缺失值保留为空，不计作零。") }}</p>
     </template>
+    <RunDetails :days="days" :version="version" :os="os"/>
   </section>
 </template>
 <script setup lang="ts">
+import RunDetails from './RunDetails.vue';
 import { ui, uiLocale } from '@/languages/localize';
 import {onUnmounted,ref,watch} from 'vue';
 import {pluginCenterApi} from '@/api/pluginCenter';

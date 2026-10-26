@@ -159,9 +159,9 @@ export const pluginCenterApi = {
   launcherRun: async (run: string, after = -1) => {
     if (isTestSession()) {
       await wait();
-      return { samples: [{ 'jvm.launch.ms': '4213', 'launcher.working_set.mib': '1180' }, { 'jvm.launch.ms': '4380', 'launcher.working_set.mib': '1242' }], mods: [{ id: 'sodium', version: '0.6.13' }], next: null };
+      return { lifecycle: {} as Record<string, Record<string,string>>, samples: [{ 'jvm.launch.ms': '4213', 'launcher.working_set.mib': '1180' }, { 'jvm.launch.ms': '4380', 'launcher.working_set.mib': '1242' }], mods: [{ id: 'sodium', version: '0.6.13' }], next: null };
     }
-    return request<{samples:Record<string,string>[];mods:Record<string,string>[];next:number|null}>(`/telemetry/runs?run=${encodeURIComponent(run)}&after=${after}`);
+    return request<{lifecycle?:Record<string,Record<string,string>>;samples:Record<string,string>[];mods:Record<string,string>[];next:number|null}>(`/telemetry/runs?run=${encodeURIComponent(run)}&after=${after}`);
   },
   launcherDiagnostics: async (days: number, version = "", os = "") => {
     if (isTestSession()) return testDiagnostics(days);
