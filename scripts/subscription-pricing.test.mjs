@@ -12,6 +12,9 @@ test('regional prices use the approved custom table and exact ten-month annual a
   assert.equal(regionalCurrencyFor('GB'), 'GBP'); assert.equal(regionalCurrencyFor('DE'), 'EUR'); assert.equal(regionalCurrencyFor(null), 'USD');
 });
 test('browser region is a hint and unsupported currencies fall back explicitly to payable USD', () => {
+  assert.deepEqual(browserRegionalPricing(['ja']), { currency: 'JPY', fallback: false });
+  assert.deepEqual(browserRegionalPricing(['de']), { currency: 'EUR', fallback: false });
+  assert.deepEqual(browserRegionalPricing(['zh-Hant-HK']), { currency: 'HKD', fallback: false });
   assert.deepEqual(browserRegionalPricing(['ja-JP']), { currency: 'JPY', fallback: false });
   assert.deepEqual(browserRegionalPricing(['en-GB']), { currency: 'GBP', fallback: false });
   assert.deepEqual(browserRegionalPricing(['de-DE']), { currency: 'EUR', fallback: false });

@@ -33,7 +33,7 @@ export function regionalCurrencyFor(country: unknown): RegionalCurrency {
 export function browserRegionalPricing(languages: readonly string[]) {
   let country: string | undefined;
   for (const language of languages) {
-    try { country = new Intl.Locale(language).region; } catch { continue; }
+    try { country = new Intl.Locale(language).maximize().region; } catch { continue; }
     if (country) break;
   }
   const requestedCurrency = regionalCurrencyFor(country);

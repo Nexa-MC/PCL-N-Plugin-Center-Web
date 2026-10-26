@@ -13,10 +13,17 @@
       <article v-for="order in orders" :key="order.intentId" class="result-order">
         <div><h2>{{ offerName(order.offerId) }}</h2><span class="status-pill" :class="{ confirmed: order.status === 'confirmed' }">{{ copy.status[order.status] }}</span></div>
         <p>{{ amount(order) }} · {{ copy.reference }}</p>
-        <p v-if="order.status === 'pending'">{{ copy.pending }}</p>
+        <p v-if="order.canResume">{{ actions.unpaid }}</p>
+        <p v-else-if="order.status === 'pending'">{{ copy.pending }}</p>
         <p v-else-if="order.status === 'confirmed'">{{ copy.confirmed }}</p>
         <p v-else>{{ copy.inactive }}</p>
+        <div v-if="scope.mode === 'prod'" class="actions">
+          <button v-if="order.canResume" class="primary-button" :disabled="busy || !!acting" @click="act(order.intentId, 'resume')">{{ actions.resume }}</button>
+          <button v-if="order.canCancel" class="secondary-button" :disabled="busy || !!acting" @click="act(order.intentId, 'cancel')">{{ actions.cancel }}</button>
+        </div>
       </article>
+      <p v-if="actionMessage" role="status">{{ actionMessage }}</p>
+      <button v-if="scope.mode === 'prod' && orders.length" class="secondary-button" :disabled="busy || !!acting" @click="act('', 'portal')">{{ actions.portal }}</button>
       <button v-if="state !== 'invalid'" class="secondary-button" type="button" :disabled="busy" @click="reload">{{ busy ? copy.loading : copy.refresh }}</button>
     </div>
     <div class="actions result-actions"><router-link class="primary-button" to="/pricing">{{ copy.plans }}</router-link><router-link class="secondary-button" to="/account?section=wallet">{{ copy.account }}</router-link></div>
@@ -25,7 +32,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { request, ApiError, SESSION_EVENT } from '@/api/platform';
+import { request, platform, ApiError, SESSION_EVENT } from '@/api/platform';
+import { waffoRedirect } from '@/utils/waffoCheckout';
 import { uiLocale } from '@/languages/localize';
 import { parseBillingReturn, billingOrderResults, type BillingOrderResults } from '@/utils/checkoutResult';
 const route = useRoute(), orders = ref<BillingOrderResults['orders']>([]), busy = ref(false);
@@ -61,6 +69,35 @@ function offerName(id: string) {
   return `Cloud+ ${plan[parts[1]] || ''} · ${cycle}`;
 }
 const amount = (order: BillingOrderResults['orders'][number]) => new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency: order.currency }).format(Number(order.amountMinor) / (order.currency === 'JPY' ? 1 : 100));
+const acting = ref(''), actionMessage = ref('');
+const actions = computed(() => uiLocale.value.startsWith('en') ? {
+  resume: 'Continue payment', cancel: 'Cancel order', portal: 'Open billing portal', unpaid: 'Payment has not been confirmed. You can continue the original checkout.',
+  confirm: 'Cancel this order? If payment completes at the same time, renewal will be stopped instead; this does not issue a refund.',
+  canceled: 'Order canceled.', canceling: 'Payment completed before cancellation. Renewal has been stopped; access lasts until the paid period ends.',
+  failed: 'Unable to complete this action. Refresh the order and try again.', expired: 'This checkout link has expired. Use the billing portal to check the order.',
+  portalRequired: 'This checkout has already been issued. Open the billing portal to manage it; it has not been canceled here.'
+} : {
+  resume: '继续支付', cancel: '取消订单', portal: '打开客户门户', unpaid: '尚未确认付款，可继续原订单的结账。',
+  confirm: '确认取消此订单？如果付款同时完成，将停止后续续费，已支付款项不会自动退款。',
+  canceled: '订单已取消。', canceling: '取消时付款已完成，已停止后续续费，权益保留至已付周期结束。',
+  failed: '操作未完成，请刷新订单后重试。', expired: '此结账链接已过期，请到客户门户核对订单。',
+  portalRequired: '结账链接已签发，请到客户门户处理；本站尚未取消该订单。'
+});
+async function act(intent: string, action: 'resume' | 'cancel' | 'portal') {
+  if (acting.value || scope.value.mode !== 'prod') return;
+  if (action === 'cancel' && !window.confirm(actions.value.confirm)) return;
+  stop(); const step = ++generation; acting.value = action; actionMessage.value = '';
+  try {
+    const owner = await platform.session(); if (!owner) throw new Error('Login required');
+    const value = await request<{ canceled?: boolean; canceling?: boolean; portalUrl?: string }>(action === 'portal' ? '/billing/waffo/portal' : `/billing/waffo/orders/${encodeURIComponent(intent)}/${action}`, { method: 'POST', body: '{}' });
+    const current = await platform.refreshSession();
+    if (step !== generation || current?.id !== owner.id) return;
+    if (action === 'cancel') { actionMessage.value = value.canceled ? actions.value.canceled : value.canceling ? actions.value.canceling : actions.value.failed; await load(); }
+    else window.location.assign(waffoRedirect(value, value.portalUrl ? 'portal' : 'checkout'));
+  } catch (error) {
+    if (step === generation) actionMessage.value = error instanceof ApiError && error.status === 410 ? actions.value.expired : error instanceof ApiError && error.message === 'waffo_live_cancel_requires_portal' ? actions.value.portalRequired : actions.value.failed;
+  } finally { acting.value = ''; }
+}
 let generation = 0, attempts = 0, timer: ReturnType<typeof setTimeout> | undefined;
 const stop = () => { if (timer) clearTimeout(timer); timer = undefined; };
 async function load() {
@@ -80,7 +117,7 @@ async function load() {
       : error instanceof ApiError && error.status === 404 && ['waffo_test_order_not_found', 'waffo_live_order_not_found'].includes(error.message) ? 'missing' : 'unavailable';
   } finally { if (generation === current) busy.value = false; }
 }
-function reload() { attempts = 0; orders.value = []; void load(); }
+function reload() { actionMessage.value = ''; attempts = 0; orders.value = []; void load(); }
 onMounted(() => { window.addEventListener(SESSION_EVENT, reload); void load(); });
 watch(() => route.fullPath, reload);
 onBeforeUnmount(() => { generation++; stop(); window.removeEventListener(SESSION_EVENT, reload); });
