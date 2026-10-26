@@ -15,6 +15,8 @@ on:
       - src/config/regionalPricing.ts
       - src/config/contact.ts
       - src/views/manage/**
+      - src/views/admin/telemetry/**
+      - src/api/pluginCenter.ts
       - src/styles/management.css
       - src/api/management.ts
       - src/api/platform.ts
