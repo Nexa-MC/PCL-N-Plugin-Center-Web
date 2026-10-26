@@ -9,7 +9,7 @@ if (!/^[a-f0-9]{40}$/.test(sha ?? '')) throw new Error('Exact release SHA requir
 
 if (command === 'prepare') {
   const files = {
-    '/plans': 'index.html', '/pricing': 'index.html', '/login': 'index.html', '/register': 'index.html', '/contact': 'index.html', '/legal/terms': 'index.html', '/legal/privacy': 'index.html', '/legal/refunds': 'index.html', '/checkout/result': 'index.html',
+    '/feedback': 'index.html', '/plans': 'index.html', '/pricing': 'index.html', '/login': 'index.html', '/register': 'index.html', '/contact': 'index.html', '/legal/terms': 'index.html', '/legal/privacy': 'index.html', '/legal/refunds': 'index.html', '/checkout/result': 'index.html',
     '/legal/current/terms.zh-CN.md': 'legal/current/terms.zh-CN.md', '/legal/current/terms.en.md': 'legal/current/terms.en.md',
     '/legal/current/privacy.zh-CN.md': 'legal/current/privacy.zh-CN.md', '/legal/current/privacy.en.md': 'legal/current/privacy.en.md',
     '/legal/current/refunds.zh-CN.md': 'legal/current/refunds.zh-CN.md',
@@ -41,7 +41,14 @@ if (command === 'prepare') {
   for (let attempt = 0; attempt < 6; attempt++) {
     try {
       assert.deepEqual(JSON.parse((await get('/public-release.json')).toString()), expected, 'Published commit differs');
-      for (const [path, hash] of Object.entries(expected.hashes)) assert.equal(digest(await get(path)), hash, `${path}: published bytes differ`);
+      for (const [path, hash] of Object.entries(expected.hashes)) {
+        const actual = await get(path);
+        if (digest(actual) !== hash) {
+          await writeFile('public-verification-failure.html', actual);
+          console.error(JSON.stringify({path,bytes:actual.length,scripts:[...actual.toString().matchAll(/<script[^>]*src=["']([^"']+)/g)].map(match=>match[1].slice(0,512))}));
+        }
+        assert.equal(digest(actual), hash, `${path}: published bytes differ`);
+      }
       lastError = undefined;
       break;
     } catch (error) {
