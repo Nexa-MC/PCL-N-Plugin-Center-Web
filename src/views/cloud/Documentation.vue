@@ -4,7 +4,7 @@
       <p class="eyebrow">NEXACL / DOCUMENTATION</p>
       <h1>{{ c.title }}</h1>
       <p class="docs-description">{{ c.description }}</p>
-      <span class="status-pill">Firefly Alpha 12</span>
+      <span class="status-pill">Firefly Alpha 14</span>
     </header>
 
     <section class="guide-grid" :aria-label="c.guidesLabel">
@@ -47,7 +47,7 @@ const c = computed(() => en.value ? {
   guidesLabel: 'NexaCL development guides', start: 'Start the tutorial',
   guides: [
     { path: 'theme-packs', icon: 'picture', format: 'NTP/1', title: 'Theme packs', description: 'Shape the launcher’s appearance, with controls that let players make it their own.', topics: ['Manifest, NSS styles and light/dark modes', 'Switches, sliders and live option changes', 'Resources, packaging and publishing'] },
-    { path: 'sidecar', icon: 'code-square', format: 'SIDECAR', title: 'Independent extensions', description: 'Build a separate process that communicates with NexaCL through its current Host contracts.', topics: ['A runnable local IPC example', 'Lifecycle, binary APIs and interactive UI', 'Cancellation, signatures and distribution'] },
+    { path: 'sidecar', icon: 'code-square', format: 'SIDECAR', title: 'Independent extensions', description: 'Build a separate process that communicates with NexaCL through its current Host contracts.', topics: ['A runnable local IPC example', 'Shared NXML pages, lifecycle and binary APIs', 'Cancellation, signatures and distribution'] },
   ],
   examples: 'Start from working source', exampleDescription: 'A complete theme and a compilable Sidecar example with a real two-process IPC self-test.', viewExamples: 'Browse examples',
   other: 'More references', legacyDescription: 'The legacy Plugin SDK and PXML guides remain available. Legacy .pnp plugins and NexaCL .nsc Sidecars use separate contracts.', legacySdk: 'Legacy Plugin SDK', source: 'NexaCL source',
@@ -57,7 +57,7 @@ const c = computed(() => en.value ? {
   guidesLabel: 'NexaCL 开发文档', start: '开始教程',
   guides: [
     { path: 'theme-packs', icon: 'picture', format: 'NTP/1', title: '主题包开发', description: '设计启动器的外观，也让玩家通过设置控件调整属于自己的样式。', topics: ['清单、NSS 样式与亮暗模式', '滑动开关、滑块与参数实时应用', '资源授权、打包与发布'] },
-    { path: 'sidecar', icon: 'code-square', format: 'SIDECAR', title: 'Sidecar 编写', description: '编写独立进程，通过当前 Host 契约与 NexaCL 交互。', topics: ['可运行的本地 IPC 示例', '生命周期、二进制 API 与交互 UI', '取消、签名准入与分发'] },
+    { path: 'sidecar', icon: 'code-square', format: 'SIDECAR', title: 'Sidecar 编写', description: '编写独立进程，通过当前 Host 契约与 NexaCL 交互。', topics: ['可运行的本地 IPC 示例', '共享 NXML 页面、生命周期与二进制 API', '取消、签名准入与分发'] },
   ],
   examples: '从完整源码开始', exampleDescription: '包含一个完整主题，以及可编译、可运行双进程 IPC 自测的 Sidecar 示例。', viewExamples: '浏览示例源码',
   other: '其他参考', legacyDescription: '旧版插件 SDK 与 PXML 文档继续保留。旧版 .pnp 插件与 NexaCL 的 .nsc Sidecar 使用不同契约。', legacySdk: '旧版插件 SDK', source: 'NexaCL 源码',
