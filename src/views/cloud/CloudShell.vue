@@ -2,7 +2,7 @@
   <div class="cloud-shell">
     <a class="skip-link" href="#cloud-content">{{ en ? 'Skip to content' : $ui("跳至内容") }}</a>
     <header class="cloud-header">
-      <router-link class="cloud-brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
+      <router-link class="cloud-brand" to="/"><BrandIcon /><strong>NexaMC</strong></router-link>
       <nav :aria-label="en ? 'Site navigation' : $ui('平台入口')"><router-link to="/" :class="{active: route.path === '/'}">{{ en ? 'Home' : $ui("主页") }}</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">{{ en ? 'Download' : $ui("下载") }}</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">{{ en ? 'Store' : $ui("商店") }}</router-link><router-link to="/pricing" :class="{active: ['/plans', '/pricing'].includes(route.path)}">{{ $ui("套餐价格") }}</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">{{ en ? 'Docs' : $ui("文档") }}</router-link></nav>
       <div class="account-menu">
         <button class="account-status" type="button" :aria-label="accountLabel" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span><span class="account-label">{{ accountLabel }}</span><KoiIcon class="account-mobile-icon" name="profile-circle" aria-hidden="true" /></button>
@@ -15,7 +15,7 @@
       <main id="cloud-content" class="cloud-content"><router-view :key="route.path.startsWith('/store') ? 'store' : route.path" /></main>
     </div>
     <footer class="cloud-footer">
-      <div><strong>NexaCL</strong><p>{{ $ui('社区开发的 Minecraft 启动器与配套云服务。') }}</p></div>
+      <div><strong>NexaMC</strong><p>{{ $ui('社区开发的 Minecraft 启动器与配套云服务。') }}</p></div>
       <nav class="footer-sections" :aria-label="$ui('页脚导航')">
         <div><h2>{{ en ? 'Explore' : '探索产品' }}</h2><router-link to="/download">{{ $ui('下载') }}</router-link><router-link to="/store">{{ $ui('商店') }}</router-link><router-link to="/pricing">{{ $ui('套餐价格') }}</router-link><router-link to="/docs">{{ $ui('文档') }}</router-link></div>
         <div><h2>{{ en ? 'Help & community' : '帮助与社区' }}</h2><router-link to="/changelog">{{ $ui('更新日志') }}</router-link><router-link to="/contact">{{ $ui('联系我们') }}</router-link><router-link to="/feedback">{{ en ? 'Feedback' : '体验反馈' }}</router-link><a v-for="contact in CONTACTS" :key="contact.key" :href="`mailto:${contact.address}`">{{ $ui(contact.label) }}</a></div>

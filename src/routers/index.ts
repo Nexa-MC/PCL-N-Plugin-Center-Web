@@ -65,18 +65,18 @@ const router = createRouter({
     { path: '/:pathMatch(.*)*', component: () => import('@/views/cloud/NotFound.vue') }
   ]
 });
-// 统一的页面标题体系：<页面名> · NexaCL；主页使用完整品牌标题。
+// 统一的页面标题体系：<页面名> · NexaMC；主页使用完整品牌标题。
 // 带 applyPageSeo 的页面（主页/下载/更新日志/登录/注册）会在挂载时用各自的 SEO 标题覆写。
 const ROUTE_TITLES: Record<string, string> = { '/login': '登录', '/register': '创建账户', '/account': '账户', '/store': '商店', '/download': '下载', '/changelog': '更新日志', '/plans': '套餐价格', '/pricing': 'Cloud+ 订阅', '/contact': '联系我们', '/docs': '文档', '/welcome': '欢迎' };
 function titleFor(path: string): string {
-  if (path === '/manage' || path.startsWith('/manage/')) return ui('{0} · NexaCL 管理后台', [ui(router.currentRoute.value.meta.title || '网站管理')]);
-  if (path === '/') return 'NexaCL — 一个更省心的 Minecraft 启动器';
-  if (ROUTE_TITLES[path]) return `${ROUTE_TITLES[path]} · NexaCL`;
-  if (path.startsWith('/legal')) return '法律文档 · NexaCL';
-  if (path.startsWith('/store')) return '商店 · NexaCL';
-  if (path.startsWith('/download')) return '下载 · NexaCL';
-  if (path.startsWith('/account')) return '账户 · NexaCL';
-  return 'NexaCL';
+  if (path === '/manage' || path.startsWith('/manage/')) return ui('{0} · NexaMC 管理后台', [ui(router.currentRoute.value.meta.title || '网站管理')]);
+  if (path === '/') return 'NexaMC — 一个更省心的 Minecraft 启动器';
+  if (ROUTE_TITLES[path]) return `${ROUTE_TITLES[path]} · NexaMC`;
+  if (path.startsWith('/legal')) return '法律文档 · NexaMC';
+  if (path.startsWith('/store')) return '商店 · NexaMC';
+  if (path.startsWith('/download')) return '下载 · NexaMC';
+  if (path.startsWith('/account')) return '账户 · NexaMC';
+  return 'NexaMC';
 }
 router.beforeEach(to => {
   startProgress();

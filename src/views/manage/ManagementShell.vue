@@ -2,7 +2,7 @@
   <div class="manage-layout">
     <a class="skip-link" href="#manage-main">{{ $ui("跳至管理内容") }}</a>
     <aside class="manage-sidebar">
-      <router-link class="manage-brand" to="/manage"><BrandIcon /><span>NexaCL <small>{{ $ui("网站管理") }}</small></span></router-link>
+      <router-link class="manage-brand" to="/manage"><BrandIcon /><span>NexaMC <small>{{ $ui("网站管理") }}</small></span></router-link>
       <nav class="manage-grouped-nav" :aria-label="$ui('后台导航')">
         <section v-for="group in navigationGroups" :key="group.label"><p class="manage-nav-label">{{ $ui(group.label) }}</p>
           <router-link v-for="item in group.items" :key="item.path" :to="item.path" :class="{ selected: route.path === item.path }" :aria-current="route.path === item.path ? 'page' : undefined"><KoiIcon :name="item.icon" /><span>{{ $ui(item.label) }}</span></router-link>
@@ -14,13 +14,13 @@
     <div class="manage-body">
       <header class="manage-topbar"><span>{{ $ui("网站后台 ") }}<span class="manage-breadcrumb">/ {{ $ui(route.meta.title || '工作概览') }}</span></span><div><LanguageControl /><ThemeControl /><span class="manage-current-user">{{ session?.name || $ui('管理员工作台') }}</span><button v-if="session" class="secondary-button" :disabled="checking" @click="logout">{{ $ui("退出") }}</button></div></header>
       <main id="manage-main" class="manage-main">
-        <div v-if="checking" class="manage-gate" role="status"><KoiIcon name="shield-tick" /><h1>{{ $ui("正在验证管理权限") }}</h1><p>{{ $ui("正在连接 NexaCL ID…") }}</p></div>
+        <div v-if="checking" class="manage-gate" role="status"><KoiIcon name="shield-tick" /><h1>{{ $ui("正在验证管理权限") }}</h1><p>{{ $ui("正在连接 NexaMC ID…") }}</p></div>
         <div v-else-if="error" class="manage-gate"><KoiIcon name="cloud-drizzle" /><h1>{{ $ui("暂时无法验证身份") }}</h1><p role="alert">{{ $ui(error) }}</p><button class="primary-button" @click="verify">{{ $ui("重新连接") }}</button></div>
-        <div v-else-if="!session" class="manage-gate"><KoiIcon name="lock-circle" /><span class="manage-eyebrow">{{ $ui('NexaCL 管理后台') }}</span><h1>{{ $ui("登录管理后台") }}</h1><p>{{ $ui("使用已获授权的 NexaCL 账户登录，继续处理网站事务。") }}</p><router-link class="primary-button" :to="{ path: '/login', query: { return: route.fullPath } }">{{ $ui("使用 NexaCL ID 登录") }}</router-link><small>{{ $ui("仅网站管理员可访问业务数据与管理操作。") }}</small></div>
+        <div v-else-if="!session" class="manage-gate"><KoiIcon name="lock-circle" /><span class="manage-eyebrow">{{ $ui('NexaMC 管理后台') }}</span><h1>{{ $ui("登录管理后台") }}</h1><p>{{ $ui("使用已获授权的 NexaMC 账户登录，继续处理网站事务。") }}</p><router-link class="primary-button" :to="{ path: '/login', query: { return: route.fullPath } }">{{ $ui("使用 NexaMC ID 登录") }}</router-link><small>{{ $ui("仅网站管理员可访问业务数据与管理操作。") }}</small></div>
         <div v-else-if="session.staff !== 1" class="manage-gate"><KoiIcon name="shield-search" /><h1>{{ $ui("此账户没有管理权限") }}</h1><p>{{ session.name }}{{ $ui("，后台仅向网站管理员开放。请联系管理员确认你的账户资格。") }}</p><button class="secondary-button" @click="logout">{{ $ui("退出并切换账户") }}</button></div>
         <router-view v-else :key="route.path" />
       </main>
-      <footer class="manage-footer"><span>{{ $ui("NexaCL · 管理后台") }}</span><span>{{ $ui("时间以 Asia/Shanghai 显示") }}</span></footer>
+      <footer class="manage-footer"><span>{{ $ui("NexaMC · 管理后台") }}</span><span>{{ $ui("时间以 Asia/Shanghai 显示") }}</span></footer>
     </div>
   </div>
 </template>

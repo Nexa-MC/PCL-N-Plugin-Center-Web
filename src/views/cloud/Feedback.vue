@@ -1,5 +1,5 @@
 <template>
-  <main class="feedback-page"><span class="eyebrow">NexaCL</span><h1>{{ $ui('分享你的使用体验') }}</h1>
+  <main class="feedback-page"><span class="eyebrow">NexaMC</span><h1>{{ $ui('分享你的使用体验') }}</h1>
     <p>{{ $ui('填写自愿，请勿填写密码、账户令牌或其他敏感信息。反馈保存 180 天。') }}</p>
     <p v-if="sent" role="status">{{ $ui('感谢反馈，我们已收到。') }}</p>
     <form v-else class="feedback-form" @submit.prevent="submit">

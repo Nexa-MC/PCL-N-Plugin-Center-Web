@@ -125,7 +125,7 @@ test('management dynamic labels, fallback messages and stored notices have trans
 
 test('management notices translate as whole messages while user content stays intact', () => {
   assert.equal(translateUi('第 {0}–{1} 条，共 {2} 条', 'en', [1, 25, '1,248']), '1–25 of 1,248');
-  assert.equal(translateUi('{0} · NexaCL 管理后台', 'en', ['Overview']), 'Overview · NexaCL Management');
+  assert.equal(translateUi('{0} · NexaCL 管理后台', 'en', ['Overview']), 'Overview · NexaMC Management');
   assert.equal(translateUi('{0} 申请成为{1}。', 'en', ['中文用户名', 'Developer']), '中文用户名 applied for the Developer role.');
   assert.equal(translateUi('确认已处理完「{0}」？工单将移入已解决列表。', 'en', ['中文工单标题']), 'Have you finished handling “中文工单标题”? The ticket will move to the resolved list.');
   assert.equal(translateUi('账户状态已变化，请刷新后重试', 'en'), 'Account status has changed. Refresh and try again.');

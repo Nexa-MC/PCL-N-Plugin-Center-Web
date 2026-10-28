@@ -1,14 +1,14 @@
 <template>
   <div class="login-page">
     <header class="login-topbar">
-      <router-link class="login-brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
+      <router-link class="login-brand" to="/"><BrandIcon /><strong>NexaMC</strong></router-link>
       <div class="login-controls"><LanguageControl /><ThemeControl /></div>
     </header>
     <main class="login-hero">
       <p v-if="checking" class="empty-state" role="status">{{ $ui("正在检查会话…") }}</p>
       <div v-else class="login-card">
         <span class="login-mark" aria-hidden="true">N</span>
-        <p class="eyebrow card-eyebrow">NEXACL ID</p>
+        <p class="eyebrow card-eyebrow">NEXAMC ID</p>
 
         <!-- 第一步:第三方身份验证(注册的必要前置) -->
         <Transition name="ms-step" mode="out-in">
@@ -118,7 +118,7 @@ onMounted(async () => {
   if (existing && !existing.setupRequired) { void router.replace('/account'); return; }
   if (existing) { setupSession.value = existing; name.value = existing.name ?? ''; }
 });
-watchEffect(() => { applyPageSeo({ title: '创建账户 · NexaCL', description: '创建 NexaCL 账户：先用 GitHub / Google / Microsoft 验证身份，再设置用户名、用户 ID 与密码。', path: '/register' }); });
+watchEffect(() => { applyPageSeo({ title: '创建账户 · NexaMC', description: '创建 NexaMC 账户：先用 GitHub / Google / Microsoft 验证身份，再设置用户名、用户 ID 与密码。', path: '/register' }); });
 </script>
 <style scoped>
 .login-page{min-height:100vh;display:flex;flex-direction:column}

@@ -4,14 +4,15 @@
     <div class="section-heading"><div><p class="eyebrow">CLOUD+</p><h1>{{ copy.title }}</h1><p class="pricing-note">{{ copy.description }}</p></div>
       <div class="billing-toggle" role="group" :aria-label="copy.cycle"><button :class="{ active: cycle === 'month' }" :aria-pressed="cycle === 'month'" @click="cycle = 'month'">{{ copy.month }}</button><button :class="{ active: cycle === 'year' }" :aria-pressed="cycle === 'year'" @click="cycle = 'year'">{{ copy.year }}</button></div>
     </div>
-    <p v-if="presentment !== currency" class="pricing-note" role="note">{{ uiLocale.startsWith('en') ? `Pay in ${presentment} when your billing country supports it. The prices below are in ${currency}; Waffo shows the converted total before payment, including its 2–4% conversion fee.` : `可按账单国家使用 ${presentment} 支付。下方为 ${currency} 定价，Waffo 会在付款前显示换算后的总额，其中包含 2–4% 的换汇费用。` }}</p>
+    <p v-if="presentment !== currency && presentment !== 'CNY'" class="pricing-note" role="note">{{ uiLocale.startsWith('en') ? `Pay in ${presentment} when your billing country supports it. The prices below are in ${currency}; Waffo shows the converted total before payment, including its 2–4% conversion fee.` : `可按账单国家使用 ${presentment} 支付。下方为 ${currency} 定价，Waffo 会在付款前显示换算后的总额，其中包含 2–4% 的换汇费用。` }}</p>
+    <p v-if="presentment === 'CNY'" class="pricing-note" role="note">{{ uiLocale.startsWith('en') ? 'CNY estimates use Waffo’s reference exchange rate. The final CNY amount and 2–4% conversion fee are shown at checkout. Confirm a China billing address to pay in CNY.' : '人民币为按 Waffo 参考汇率换算的估算价，最终人民币金额及 2–4% 换汇费用以付款页为准。结账前需确认中国账单地址。' }}</p>
     <p v-if="loading" class="pricing-note" role="status">{{ copy.loading }}</p>
     <p v-else-if="unavailable" class="pricing-note" role="status">{{ copy.unavailable }}</p>
     <p v-if="error" class="form-error" role="alert">{{ error }}</p>
     <div id="subscription-plans" class="pricing-grid"><article v-for="plan in visiblePlans" :key="plan.name" class="work-panel pricing-card" :class="{ highlight: plan.highlight }">
       <span v-if="plan.highlight" class="status-pill">{{ $ui('推荐') }}</span>
       <h2>{{ plan.name }}</h2><p class="tier-desc">{{ $ui(plan.description) }}</p><p class="tier-price"><strong>{{ amount(plan.name) }}</strong><small> / {{ cycle === 'month' ? copy.monthUnit : copy.yearUnit }}</small></p>
-      <p class="pricing-note">{{ cycle === 'year' ? copy.annual : copy.monthly }} · {{ currency }}</p><ul class="tier-features"><li v-for="feature in plan.features" :key="feature">{{ $ui(feature) }}</li></ul>
+      <p class="pricing-note">{{ cycle === 'year' ? copy.annual : copy.monthly }} · {{ presentment === 'CNY' ? 'CNY' : currency }}</p><ul class="tier-features"><li v-for="feature in plan.features" :key="feature">{{ $ui(feature) }}</li></ul>
       <button class="primary-button" :disabled="disabled" @click="subscribe(plan.name)">{{ busy === plan.name ? copy.opening : label(plan.name) }}</button>
     </article></div>
     <p v-if="hasLowerPlans" class="more-plans"><a href="#subscription-plans" :aria-expanded="expanded" aria-controls="subscription-plans" @click.prevent="expanded = !expanded">{{ expanded ? copy.less : copy.more }}</a></p>
@@ -33,6 +34,7 @@ const LegacyPricing = defineAsyncComponent(() => import('./Pricing.vue'));
 const router = useRouter(), plans = PUBLIC_PLANS;
 const currency = browserRegionalPricing(navigator.languages?.length ? navigator.languages : [navigator.language]).currency, cycle = ref<BillingCycle>('month');
 const presentment = browserPresentmentCurrency(navigator.languages?.length ? navigator.languages : [navigator.language]);
+const cnyRate = ref<{ rate: number; expiresAt: string }>();
 const session = ref<Session>(), current = ref<CurrentPlan | null>(null), loading = ref(true), unavailable = ref(false), expanded = ref(false);
 const readiness = ref<WaffoReadiness>(), busy = ref(''), error = ref('');
 const paddleSubscription = ref(false);
@@ -53,7 +55,22 @@ const copy = computed(() => uiLocale.value.startsWith('en') ? {
   actions: { subscribe: '订阅', current: '管理订阅', upgrade: '升级', downgrade: '调整套餐', switch_cycle: '切换计费周期', unknown: '订阅' }
 });
 const label = (name: Tier['name']) => copy.value.actions[planAction(current.value, rank(name), cycle.value)];
-const amount = (name: Tier['name']) => new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency }).format(Number(regionalAmount(name, currency, cycle.value)));
+const amount = (name: Tier['name']) => {
+  const base = Number(regionalAmount(name, currency, cycle.value));
+  if (presentment === 'CNY') {
+    if (!cnyRate.value || Date.parse(cnyRate.value.expiresAt) <= Date.now()) return uiLocale.value.startsWith('en') ? 'CNY · quoted at checkout' : '人民币 · 结账时询价';
+    return (uiLocale.value.startsWith('en') ? '≈ ' : '约 ') + new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency: 'CNY' }).format(base * cnyRate.value.rate);
+  }
+  return new Intl.NumberFormat(uiLocale.value, { style: 'currency', currency }).format(base);
+};
+async function loadCnyRate() {
+  try {
+    const result = await request<{ fromCurrency: string; currency: string; rate: number; expiresAt: string; estimated: boolean }>('/billing/waffo/cny-reference');
+    if (result.fromCurrency === 'USD' && result.currency === 'CNY' && result.estimated === true && Number.isFinite(result.rate) && result.rate > 0 && result.rate <= 100 && Date.parse(result.expiresAt) > Date.now()) cnyRate.value = result;
+  } catch { cnyRate.value = undefined; }
+}
+let rateTimer: ReturnType<typeof setInterval> | undefined;
+onMounted(() => { if (!legacy && presentment === 'CNY') { void loadCnyRate(); rateTimer = setInterval(() => { cnyRate.value = undefined; void loadCnyRate(); }, 60000); } });
 const keys = new Map<string, string>();
 let generation = 0;
 async function loadMembership() {
@@ -73,12 +90,14 @@ async function subscribe(name: Tier['name']) {
   if (disabled.value) return;
   if (!session.value) { await router.push({ path: '/login', query: { return: '/pricing' } }); return; }
   if (current.value && current.value.rank > 0) { await manage(); return; }
+  const billingCountry = presentment === 'CNY' ? 'CN' : undefined;
+  if (billingCountry && !window.confirm(uiLocale.value.startsWith('en') ? 'Confirm your billing country is China and you are purchasing as an individual. Waffo will use this billing country for local-currency payment. The final CNY total is shown before you pay.' : '请确认您的账单国家是中国，且为个人购买。Waffo 将以此账单国家处理本币付款，最终人民币总额会在支付前显示。')) return;
   const userId = session.value.id, step = generation; busy.value = name; error.value = '';
   try {
     if (isTestSession()) throw new Error(copy.value.unavailable);
     const offerId = `cloud-plus:${name.toLowerCase()}:${cycle.value}`, offerKey = `${offerId}:${currency}`;
     const key = keys.get(offerKey) || crypto.randomUUID(); keys.set(offerKey, key);
-    const target = waffoRedirect(await request('/billing/waffo/checkout', { method: 'POST', body: JSON.stringify({ offerId, currency }), headers: { 'Idempotency-Key': key } }), 'checkout');
+    const target = waffoRedirect(await request('/billing/waffo/checkout', { method: 'POST', body: JSON.stringify({ offerId, currency, ...(billingCountry ? { billingCountry } : {}) }), headers: { 'Idempotency-Key': key } }), 'checkout');
     const user = await platform.refreshSession();
     if (step !== generation || user?.id !== userId) throw new Error(copy.value.unavailable);
     window.location.assign(target);
@@ -98,7 +117,7 @@ async function manage() {
   finally { busy.value = ''; }
 }
 onMounted(() => { if (!legacy) { window.addEventListener(SESSION_EVENT, loadMembership); void loadMembership(); } });
-onBeforeUnmount(() => { generation++; window.removeEventListener(SESSION_EVENT, loadMembership); });
+onBeforeUnmount(() => { if (rateTimer) clearInterval(rateTimer); generation++; window.removeEventListener(SESSION_EVENT, loadMembership); });
 </script>
 <style scoped>
 .pricing-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}.pricing-card{max-width:420px;width:100%;justify-self:center}.more-plans{text-align:center;margin:26px 0}.more-plans a{color:var(--nc-accent);text-decoration:underline;text-underline-offset:4px}.subscription-plans>.login-fine{margin-top:24px}.login-fine button.text-link{background:transparent;border:0;padding:0;color:var(--nc-accent);font:inherit;text-decoration:underline;text-underline-offset:3px}

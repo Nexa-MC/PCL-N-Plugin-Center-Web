@@ -3,7 +3,7 @@
     <div class="footer-brand">
       <BrandIcon />
       <div>
-        <strong>NexaCL</strong>
+        <strong>NexaMC</strong>
         <span>{{ t("site.footer.tagline") }}</span>
       </div>
     </div>
@@ -13,7 +13,7 @@
       <a href="https://docs.pcln.top/" target="_blank" rel="noreferrer">{{ t("market.header.docs") }}</a>
       <a :href="SOURCE_GITHUB" target="_blank" rel="noreferrer">GitHub</a>
     </nav>
-    <p>© {{ year }} {{ $ui("NexaCL 贡献者 · Apache-2.0") }}</p>
+    <p>© {{ year }} {{ $ui("NexaMC 贡献者 · Apache-2.0") }}</p>
   </footer>
 </template>
 

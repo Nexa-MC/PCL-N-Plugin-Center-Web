@@ -1,4 +1,4 @@
-# NexaCL interface refresh — 2026-10-28
+# NexaMC interface refresh — 2026-10-28
 
 ## Source and scope
 
@@ -23,7 +23,7 @@ The previous interface mixed small utility text, pills and varying card styles, 
 
 ## Colour and interaction
 
-Light: white surfaces on soft neutral green, dark graphite text and `#087b68` accent. Dark: layered deep green surfaces, warm off-white text and `#64d6bf` accent. Semantic error/warning/success tokens remain distinct. The design uses 4/8px spacing increments, 16px cards, 10px controls, restrained shadows and visible keyboard focus. Motion honours reduced-motion preferences.
+Light: white surfaces on cool blue neutrals, dark blue-grey text and `#007b9e` accent. Dark: layered blue-grey surfaces, cool off-white text and `#39c9ec` accent. Semantic error/warning/success tokens remain distinct. The design uses 4/8px spacing increments, 16px cards, 10px controls, restrained shadows and visible keyboard focus. Motion honours reduced-motion preferences.
 
 Automated tests verify AA 4.5:1 minimum for primary/muted text, primary actions and error/warning text against their semantic backgrounds. This is a token-level check, not a claim of a complete accessibility certification.
 

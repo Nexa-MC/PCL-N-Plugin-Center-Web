@@ -1,19 +1,19 @@
-/* NexaCL interface system: shared by public, account, publishing and admin routes.
+/* NexaMC interface system: shared by public, account, publishing and admin routes.
    Page components retain their layout/behaviour; this layer owns visual tokens. */
 html:root {
-  --nc-accent: #087b68;
-  --nc-accent-strong: #05624f;
+  --nc-accent: #007b9e;
+  --nc-accent-strong: #00617e;
   --nc-on-accent: #ffffff;
-  --market-bg: #f5f7f6;
+  --market-bg: #f4f8fb;
   --market-surface: #ffffff;
   --market-surface-solid: #ffffff;
-  --market-surface-soft: #edf2ef;
-  --market-border: #d6e1dc;
-  --market-text: #20332d;
-  --market-muted: #536761;
+  --market-surface-soft: #eaf2f7;
+  --market-border: #d3e1eb;
+  --market-text: #183244;
+  --market-muted: #506778;
   --market-text-muted: var(--market-muted);
   --market-accent: var(--nc-accent);
-  --market-accent-soft: #e2f3ec;
+  --market-accent-soft: #e0f5fc;
   --ui-danger: #a83236;
   --ui-danger-soft: #fff0ee;
   --ui-warning: #805800;
@@ -21,7 +21,7 @@ html:root {
   --ui-success: #166d47;
   --ui-radius: 16px;
   --ui-control-radius: 10px;
-  --ui-shadow: 0 2px 4px #193d2e04, 0 12px 32px #193d2e06;
+  --ui-shadow: 0 2px 4px #12354a04, 0 12px 32px #12354a06;
   --ui-space-1: 4px;
   --ui-space-2: 8px;
   --ui-space-3: 12px;
@@ -31,9 +31,9 @@ html:root {
   --ui-space-12: 48px;
   --el-color-primary: var(--nc-accent);
   --el-color-primary-dark-2: var(--nc-accent-strong);
-  --el-color-primary-light-3: #419c88;
-  --el-color-primary-light-5: #83bdac;
-  --el-color-primary-light-7: #bbded1;
+  --el-color-primary-light-3: #419cba;
+  --el-color-primary-light-5: #83bdd1;
+  --el-color-primary-light-7: #bbdeeb;
   --el-color-primary-light-9: var(--market-accent-soft);
   --el-text-color-primary: var(--market-text);
   --el-text-color-regular: var(--market-text);
@@ -51,17 +51,17 @@ html:root {
   text-rendering: optimizeLegibility;
 }
 html.dark {
-  --nc-accent: #64d6bf;
-  --nc-accent-strong: #91e5d3;
-  --nc-on-accent: #102e25;
-  --market-bg: #101917;
-  --market-surface: #172420;
-  --market-surface-solid: #172420;
-  --market-surface-soft: #20332b;
-  --market-border: #354d43;
-  --market-text: #edf5f0;
-  --market-muted: #acbdb3;
-  --market-accent-soft: #203d33;
+  --nc-accent: #39c9ec;
+  --nc-accent-strong: #88e3fa;
+  --nc-on-accent: #073044;
+  --market-bg: #0e1820;
+  --market-surface: #162530;
+  --market-surface-solid: #162530;
+  --market-surface-soft: #203440;
+  --market-border: #34505f;
+  --market-text: #edf6fc;
+  --market-muted: #afc1ce;
+  --market-accent-soft: #183e4d;
   --ui-danger: #ffaaa6;
   --ui-danger-soft: #3c2425;
   --ui-warning: #ffd18a;
@@ -70,14 +70,14 @@ html.dark {
   --ui-shadow: 0 2px 4px #0000000c, 0 14px 36px #00000018;
   --el-color-primary: var(--nc-accent);
   --el-color-primary-dark-2: var(--nc-accent-strong);
-  --el-color-primary-light-3: #4bab96;
-  --el-color-primary-light-5: #377d69;
-  --el-color-primary-light-7: #285341;
+  --el-color-primary-light-3: #36a5c5;
+  --el-color-primary-light-5: #2d7893;
+  --el-color-primary-light-7: #245268;
   --el-color-primary-light-9: var(--market-accent-soft);
   --el-text-color-primary: var(--market-text);
   --el-text-color-regular: var(--market-text);
   --el-text-color-secondary: var(--market-muted);
-  --el-text-color-placeholder: #98ada1;
+  --el-text-color-placeholder: #96aebb;
   --el-bg-color: var(--market-surface);
   --el-bg-color-overlay: var(--market-surface);
   --el-bg-color-page: var(--market-bg);
@@ -115,7 +115,7 @@ html:root :is(.pricing-note,.hero-description,.resource-description,.legal-intro
 html:root :is(.work-panel,.resource-card,.manage-panel,.login-card,.login-panel,.download-picker) { background: var(--market-surface); border: 1px solid var(--market-border); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
 html:root .work-panel { padding: clamp(20px,3vw,32px); }
 html:root :is(.resource-card,.guide-card) { transition: border-color .18s ease, box-shadow .18s ease; }
-html:root :is(a.resource-card,.guide-card):hover { border-color: var(--nc-accent); box-shadow: 0 12px 32px #193d2e10; }
+html:root :is(a.resource-card,.guide-card):hover { border-color: var(--nc-accent); box-shadow: 0 12px 32px #12354a10; }
 html:root :is(.primary-button,.secondary-button,.danger-button,.provider-button,.hero-btn,.pill) { min-height: 44px; padding: 10px 20px; font-size: 14px; font-weight: 600; gap: 10px; border-radius: var(--ui-control-radius); transition: background .16s ease, border-color .16s ease, transform .16s ease; }
 html:root .primary-button { background: var(--nc-accent); color: var(--nc-on-accent); }
 html:root .primary-button:hover:not(:disabled) { background: var(--nc-accent-strong); }

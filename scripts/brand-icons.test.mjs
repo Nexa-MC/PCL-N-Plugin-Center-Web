@@ -28,7 +28,7 @@ test('favicon and home-screen references point to existing assets', () => {
   assert.match(html, /rel="apple-touch-icon"/);
   assert.match(html, /rel="manifest"/);
   const manifest = JSON.parse(readFileSync(publicFile('site.webmanifest'), 'utf8'));
-  assert.equal(manifest.name, 'NexaCL');
+  assert.equal(manifest.name, 'NexaMC');
   for (const icon of manifest.icons) {
     assert.equal(pngSize(icon.src.replace(/^\//, '')).join('x'), icon.sizes);
     assert.equal(icon.purpose, 'any');

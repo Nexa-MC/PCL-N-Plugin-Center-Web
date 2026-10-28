@@ -2,14 +2,14 @@
   <div class="login-page">
 
     <header class="login-topbar">
-      <router-link class="login-brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
+      <router-link class="login-brand" to="/"><BrandIcon /><strong>NexaMC</strong></router-link>
       <div class="login-controls"><LanguageControl /><ThemeControl /></div>
     </header>
     <main class="login-hero">
       <p v-if="checking" class="empty-state" role="status">{{ $ui("正在检查会话…") }}</p>
       <div v-else class="login-card">
         <span class="login-mark" aria-hidden="true">N</span>
-        <p class="eyebrow card-eyebrow">NEXACL ID</p>
+        <p class="eyebrow card-eyebrow">NEXAMC ID</p>
         <h1>{{ loginStep === 'creds' ? $ui("登录") : $ui("两步验证") }}</h1>
         <p class="login-sub">{{ loginStep === 'creds' ? $ui("账户 · 订阅 · 下载") : loginUserName }}</p>
 
@@ -201,7 +201,7 @@ onMounted(async () => {
   checking.value = false;
   try { emailAvailable.value = (await platform.loginMethods()).emailCode; } catch { emailAvailable.value = false; }
 });
-watchEffect(() => { applyPageSeo({ title: '登录 · NexaCL', description: '使用 Passkey、邮箱验证码、密码或 GitHub / Google / Microsoft 登录 NexaCL。', path: '/login' }); });
+watchEffect(() => { applyPageSeo({ title: '登录 · NexaMC', description: '使用 Passkey、邮箱验证码、密码或 GitHub / Google / Microsoft 登录 NexaMC。', path: '/login' }); });
 </script>
 <style scoped>
 .login-page{min-height:100vh;display:flex;flex-direction:column}
