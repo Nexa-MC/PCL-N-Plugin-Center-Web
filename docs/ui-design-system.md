@@ -2,7 +2,7 @@
 
 ## Source and scope
 
-Requested skill: `@user_865e3592/ui-new`, installed using SkillHub CLI 2026.8.5 from the user-specified https://skillhub.cn/install/skillhub.md procedure into `.agents/skills/@user_865e3592/ui-new`. The package identifies itself as `ui-design-system`; its audit protocol informed this work. Only that skill was installed; no default skill bundle, source-priority policy, external font service or runtime UI dependency was added.
+Requested skill: `@user_865e3592/ui-new` version `1.0.0`, installed using SkillHub CLI 2026.8.5 from the user-specified https://skillhub.cn/install/skillhub.md procedure into `.agents/skills/@user_865e3592/ui-new`. The package identifies itself as `ui-design-system`; its audit protocol informed this work. Only that skill was installed; no default skill bundle, source-priority policy, external font service or runtime UI dependency was added.
 
 The redesign uses the existing Vue application, route permissions and component contracts. Payment, account acceptance, publishing eligibility and financial actions retain their existing behaviour.
 

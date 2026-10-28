@@ -28,3 +28,6 @@ dist-ssr
 *.sw?
 
 .wrangler/
+
+# SkillHub records an absolute, machine-local installation path.
+.agents/skills/.skills_store_lock.json
