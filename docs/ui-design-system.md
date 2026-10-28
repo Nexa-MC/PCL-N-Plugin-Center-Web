@@ -41,3 +41,13 @@ Publication still requires the normal CI/deployment outcome and public version r
 ## NexaMC brand asset — 2026-10-28
 
 The user-supplied source is preserved verbatim as `public/icons/nexamc-source.png` from https://avatars.githubusercontent.com/u/304438575?s=400&u=7754fb7a6a14a180d37817b013bd8f77804212b9&v=4. Browser, navigation and home-screen assets are format/size derivatives of this source, with no redraw or colour changes. Light and dark themes use the same artwork. New `nexamc-*` paths avoid stale browser caches; prior `nexacl-*` PNG paths and `pcln.png` retain compatible aliases containing the new artwork. Shared icon changes deploy both public and management Workers.
+
+## Console dashboard rollback
+
+Management and `/publisher/*` routes retain the dashboard geometry from before
+`ba6f860`: compact headings/cards, original content width, and single-level
+management navigation in its original order. New security and finance destinations
+remain beside store review. `App.vue` scopes this exception with
+`console-dashboard`; navigating back to public pages restores the public design.
+The shared NexaMC logo and cyan tokens remain current. Publisher project categories,
+trusted Sidecar permissions, and session restoration are not rolled back.

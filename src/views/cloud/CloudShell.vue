@@ -14,9 +14,10 @@
     <div class="cloud-body">
       <main id="cloud-content" class="cloud-content"><router-view :key="route.path.startsWith('/store') ? 'store' : route.path" /></main>
     </div>
-    <footer class="cloud-footer">
+    <footer class="cloud-footer" :class="{ 'dashboard-footer': publisherConsole }">
       <div><strong>NexaMC</strong><p>{{ $ui('社区开发的 Minecraft 启动器与配套云服务。') }}</p></div>
-      <nav class="footer-sections" :aria-label="$ui('页脚导航')">
+      <nav v-if="publisherConsole" :aria-label="$ui('页脚导航')"><router-link to="/pricing">{{ $ui('套餐价格') }}</router-link><router-link to="/legal/terms">{{ $ui('服务条款') }}</router-link><router-link to="/legal/privacy">{{ $ui('隐私政策') }}</router-link><router-link to="/legal/refunds">{{ $ui('退款与取消政策') }}</router-link><router-link to="/contact">{{ $ui('联系我们') }}</router-link><a v-for="contact in CONTACTS" :key="contact.key" :href="`mailto:${contact.address}`">{{ $ui(contact.label) }}</a></nav>
+      <nav v-else class="footer-sections" :aria-label="$ui('页脚导航')">
         <div><h2>{{ en ? 'Explore' : '探索产品' }}</h2><router-link to="/download">{{ $ui('下载') }}</router-link><router-link to="/store">{{ $ui('商店') }}</router-link><router-link to="/pricing">{{ $ui('套餐价格') }}</router-link><router-link to="/docs">{{ $ui('文档') }}</router-link></div>
         <div><h2>{{ en ? 'Help & community' : '帮助与社区' }}</h2><router-link to="/changelog">{{ $ui('更新日志') }}</router-link><router-link to="/contact">{{ $ui('联系我们') }}</router-link><router-link to="/feedback">{{ en ? 'Feedback' : '体验反馈' }}</router-link><a v-for="contact in CONTACTS" :key="contact.key" :href="`mailto:${contact.address}`">{{ $ui(contact.label) }}</a></div>
         <div><h2>{{ en ? 'Policies' : '条款与政策' }}</h2><router-link to="/legal/terms">{{ $ui('服务条款') }}</router-link><router-link to="/legal/privacy">{{ $ui('隐私政策') }}</router-link><router-link to="/legal/refunds">{{ $ui('退款与取消政策') }}</router-link></div>
@@ -36,6 +37,7 @@ import LanguageControl from '@/components/LanguageControl.vue';
 import ThemeControl from '@/components/ThemeControl.vue';
 const route = useRoute(), router = useRouter();
 const { locale } = useI18n();
+const publisherConsole = computed(() => route.path.startsWith('/publisher/'));
 const en = computed(() => locale.value !== 'zh');
 const session = ref<Session>(), menuOpen = ref(false);
 const accountLabel = computed(() => session.value ? (session.value.name || (en.value ? 'Manage account' : '账户管理')) : (en.value ? 'Sign in' : '登录 / 注册'));
@@ -60,4 +62,5 @@ onUnmounted(() => { window.removeEventListener('focus', onFocus); window.removeE
 @media(max-width:680px){.cloud-footer{padding:24px 20px;gap:18px}}
 .cloud-footer{align-items:flex-start;max-width:1280px;padding-block:40px;gap:32px;font-size:13px}.cloud-footer>div{max-width:260px}.cloud-footer strong{font-size:20px}.cloud-footer p{font-size:13px;line-height:1.8}.cloud-footer .footer-sections{display:grid;grid-template-columns:repeat(3,minmax(120px,1fr));gap:24px 40px}.footer-sections>div{display:flex;flex-direction:column;align-items:flex-start;gap:6px}.footer-sections h2{font-size:13px;color:var(--market-text);margin-bottom:10px;font-weight:650}.footer-sections a{padding-block:5px;line-height:1.6}.footer-sections a:focus-visible{outline-offset:3px}@media(max-width:700px){.cloud-footer .footer-sections{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.footer-sections a{min-height:44px;display:flex;align-items:center}.cloud-footer{padding:32px 20px}}
 .account-mobile-icon{display:none}@media(max-width:700px){.account-mobile-icon{display:block;width:20px;height:20px}.account-label{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.account-status .status-dot{display:none}}
+.dashboard-footer{align-items:center;max-width:1440px;padding:24px 40px 32px;gap:24px;font-size:12px}.dashboard-footer strong{font-size:14px}.dashboard-footer p{font-size:12px}.dashboard-footer>div{max-width:none}@media(max-width:680px){.dashboard-footer{padding:24px 20px;gap:18px}}
 </style>

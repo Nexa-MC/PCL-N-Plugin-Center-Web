@@ -88,164 +88,169 @@ html.dark {
 }
 body { background: var(--market-bg); color: var(--market-text); }
 ::selection { background: var(--market-accent-soft); color: var(--market-text); }
-html:root :is(h1,h2,h3) { text-wrap: balance; line-height: 1.3; letter-spacing: -.025em; }
-html:root h1 { font-size: clamp(28px, 3.2vw, 40px); font-weight: 700; }
-html:root h2 { font-size: clamp(20px, 2vw, 25px); font-weight: 650; }
-html:root h3 { font-size: 17px; font-weight: 650; }
-html:root :is(button, input, select, textarea) { font: inherit; }
-html:root :is(a, button, input, textarea, select, summary):focus-visible { outline: 3px solid var(--nc-accent); outline-offset: 3px; }
-html:root button:disabled { cursor: not-allowed; }
-html:root .cloud-content { max-width: 1280px; padding: clamp(24px,4vw,48px) clamp(16px,3vw,40px) 64px; }
-html:root .cloud-body { min-height: calc(100vh - 240px); }
-html:root .cloud-header { position: sticky; top: 0; z-index: 40; min-height: 72px; height: auto; padding: 12px clamp(16px,3vw,40px); gap: 20px; background: var(--market-surface); color: var(--market-text); border-bottom: 1px solid var(--market-border); }
-html:root .cloud-brand { min-width: 130px; }
-html:root .cloud-brand strong { color: var(--market-text); font-size: 21px; }
-html:root .cloud-header nav a { color: var(--market-muted); min-height: 44px; padding: 10px 14px; font-size: 14px; border-radius: var(--ui-control-radius); }
-html:root .cloud-header nav a:hover { color: var(--market-text); background: var(--market-surface-soft); }
-html:root .cloud-header nav a.active { background: var(--market-accent-soft); color: var(--nc-accent-strong); }
-html:root .account-status { color: var(--market-text); min-height: 44px; font-size: 14px; padding: 8px 12px; border: 1px solid var(--market-border); border-radius: var(--ui-control-radius); max-width: 220px; overflow-wrap: anywhere; }
-html:root .status-dot { background: var(--nc-accent); flex-shrink: 0; }
-html:root .account-dropdown { display: grid; top: calc(100% + 8px); padding: 8px; box-shadow: var(--ui-shadow); border-radius: 14px; }
-html:root .account-dropdown :is(a,button) { display: block; font-size: 14px; min-height: 44px; border-radius: 8px; }
-html:root .account-dropdown :is(a,button):hover { background: var(--market-accent-soft); color: var(--nc-accent-strong); }
-html:root :is(.theme-control select,.language-control) { min-height: 44px; border-radius: var(--ui-control-radius); font-size: 13px; }
-html:root .section-heading { align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; }
-html:root :is(.eyebrow,.manage-eyebrow) { color: var(--nc-accent-strong); font-size: 11px; font-weight: 650; letter-spacing: .12em; margin-bottom: 8px; }
-html:root :is(.pricing-note,.hero-description,.resource-description,.legal-intro,.store-muted) { color: var(--market-muted); font-size: 14px; line-height: 1.75; }
-html:root :is(.work-panel,.resource-card,.manage-panel,.login-card,.login-panel,.download-picker) { background: var(--market-surface); border: 1px solid var(--market-border); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
-html:root .work-panel { padding: clamp(20px,3vw,32px); }
-html:root :is(.resource-card,.guide-card) { transition: border-color .18s ease, box-shadow .18s ease; }
-html:root :is(a.resource-card,.guide-card):hover { border-color: var(--nc-accent); box-shadow: 0 12px 32px #12354a10; }
-html:root :is(.primary-button,.secondary-button,.danger-button,.provider-button,.hero-btn,.pill) { min-height: 44px; padding: 10px 20px; font-size: 14px; font-weight: 600; gap: 10px; border-radius: var(--ui-control-radius); transition: background .16s ease, border-color .16s ease, transform .16s ease; }
-html:root .primary-button { background: var(--nc-accent); color: var(--nc-on-accent); }
-html:root .primary-button:hover:not(:disabled) { background: var(--nc-accent-strong); }
-html:root :is(.primary-button,.secondary-button,.danger-button):active:not(:disabled) { transform: scale(.98); }
-html:root .secondary-button { background: var(--market-surface); color: var(--market-text); border-color: var(--market-border); }
-html:root .secondary-button:hover:not(:disabled) { background: var(--market-surface-soft); border-color: var(--nc-accent); }
-html:root .danger-button { color: var(--ui-danger); background: var(--market-surface); border-color: var(--ui-danger); }
-html:root .danger-button:hover:not(:disabled) { background: var(--ui-danger-soft); }
-html:root .text-link { font-size: 14px; text-underline-offset: 4px; }
-html:root .text-link:hover { text-decoration: underline; }
-html:root :is(.login-fine,.resource-meta,.resource-card footer,.legal-meta) { color: var(--market-muted); font-size: 12px; line-height: 1.7; }
-html:root :is(.credential-form,.support-form,.stack-form,.manage-form,.login-panel,.dialog-field) :is(input:not([type=checkbox]):not([type=radio]),select,textarea) { min-height: 44px; padding: 10px 12px; font-size: 15px; border-radius: var(--ui-control-radius); border: 1px solid var(--market-border); color: var(--market-text); background: var(--market-surface); }
-html:root :is(.credential-form,.support-form,.stack-form,.manage-form) label { font-size: 14px; color: var(--market-text); }
-html:root input::placeholder, html:root textarea::placeholder { color: var(--market-muted); opacity: 1; }
-html:root .form-error { color: var(--ui-danger); background: var(--ui-danger-soft); border: 1px solid currentColor; font-size: 14px; border-radius: 10px; }
-html:root .empty-state { background: var(--market-surface); border: 1px dashed var(--market-border); border-radius: var(--ui-radius); padding: 56px 24px; color: var(--market-muted); font-size: 15px; margin: 24px 0; }
-html:root .empty-state :is(h3,p) { font-size: 14px; color: var(--market-muted); }
-html:root .status-pill { font-size: 12px; padding: 5px 12px; background: var(--market-accent-soft); color: var(--nc-accent-strong); border-radius: 7px; }
-html:root .account-layout { grid-template-columns: 224px minmax(0,1fr); gap: 32px; }
-html:root .account-nav { top: 96px; }
-html:root .account-panel .work-panel > p { font-size: 14px; }
-html:root :is(.profile-row,.identity-row,.ticket-row) { padding-block: 18px; font-size: 14px; border-color: var(--market-border); }
-html:root :is(.profile-row span,.identity-row small) { color: var(--market-muted); }
-html:root .profile-row strong { overflow-wrap: anywhere; text-align: end; }
-html:root .overview-avatar { border-radius: 22px; width: 72px; height: 72px; font-size: 30px; background: var(--market-accent-soft); color: var(--nc-accent-strong); }
-html:root .pricing-grid { gap: 20px; align-items: stretch; margin-top: 32px; }
-html:root .pricing-card { display: flex; flex-direction: column; padding: 28px; position: relative; }
-html:root .pricing-card .tier-desc { font-size: 14px; color: var(--market-muted); min-height: 48px; }
-html:root .pricing-card .tier-features { flex: 1; font-size: 14px; line-height: 1.9; margin-block: 20px 28px; }
-html:root .pricing-card .primary-button { width: 100%; }
-html:root .pricing-card.highlight { border: 2px solid var(--nc-accent); background: var(--market-surface); }
-html:root .pricing-card .tier-price { margin-block: 24px 8px; }
-html:root .tier-price strong { font-size: clamp(30px,3vw,40px); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-html:root .billing-toggle { border-radius: 12px; border: 1px solid var(--market-border); padding: 4px; }
-html:root .billing-toggle button { min-height: 40px; font-size: 14px; padding: 8px 20px; border-radius: 8px; }
-html:root .legal-page { max-width: 920px; }
-html:root .legal-doc { padding: clamp(24px,4vw,48px); font-size: 16px; line-height: 1.9; }
-html:root .legal-doc :is(p,li) { color: var(--market-text); }
-html:root .legal-doc :is(h2,h3) { scroll-margin-top: 100px; }
-html:root .legal-meta { overflow-wrap: anywhere; }
-html:root .legal-entry { align-items: flex-start; }
-html:root .login-card { max-width: 460px; padding: clamp(24px,4vw,40px); text-align: left; }
-html:root .login-card :is(h1,h2,.login-sub,.card-eyebrow) { text-align: center; }
-html:root .login-card .login-mark { display: flex; margin: auto; }
-html:root .login-page .login-topbar { min-height: 76px; }
-html:root .cloud-shell .hero-card { padding: clamp(40px,6vw,80px) clamp(20px,4vw,48px) 36px; border-radius: 24px; }
-html:root .cloud-shell .hero-card:before { background: radial-gradient(ellipse at 20% 0%,var(--market-accent-soft),transparent 65%); animation: none; }
-html:root .cloud-shell .hero-card h1 { font-size: clamp(36px,5.4vw,64px); max-width: 850px; margin-inline: auto; letter-spacing: -.045em; }
-html:root .cloud-shell .hero-sub { color: var(--market-muted); font-size: clamp(16px,2vw,19px); max-width: 620px; margin-inline: auto; }
-html:root .cloud-shell .hero-badge { color: var(--nc-accent-strong); border-color: var(--market-border); font-size: 12px; }
-html:root .cloud-shell .hero-btn-solid { background: var(--nc-accent); color: var(--nc-on-accent); }
-html:root .cloud-shell .home-section { margin-top: clamp(48px,6vw,80px); }
-html:root .cloud-shell .tile { border-radius: 16px; }
-html:root .cloud-shell :is(.t-launch,.t-drop) { background: var(--market-surface); }
-html:root .cloud-shell .tile-icon { color: var(--nc-accent); background: var(--market-accent-soft); }
-html:root .cloud-shell .section-head h2 { font-size: clamp(26px,3vw,36px); }
-html:root .cloud-shell .product-window { box-shadow: 0 20px 56px #132d2420; border-color: var(--market-border); }
-html:root .cloud-shell .window-caption { background: var(--nc-accent); color: var(--nc-on-accent); }
-html:root .resource-grid { gap: 20px; }
-html:root .resource-card { padding: 24px; }
-html:root .resource-art { height: 112px; border-radius: 12px; background: var(--market-accent-soft); }
-html:root .resource-card p { color: var(--market-muted); font-size: 14px; }
-html:root .catalog-toolbar { padding-bottom: 20px; margin-top: 28px; }
-html:root .search-field { border-radius: 10px; min-height: 44px; border-color: var(--market-border); }
-html:root .search-field input { font-size: 14px; min-width: 0; }
-html:root .manage-layout { grid-template-columns: 248px minmax(0,1fr); }
-html:root .manage-sidebar { overflow-y: auto; padding: 28px 18px; }
-html:root .manage-topbar { background: var(--market-surface); min-height: 72px; }
-html:root .manage-main { padding: 36px clamp(20px,3vw,40px) 56px; max-width: 1480px; width: 100%; margin-inline: auto; }
-html:root .manage-panel { padding: 24px; }
-html:root .manage-table :is(th,td) { padding: 14px 16px; font-size: 13px; }
-html:root .manage-table th { background: var(--market-surface-soft); color: var(--market-muted); font-weight: 600; }
-html:root .manage-stat { border-radius: 14px; box-shadow: none; }
-html:root .manage-stat strong { font-variant-numeric: tabular-nums; }
-html:root .el-card { border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
-html:root .el-dialog { border-radius: 20px; padding: 24px; max-width: calc(100vw - 32px); }
-html:root .el-table { --el-table-header-bg-color: var(--market-surface-soft); --el-table-border-color: var(--market-border); --el-table-tr-bg-color: var(--market-surface); }
-html:root .el-button { min-height: 40px; border-radius: 9px; }
+html:root:not(.console-dashboard) :is(h1,h2,h3) { text-wrap: balance; line-height: 1.3; letter-spacing: -.025em; }
+html:root:not(.console-dashboard) h1 { font-size: clamp(28px, 3.2vw, 40px); font-weight: 700; }
+html:root:not(.console-dashboard) h2 { font-size: clamp(20px, 2vw, 25px); font-weight: 650; }
+html:root:not(.console-dashboard) h3 { font-size: 17px; font-weight: 650; }
+html:root:not(.console-dashboard) :is(button, input, select, textarea) { font: inherit; }
+html:root:not(.console-dashboard) :is(a, button, input, textarea, select, summary):focus-visible { outline: 3px solid var(--nc-accent); outline-offset: 3px; }
+html:root:not(.console-dashboard) button:disabled { cursor: not-allowed; }
+html:root:not(.console-dashboard) .cloud-content { max-width: 1280px; padding: clamp(24px,4vw,48px) clamp(16px,3vw,40px) 64px; }
+html:root:not(.console-dashboard) .cloud-body { min-height: calc(100vh - 240px); }
+html:root:not(.console-dashboard) .cloud-header { position: sticky; top: 0; z-index: 40; min-height: 72px; height: auto; padding: 12px clamp(16px,3vw,40px); gap: 20px; background: var(--market-surface); color: var(--market-text); border-bottom: 1px solid var(--market-border); }
+html:root:not(.console-dashboard) .cloud-brand { min-width: 130px; }
+html:root:not(.console-dashboard) .cloud-brand strong { color: var(--market-text); font-size: 21px; }
+html:root:not(.console-dashboard) .cloud-header nav a { color: var(--market-muted); min-height: 44px; padding: 10px 14px; font-size: 14px; border-radius: var(--ui-control-radius); }
+html:root:not(.console-dashboard) .cloud-header nav a:hover { color: var(--market-text); background: var(--market-surface-soft); }
+html:root:not(.console-dashboard) .cloud-header nav a.active { background: var(--market-accent-soft); color: var(--nc-accent-strong); }
+html:root:not(.console-dashboard) .account-status { color: var(--market-text); min-height: 44px; font-size: 14px; padding: 8px 12px; border: 1px solid var(--market-border); border-radius: var(--ui-control-radius); max-width: 220px; overflow-wrap: anywhere; }
+html:root:not(.console-dashboard) .status-dot { background: var(--nc-accent); flex-shrink: 0; }
+html:root:not(.console-dashboard) .account-dropdown { display: grid; top: calc(100% + 8px); padding: 8px; box-shadow: var(--ui-shadow); border-radius: 14px; }
+html:root:not(.console-dashboard) .account-dropdown :is(a,button) { display: block; font-size: 14px; min-height: 44px; border-radius: 8px; }
+html:root:not(.console-dashboard) .account-dropdown :is(a,button):hover { background: var(--market-accent-soft); color: var(--nc-accent-strong); }
+html:root:not(.console-dashboard) :is(.theme-control select,.language-control) { min-height: 44px; border-radius: var(--ui-control-radius); font-size: 13px; }
+html:root:not(.console-dashboard) .section-heading { align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; }
+html:root:not(.console-dashboard) :is(.eyebrow,.manage-eyebrow) { color: var(--nc-accent-strong); font-size: 11px; font-weight: 650; letter-spacing: .12em; margin-bottom: 8px; }
+html:root:not(.console-dashboard) :is(.pricing-note,.hero-description,.resource-description,.legal-intro,.store-muted) { color: var(--market-muted); font-size: 14px; line-height: 1.75; }
+html:root:not(.console-dashboard) :is(.work-panel,.resource-card,.manage-panel,.login-card,.login-panel,.download-picker) { background: var(--market-surface); border: 1px solid var(--market-border); border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
+html:root:not(.console-dashboard) .work-panel { padding: clamp(20px,3vw,32px); }
+html:root:not(.console-dashboard) :is(.resource-card,.guide-card) { transition: border-color .18s ease, box-shadow .18s ease; }
+html:root:not(.console-dashboard) :is(a.resource-card,.guide-card):hover { border-color: var(--nc-accent); box-shadow: 0 12px 32px #12354a10; }
+html:root:not(.console-dashboard) :is(.primary-button,.secondary-button,.danger-button,.provider-button,.hero-btn,.pill) { min-height: 44px; padding: 10px 20px; font-size: 14px; font-weight: 600; gap: 10px; border-radius: var(--ui-control-radius); transition: background .16s ease, border-color .16s ease, transform .16s ease; }
+html:root:not(.console-dashboard) .primary-button { background: var(--nc-accent); color: var(--nc-on-accent); }
+html:root:not(.console-dashboard) .primary-button:hover:not(:disabled) { background: var(--nc-accent-strong); }
+html:root:not(.console-dashboard) :is(.primary-button,.secondary-button,.danger-button):active:not(:disabled) { transform: scale(.98); }
+html:root:not(.console-dashboard) .secondary-button { background: var(--market-surface); color: var(--market-text); border-color: var(--market-border); }
+html:root:not(.console-dashboard) .secondary-button:hover:not(:disabled) { background: var(--market-surface-soft); border-color: var(--nc-accent); }
+html:root:not(.console-dashboard) .danger-button { color: var(--ui-danger); background: var(--market-surface); border-color: var(--ui-danger); }
+html:root:not(.console-dashboard) .danger-button:hover:not(:disabled) { background: var(--ui-danger-soft); }
+html:root:not(.console-dashboard) .text-link { font-size: 14px; text-underline-offset: 4px; }
+html:root:not(.console-dashboard) .text-link:hover { text-decoration: underline; }
+html:root:not(.console-dashboard) :is(.login-fine,.resource-meta,.resource-card footer,.legal-meta) { color: var(--market-muted); font-size: 12px; line-height: 1.7; }
+html:root:not(.console-dashboard) :is(.credential-form,.support-form,.stack-form,.manage-form,.login-panel,.dialog-field) :is(input:not([type=checkbox]):not([type=radio]),select,textarea) { min-height: 44px; padding: 10px 12px; font-size: 15px; border-radius: var(--ui-control-radius); border: 1px solid var(--market-border); color: var(--market-text); background: var(--market-surface); }
+html:root:not(.console-dashboard) :is(.credential-form,.support-form,.stack-form,.manage-form) label { font-size: 14px; color: var(--market-text); }
+html:root:not(.console-dashboard) input::placeholder, html:root:not(.console-dashboard) textarea::placeholder { color: var(--market-muted); opacity: 1; }
+html:root:not(.console-dashboard) .form-error { color: var(--ui-danger); background: var(--ui-danger-soft); border: 1px solid currentColor; font-size: 14px; border-radius: 10px; }
+html:root:not(.console-dashboard) .empty-state { background: var(--market-surface); border: 1px dashed var(--market-border); border-radius: var(--ui-radius); padding: 56px 24px; color: var(--market-muted); font-size: 15px; margin: 24px 0; }
+html:root:not(.console-dashboard) .empty-state :is(h3,p) { font-size: 14px; color: var(--market-muted); }
+html:root:not(.console-dashboard) .status-pill { font-size: 12px; padding: 5px 12px; background: var(--market-accent-soft); color: var(--nc-accent-strong); border-radius: 7px; }
+html:root:not(.console-dashboard) .account-layout { grid-template-columns: 224px minmax(0,1fr); gap: 32px; }
+html:root:not(.console-dashboard) .account-nav { top: 96px; }
+html:root:not(.console-dashboard) .account-panel .work-panel > p { font-size: 14px; }
+html:root:not(.console-dashboard) :is(.profile-row,.identity-row,.ticket-row) { padding-block: 18px; font-size: 14px; border-color: var(--market-border); }
+html:root:not(.console-dashboard) :is(.profile-row span,.identity-row small) { color: var(--market-muted); }
+html:root:not(.console-dashboard) .profile-row strong { overflow-wrap: anywhere; text-align: end; }
+html:root:not(.console-dashboard) .overview-avatar { border-radius: 22px; width: 72px; height: 72px; font-size: 30px; background: var(--market-accent-soft); color: var(--nc-accent-strong); }
+html:root:not(.console-dashboard) .pricing-grid { gap: 20px; align-items: stretch; margin-top: 32px; }
+html:root:not(.console-dashboard) .pricing-card { display: flex; flex-direction: column; padding: 28px; position: relative; }
+html:root:not(.console-dashboard) .pricing-card .tier-desc { font-size: 14px; color: var(--market-muted); min-height: 48px; }
+html:root:not(.console-dashboard) .pricing-card .tier-features { flex: 1; font-size: 14px; line-height: 1.9; margin-block: 20px 28px; }
+html:root:not(.console-dashboard) .pricing-card .primary-button { width: 100%; }
+html:root:not(.console-dashboard) .pricing-card.highlight { border: 2px solid var(--nc-accent); background: var(--market-surface); }
+html:root:not(.console-dashboard) .pricing-card .tier-price { margin-block: 24px 8px; }
+html:root:not(.console-dashboard) .tier-price strong { font-size: clamp(30px,3vw,40px); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+html:root:not(.console-dashboard) .billing-toggle { border-radius: 12px; border: 1px solid var(--market-border); padding: 4px; }
+html:root:not(.console-dashboard) .billing-toggle button { min-height: 40px; font-size: 14px; padding: 8px 20px; border-radius: 8px; }
+html:root:not(.console-dashboard) .legal-page { max-width: 920px; }
+html:root:not(.console-dashboard) .legal-doc { padding: clamp(24px,4vw,48px); font-size: 16px; line-height: 1.9; }
+html:root:not(.console-dashboard) .legal-doc :is(p,li) { color: var(--market-text); }
+html:root:not(.console-dashboard) .legal-doc :is(h2,h3) { scroll-margin-top: 100px; }
+html:root:not(.console-dashboard) .legal-meta { overflow-wrap: anywhere; }
+html:root:not(.console-dashboard) .legal-entry { align-items: flex-start; }
+html:root:not(.console-dashboard) .login-card { max-width: 460px; padding: clamp(24px,4vw,40px); text-align: left; }
+html:root:not(.console-dashboard) .login-card :is(h1,h2,.login-sub,.card-eyebrow) { text-align: center; }
+html:root:not(.console-dashboard) .login-card .login-mark { display: flex; margin: auto; }
+html:root:not(.console-dashboard) .login-page .login-topbar { min-height: 76px; }
+html:root:not(.console-dashboard) .cloud-shell .hero-card { padding: clamp(40px,6vw,80px) clamp(20px,4vw,48px) 36px; border-radius: 24px; }
+html:root:not(.console-dashboard) .cloud-shell .hero-card:before { background: radial-gradient(ellipse at 20% 0%,var(--market-accent-soft),transparent 65%); animation: none; }
+html:root:not(.console-dashboard) .cloud-shell .hero-card h1 { font-size: clamp(36px,5.4vw,64px); max-width: 850px; margin-inline: auto; letter-spacing: -.045em; }
+html:root:not(.console-dashboard) .cloud-shell .hero-sub { color: var(--market-muted); font-size: clamp(16px,2vw,19px); max-width: 620px; margin-inline: auto; }
+html:root:not(.console-dashboard) .cloud-shell .hero-badge { color: var(--nc-accent-strong); border-color: var(--market-border); font-size: 12px; }
+html:root:not(.console-dashboard) .cloud-shell .hero-btn-solid { background: var(--nc-accent); color: var(--nc-on-accent); }
+html:root:not(.console-dashboard) .cloud-shell .home-section { margin-top: clamp(48px,6vw,80px); }
+html:root:not(.console-dashboard) .cloud-shell .tile { border-radius: 16px; }
+html:root:not(.console-dashboard) .cloud-shell :is(.t-launch,.t-drop) { background: var(--market-surface); }
+html:root:not(.console-dashboard) .cloud-shell .tile-icon { color: var(--nc-accent); background: var(--market-accent-soft); }
+html:root:not(.console-dashboard) .cloud-shell .section-head h2 { font-size: clamp(26px,3vw,36px); }
+html:root:not(.console-dashboard) .cloud-shell .product-window { box-shadow: 0 20px 56px #132d2420; border-color: var(--market-border); }
+html:root:not(.console-dashboard) .cloud-shell .window-caption { background: var(--nc-accent); color: var(--nc-on-accent); }
+html:root:not(.console-dashboard) .resource-grid { gap: 20px; }
+html:root:not(.console-dashboard) .resource-card { padding: 24px; }
+html:root:not(.console-dashboard) .resource-art { height: 112px; border-radius: 12px; background: var(--market-accent-soft); }
+html:root:not(.console-dashboard) .resource-card p { color: var(--market-muted); font-size: 14px; }
+html:root:not(.console-dashboard) .catalog-toolbar { padding-bottom: 20px; margin-top: 28px; }
+html:root:not(.console-dashboard) .search-field { border-radius: 10px; min-height: 44px; border-color: var(--market-border); }
+html:root:not(.console-dashboard) .search-field input { font-size: 14px; min-width: 0; }
+html:root:not(.console-dashboard) .manage-layout { grid-template-columns: 248px minmax(0,1fr); }
+html:root:not(.console-dashboard) .manage-sidebar { overflow-y: auto; padding: 28px 18px; }
+html:root:not(.console-dashboard) .manage-topbar { background: var(--market-surface); min-height: 72px; }
+html:root:not(.console-dashboard) .manage-main { padding: 36px clamp(20px,3vw,40px) 56px; max-width: 1480px; width: 100%; margin-inline: auto; }
+html:root:not(.console-dashboard) .manage-panel { padding: 24px; }
+html:root:not(.console-dashboard) .manage-table :is(th,td) { padding: 14px 16px; font-size: 13px; }
+html:root:not(.console-dashboard) .manage-table th { background: var(--market-surface-soft); color: var(--market-muted); font-weight: 600; }
+html:root:not(.console-dashboard) .manage-stat { border-radius: 14px; box-shadow: none; }
+html:root:not(.console-dashboard) .manage-stat strong { font-variant-numeric: tabular-nums; }
+html:root:not(.console-dashboard) .el-card { border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
+html:root:not(.console-dashboard) .el-dialog { border-radius: 20px; padding: 24px; max-width: calc(100vw - 32px); }
+html:root:not(.console-dashboard) .el-table { --el-table-header-bg-color: var(--market-surface-soft); --el-table-border-color: var(--market-border); --el-table-tr-bg-color: var(--market-surface); }
+html:root:not(.console-dashboard) .el-button { min-height: 40px; border-radius: 9px; }
 @media (max-width: 1000px) {
-  html:root .cloud-header { flex-wrap: wrap; gap: 10px; }
-  html:root .cloud-header nav { order: 5; flex-basis: 100%; overflow-x: auto; }
-  html:root .cloud-header nav a { flex-shrink: 0; }
-  html:root .account-nav { position: static; }
-  html:root .manage-layout { grid-template-columns: 212px minmax(0,1fr); }
+  html:root:not(.console-dashboard) .cloud-header { flex-wrap: wrap; gap: 10px; }
+  html:root:not(.console-dashboard) .cloud-header nav { order: 5; flex-basis: 100%; overflow-x: auto; }
+  html:root:not(.console-dashboard) .cloud-header nav a { flex-shrink: 0; }
+  html:root:not(.console-dashboard) .account-nav { position: static; }
+  html:root:not(.console-dashboard) .manage-layout { grid-template-columns: 212px minmax(0,1fr); }
 }
 @media (max-width: 700px) {
-  html:root .cloud-header { position: static; }
-  html:root .cloud-brand { min-width: 0; }
-  html:root .cloud-brand strong { font-size: 18px; }
-  html:root .cloud-header nav { gap: 2px; }
-  html:root .cloud-header nav a { font-size: 13px; padding: 10px 12px; }
-  html:root .cloud-header .account-status { font-size: 12px; max-width: 140px; padding: 8px; }
-  html:root .account-layout { display: block; }
-  html:root .section-heading { gap: 16px; }
-  html:root :is(.profile-row,.identity-row) { gap: 12px; flex-wrap: wrap; }
-  html:root .legal-entry { flex-wrap: wrap; }
-  html:root .manage-layout { display: block; }
-  html:root .manage-sidebar { position: static; height: auto; padding: 18px 16px; border-right: 0; }
-  html:root .manage-main { padding: 24px 16px 40px; }
-  html:root .manage-topbar { padding: 12px 16px; flex-wrap: wrap; }
-  html:root .manage-panel { padding: 18px; }
-  html:root .manage-table :is(th,td) { padding: 12px; }
-  html:root .el-button { min-height: 44px; }
-  html:root .pricing-card { max-width: none; }
-  html:root .search-field { width: 100%; }
-  html:root .search-field input { width: 100%; }
+  html:root:not(.console-dashboard) .cloud-header { position: static; }
+  html:root:not(.console-dashboard) .cloud-brand { min-width: 0; }
+  html:root:not(.console-dashboard) .cloud-brand strong { font-size: 18px; }
+  html:root:not(.console-dashboard) .cloud-header nav { gap: 2px; }
+  html:root:not(.console-dashboard) .cloud-header nav a { font-size: 13px; padding: 10px 12px; }
+  html:root:not(.console-dashboard) .cloud-header .account-status { font-size: 12px; max-width: 140px; padding: 8px; }
+  html:root:not(.console-dashboard) .account-layout { display: block; }
+  html:root:not(.console-dashboard) .section-heading { gap: 16px; }
+  html:root:not(.console-dashboard) :is(.profile-row,.identity-row) { gap: 12px; flex-wrap: wrap; }
+  html:root:not(.console-dashboard) .legal-entry { flex-wrap: wrap; }
+  html:root:not(.console-dashboard) .manage-layout { display: block; }
+  html:root:not(.console-dashboard) .manage-sidebar { position: static; height: auto; padding: 18px 16px; border-right: 0; }
+  html:root:not(.console-dashboard) .manage-main { padding: 24px 16px 40px; }
+  html:root:not(.console-dashboard) .manage-topbar { padding: 12px 16px; flex-wrap: wrap; }
+  html:root:not(.console-dashboard) .manage-panel { padding: 18px; }
+  html:root:not(.console-dashboard) .manage-table :is(th,td) { padding: 12px; }
+  html:root:not(.console-dashboard) .el-button { min-height: 44px; }
+  html:root:not(.console-dashboard) .pricing-card { max-width: none; }
+  html:root:not(.console-dashboard) .search-field { width: 100%; }
+  html:root:not(.console-dashboard) .search-field input { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  html:root *, html:root *::before, html:root *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  html:root:not(.console-dashboard) *, html:root:not(.console-dashboard) *::before, html:root:not(.console-dashboard) *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
 
 /* Auth titles and shared semantic states remain readable in either palette. */
-html:root .login-card h1 { font-size: 28px; margin-bottom: 8px; }
-html:root .cloud-shell .hero-btn { border-radius: var(--ui-control-radius); min-height: 48px; }
-html:root .cloud-shell .window-body { background: var(--market-surface-soft); }
-html:root .account-nav a { min-height: 44px; font-size: 14px; }
-html:root .form-success { color: var(--ui-success); background: var(--market-accent-soft); padding: 12px 16px; border-radius: 10px; }
-html:root { --manage-border: var(--market-border); --manage-muted: var(--market-muted); }
+html:root:not(.console-dashboard) .login-card h1 { font-size: 28px; margin-bottom: 8px; }
+html:root:not(.console-dashboard) .cloud-shell .hero-btn { border-radius: var(--ui-control-radius); min-height: 48px; }
+html:root:not(.console-dashboard) .cloud-shell .window-body { background: var(--market-surface-soft); }
+html:root:not(.console-dashboard) .account-nav a { min-height: 44px; font-size: 14px; }
+html:root:not(.console-dashboard) .form-success { color: var(--ui-success); background: var(--market-accent-soft); padding: 12px 16px; border-radius: 10px; }
+html:root:not(.console-dashboard) { --manage-border: var(--market-border); --manage-muted: var(--market-muted); }
 @media (max-width: 700px) {
-  html:root :is(.category-tabs,.platform-tabs,.manage-pagination,.manage-tabs,.store-switch) :is(button,a) { min-height: 44px; }
+  html:root:not(.console-dashboard) :is(.category-tabs,.platform-tabs,.manage-pagination,.manage-tabs,.store-switch) :is(button,a) { min-height: 44px; }
 }
 
-html:root .manage-page-heading { flex-wrap: wrap; }
-html:root .manage-page-heading > div { min-width: 0; }
+html:root:not(.console-dashboard) .manage-page-heading { flex-wrap: wrap; }
+html:root:not(.console-dashboard) .manage-page-heading > div { min-width: 0; }
 @media (max-width: 700px) {
-  html:root .cloud-header { gap: 8px; padding-inline: 16px; }
-  html:root .cloud-header .account-status { width: 44px; height: 44px; padding: 0; justify-content: center; }
-  html:root .cloud-header .account-menu { margin-left: auto; }
-  html:root .cloud-header .cloud-brand { gap: 6px; margin-right: 0; }
-  html:root .cloud-header .theme-control select { max-width: 90px; }
-  html:root .cloud-header .language-control { min-width: 44px; padding-inline: 8px; }
-  html:root .manage-page-heading > button { margin-top: 0; }
+  html:root:not(.console-dashboard) .cloud-header { gap: 8px; padding-inline: 16px; }
+  html:root:not(.console-dashboard) .cloud-header .account-status { width: 44px; height: 44px; padding: 0; justify-content: center; }
+  html:root:not(.console-dashboard) .cloud-header .account-menu { margin-left: auto; }
+  html:root:not(.console-dashboard) .cloud-header .cloud-brand { gap: 6px; margin-right: 0; }
+  html:root:not(.console-dashboard) .cloud-header .theme-control select { max-width: 90px; }
+  html:root:not(.console-dashboard) .cloud-header .language-control { min-width: 44px; padding-inline: 8px; }
+  html:root:not(.console-dashboard) .manage-page-heading > button { margin-top: 0; }
 }
+
+/* Consoles retain the pre-redesign dashboard geometry and heading hierarchy.
+   Shared NexaMC colour tokens above still apply. */
+html.console-dashboard { line-height: normal; }
+html.console-dashboard :is(a,button,input,textarea,select):focus-visible { outline: 2px solid var(--nc-accent); outline-offset: 3px; }
