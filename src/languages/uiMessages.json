@@ -2006,5 +2006,14 @@
   "绑定GitHub账户，成为Nexa-MC/NexaMC公开贡献者": "Link a GitHub account listed as a public contributor to Nexa-MC/NexaMC",
   "NexaMC核心贡献者（管理员审核）": "NexaMC core contributor (administrator review)",
   "我是NexaMC核心贡献者，申请管理员审核此项。": "I am a NexaMC core contributor and request administrator verification of this condition.",
-  "NexaMC 贡献者 · Apache-2.0": "NexaMC contributors · Apache-2.0"
+  "NexaMC 贡献者 · Apache-2.0": "NexaMC contributors · Apache-2.0",
+  "项目分类": "Project categories",
+  "插件项目": "Plugin projects",
+  "Sidecar 项目": "Sidecar projects",
+  "Sidecar 项目需要受信任开发者资格": "Sidecar projects require trusted developer status",
+  "Sidecar 发布需要与制品哈希一致的完整安全扫描；缺少扫描不会自动发布。": "Sidecar publishing requires a complete security scan matching the artifact hash. Missing scans never publish automatically.",
+  "VirusTotal 分析编号": "VirusTotal analysis ID",
+  "项目类型无效": "Invalid project type",
+  "Sidecar 制品须为 .nsc 文件": "Sidecar artifacts must be .nsc files",
+  "Sidecar 发布须由受信任开发者重新提交有效扫描": "A trusted developer must resubmit a valid scan to publish a Sidecar"
 }

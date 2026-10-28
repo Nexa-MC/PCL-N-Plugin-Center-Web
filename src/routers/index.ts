@@ -31,6 +31,7 @@ const router = createRouter({
       { path: 'store/themes/:id', component: storeView, meta: { storeKind: 'theme' } },
       { path: 'store/:id', redirect: to => '/store/plugins/' + encodeURIComponent(String(to.params.id)) },
       { path: 'publisher/plugins', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin' } },
+      { path: 'publisher/sidecars', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin', projectType: 'sidecar' } },
       { path: 'publisher/themes', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme' } },
       { path: 'download', component: () => import('@/views/site/download.vue') },
       { path: 'changelog', component: () => import('@/views/site/changelog.vue') },

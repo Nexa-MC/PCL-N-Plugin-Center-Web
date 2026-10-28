@@ -14,12 +14,12 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { store, consoleOrigin, storePath, storeState, type PublisherSummary, type StoreKind } from '@/api/store';
+import { store, consoleOrigin, storePath, storeState, type PublisherSummary, type StoreKind, type DeveloperProjectType } from '@/api/store';
 import '@/styles/store.css';
-const props = defineProps<{ kind: StoreKind }>(), data = ref<PublisherSummary>(), loading = ref(false), error = ref('');
+const props = defineProps<{ kind: StoreKind; projectType?: DeveloperProjectType }>(), data = ref<PublisherSummary>(), loading = ref(false), error = ref('');
 const metrics = [{ key: 'contents', label: '内容总数' }, { key: 'published', label: '已上架' }, { key: 'pending', label: '待审核' }, { key: 'quarantined', label: '已下架待复核' }] as const;
 const maximum = computed(() => Math.max(1, ...(data.value?.activity.map(day => day.downloads) || [])));
 let generation = 0;
-async function load() { const current = ++generation; loading.value = true; error.value = ''; try { const result = await store.summary(props.kind); if (current === generation) data.value = result; } catch (e) { if (current === generation) error.value = e instanceof Error ? e.message : '内容概览读取失败'; } finally { if (current === generation) loading.value = false; } }
-watch(() => props.kind, load, { immediate: true });
+async function load() { const current = ++generation; loading.value = true; error.value = ''; try { const result = await store.summary(props.kind, props.projectType); if (current === generation) data.value = result; } catch (e) { if (current === generation) error.value = e instanceof Error ? e.message : '内容概览读取失败'; } finally { if (current === generation) loading.value = false; } }
+watch(() => [props.kind, props.projectType], load, { immediate: true });
 </script>
