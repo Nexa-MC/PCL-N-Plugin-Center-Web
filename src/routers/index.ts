@@ -3,8 +3,8 @@ import { startProgress, doneProgress } from '@/utils/progressBar';
 import CloudShell from '@/views/cloud/CloudShell.vue';
 import { watch } from 'vue';
 import { ui, uiLocale } from '@/languages/localize';
-// Store publishing still depends on the separate wallet/artifact rollout.
-const storeView = () => import.meta.env.VITE_STORE_ENABLED === 'true' ? import('@/views/cloud/Store.vue') : import('@/views/cloud/LegacyStore.vue');
+// Browsing stays public; theme installation is handed to NexaCL.
+const storeView = () => import('@/views/cloud/Store.vue');
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), scrollBehavior: () => ({ top: 0 }),
   routes: [
@@ -23,6 +23,7 @@ const router = createRouter({
     ] },
     { path: '/', component: CloudShell, children: [
       { path: '', component: () => import('@/views/cloud/Home.vue') },
+      { path: 'device', component: () => import('@/views/cloud/DeviceAuthorization.vue') },
       { path: 'store', redirect: to => to.query.category === 'theme' ? '/store/themes' : '/store/plugins' },
       { path: 'store/plugins', component: storeView, meta: { storeKind: 'plugin' } },
       { path: 'store/plugins/:id', component: storeView, meta: { storeKind: 'plugin' } },

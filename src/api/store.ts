@@ -1,4 +1,4 @@
-import { ApiError, isTestSession, request, requestBlob, type Page } from './platform';
+import { ApiError, isTestSession, request, type Page } from './platform';
 import { ntokenWallet } from './wallet';
 export type StoreKind = 'plugin' | 'theme';
 export interface StoreContent {
@@ -23,7 +23,6 @@ export const store = {
   purchase: (product: StoreProduct, key: string) => { preventTestWrite(); return request('/store/products/' + product.id + '/purchase', { method: 'POST', headers: { 'Idempotency-Key': key }, body: JSON.stringify({ productRevision: product.revision }) }); },
   review: (id: string, score: number, body: string) => { preventTestWrite(); return request('/store/items/' + id + '/review', { method: 'PUT', body: JSON.stringify({ score, body }) }); },
   report: (id: string, message: string) => { preventTestWrite(); return request<{ message_count: number; item_state: string }>('/store/items/' + id + '/report', { method: 'POST', body: JSON.stringify({ message }) }); },
-  download: (id: string) => { preventTestWrite(); return requestBlob('/store/items/' + id + '/artifact'); },
   summary: (kind: StoreKind) => isTestSession() ? Promise.resolve({ totals: { contents: 0, published: 0, pending: 0, quarantined: 0 }, items: [], activity: [], generatedAt: new Date().toISOString(), paidCheckoutEnabled: false, preview: true } as PublisherSummary) : request<PublisherSummary>('/publisher/summary?kind=' + kind),
   create: (value: { kind: StoreKind; name: string; summary: string; description: string; tokenPrice: number }) => { preventTestWrite(); return request<{ id: string; productId: string; revision: number }>('/publisher/items', { method: 'POST', body: JSON.stringify(value) }); },
   upload: (kind: StoreKind, file: File) => { preventTestWrite(); return request<{ id: string; sha256: string }>('/publisher/artifacts?kind=' + kind, { method: 'POST', body: file, headers: { 'Content-Type': 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) }, signal: AbortSignal.timeout(60000) }); },
@@ -36,3 +35,8 @@ export const store = {
 export const storePath = (kind: StoreKind, id?: string) => '/store/' + (kind === 'plugin' ? 'plugins' : 'themes') + (id ? '/' + encodeURIComponent(id) : '');
 export const consoleOrigin = (kind: StoreKind) => kind === 'plugin' ? 'https://dev.consol.pcln.top' : 'https://creator.consol.pcln.top';
 export const storeState = (state: string) => ({ draft: '草稿', pending_review: '待审核', published: '已上架', quarantined: '已下架待复核' }[state] || state);
+
+export function themeInstallLink(id: string): string {
+  if (!/^[A-Za-z0-9_-]{1,128}$/.test(id)) return '';
+  return 'nexacl://extension/NexaMcMarketPage?argument=' + encodeURIComponent(id);
+}

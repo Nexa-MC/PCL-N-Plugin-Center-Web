@@ -1973,5 +1973,20 @@
   "元数据格式": "Metadata format",
   "嵌套候选": "Nested candidate",
   "日期": "Date",
-  "查看": "View"
+  "查看": "View",
+  "确认设备登录": "Confirm device sign-in",
+  "仅确认你刚刚在 NexaCL 中发起的登录，并核对客户端显示的设备码。": "Only approve a sign-in you just started in NexaCL. Check the code displayed in the client.",
+  "设备码": "Device code",
+  "将使用此账户登录客户端：": "Sign in to the client with this account:",
+  "登录并继续": "Sign in and continue",
+  "确认登录 NexaCL": "Confirm NexaCL sign-in",
+  "插件包上传和下载暂未开放": "Plugin package uploads and downloads are currently unavailable",
+  "内容目前未上架，停止新的获取；主题拥有者可在客户端安装。": "This content is not listed for new acquisitions. Theme owners can install it in the client.",
+  "在 NexaCL 中安装": "Install in NexaCL",
+  "主题包仅通过 NexaCL 客户端安装，网页不提供文件下载。": "Theme packages are installed through NexaCL. Browser downloads are unavailable.",
+  "下载 NexaCL": "Download NexaCL",
+  "无法读取登录状态，请刷新重试。": "Could not read your sign-in status. Refresh and try again.",
+  "已授权，请返回 NexaCL 完成登录。": "Authorized. Return to NexaCL to finish signing in.",
+  "已拒绝此次设备登录。": "This device sign-in was denied.",
+  "设备码无效或已过期，请在客户端重新发起登录。": "The device code is invalid or expired. Start sign-in again in the client."
 }

@@ -23,7 +23,11 @@ test('store client sends server product revisions, stable idempotency keys and n
     const request = async (path, options) => { calls.push({ path, options }); return {}; };
     export const fixture = { calls, setPreview(value) { preview = value; } };`);
   const { outputText } = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } });
-  const { store, fixture } = await import('data:text/javascript;base64,' + Buffer.from(outputText).toString('base64'));
+  const { store, fixture, themeInstallLink } = await import('data:text/javascript;base64,' + Buffer.from(outputText).toString('base64'));
+  assert.equal(themeInstallLink('theme-123'), 'nexacl://extension/NexaMcMarketPage?argument=theme-123');
+  for (const invalid of ['', '../file', 'id&command=run', 'https://example.test/a', 'x'.repeat(129)])
+    assert.equal(themeInstallLink(invalid), '');
+  assert.equal(store.download, undefined);
   const product = { id: 'product-fixture', revision: 3, token_price: 999 };
   await store.purchase(product, 'fixture-idempotency-key');
   assert.deepEqual(JSON.parse(fixture.calls[0].options.body), { productRevision: 3 });

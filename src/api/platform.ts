@@ -188,6 +188,7 @@ export async function managementAuthRequest<T>(path: string, init: RequestInit =
 }
 
 export const platform = {
+  confirmDevice: (user_code: string, decision: 'approve' | 'deny') => authJson(authFetch('/auth/v1/device/confirm', { method: 'POST', body: JSON.stringify({ user_code, decision }) }), '设备码无效或已过期，请在客户端重新发起登录。'),
   // 后台不接受前端演示账户；每次进入或重新聚焦都向 Auth 验证真实身份。
   managementSession: async () => {
     testSession = undefined;
