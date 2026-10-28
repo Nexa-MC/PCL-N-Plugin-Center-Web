@@ -2015,5 +2015,7 @@
   "VirusTotal 分析编号": "VirusTotal analysis ID",
   "项目类型无效": "Invalid project type",
   "Sidecar 制品须为 .nsc 文件": "Sidecar artifacts must be .nsc files",
-  "Sidecar 发布须由受信任开发者重新提交有效扫描": "A trusted developer must resubmit a valid scan to publish a Sidecar"
+  "Sidecar 发布须由受信任开发者重新提交有效扫描": "A trusted developer must resubmit a valid scan to publish a Sidecar",
+  "Sidecar 项目概览": "Sidecar project overview",
+  "插件项目概览": "Plugin project overview"
 }

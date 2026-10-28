@@ -1,6 +1,6 @@
 <template>
   <section class="work-panel">
-    <div class="section-heading store-summary-heading"><h2>{{ $ui(kind === 'plugin' ? '开发者控制台' : '创作者控制台') }}</h2><div class="actions"><a class="primary-button" :href="consoleOrigin(kind)" target="_blank" rel="noopener noreferrer">{{ $ui('进入内容控制台 ↗') }}</a><button class="secondary-button" :disabled="loading" @click="load">{{ $ui('刷新摘要') }}</button></div></div>
+    <div class="section-heading store-summary-heading"><h2>{{ $ui(projectType ? projectType === 'sidecar' ? 'Sidecar 项目概览' : '插件项目概览' : kind === 'plugin' ? '开发者控制台' : '创作者控制台') }}</h2><div class="actions"><a v-if="!projectType" class="primary-button" :href="consoleOrigin(kind)" target="_blank" rel="noopener noreferrer">{{ $ui('进入内容控制台 ↗') }}</a><button class="secondary-button" :disabled="loading" @click="load">{{ $ui('刷新摘要') }}</button></div></div>
     <p class="store-muted">{{ consoleOrigin(kind).replace('https://', '') }}</p>
     <p v-if="loading" role="status" class="store-muted">{{ $ui('正在读取内容概览…') }}</p><p v-else-if="error" role="alert" class="form-error">{{ $ui(error) }}</p>
     <template v-if="data">
