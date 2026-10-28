@@ -1,8 +1,7 @@
 <template>
-  <img class="nexa-brand-icon" :src="dark || isDark ? '/icons/nexacl-dark-128.png' : '/icons/nexacl-128.png'" alt="" width="32" height="32" aria-hidden="true" />
+  <img class="nexa-brand-icon" src="/icons/nexamc-128.png" alt="" width="32" height="32" aria-hidden="true" />
 </template>
 <script setup lang="ts">
-import { isDark } from '@/utils/theme';
 defineProps<{ dark?: boolean }>();
 </script>
 <style scoped>

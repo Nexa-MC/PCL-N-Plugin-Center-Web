@@ -37,3 +37,7 @@ Automated tests verify AA 4.5:1 minimum for primary/muted text, primary actions 
 - Shared design/main-entry changes now target both public and management deployments; a regression test protects that routing.
 
 Publication still requires the normal CI/deployment outcome and public version readback; local verification alone does not establish a production deployment.
+
+## NexaMC brand asset — 2026-10-28
+
+The user-supplied source is preserved verbatim as `public/icons/nexamc-source.png` from https://avatars.githubusercontent.com/u/304438575?s=400&u=7754fb7a6a14a180d37817b013bd8f77804212b9&v=4. Browser, navigation and home-screen assets are format/size derivatives of this source, with no redraw or colour changes. Light and dark themes use the same artwork. New `nexamc-*` paths avoid stale browser caches; prior `nexacl-*` PNG paths and `pcln.png` retain compatible aliases containing the new artwork. Shared icon changes deploy both public and management Workers.

@@ -11,7 +11,7 @@ function applyTheme() {
   isDark.value = dark;
   document.documentElement.classList.toggle('dark', dark);
   document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
-  document.getElementById('site-icon')?.setAttribute('href', `/icons/nexacl${dark ? '-dark' : ''}-32.png`);
+  document.getElementById('site-icon')?.setAttribute('href', '/icons/nexamc-32.png');
 }
 export function setTheme(value: ThemePreference) { themePreference.value = value; try { localStorage.setItem(key, value); } catch { /* 私密模式仍允许本次切换 */ } applyTheme(); }
 system.addEventListener('change', applyTheme);

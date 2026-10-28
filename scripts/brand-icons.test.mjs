@@ -9,9 +9,9 @@ const pngSize = path => {
   return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
 };
 
-test('NexaCL icon sizes match their browser declarations', () => {
+test('NexaMC icon sizes match their browser declarations', () => {
   for (const size of [16, 32, 48, 180, 192, 512]) {
-    assert.deepEqual(pngSize(`icons/nexacl-${size}.png`), [size, size]);
+    assert.deepEqual(pngSize(`icons/nexamc-${size}.png`), [size, size]);
   }
   assert.deepEqual(pngSize('pcln.png'), [256, 256]);
   const ico = readFileSync(publicFile('favicon.ico'));

@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url';
 // Shared design changes update both domains; other shared-only pushes retain
 // the existing management deployment behavior.
 export function deploymentTargets(paths) {
-  const sharedDesign = paths.some(path => path === 'src/main.ts' || /^src\/styles\/(design-system|theme|cloud)\.css$/.test(path));
+  const sharedDesign = paths.some(path => path === 'src/main.ts' || path === 'src/components/BrandIcon.vue' || path.startsWith('public/icons/') || path === 'public/favicon.ico' || /^src\/styles\/(design-system|theme|cloud)\.css$/.test(path));
   const web = sharedDesign || paths.some(path => /^(public\/|src\/views\/(cloud|site)\/|src\/config\/(publicPricing|pricing|regionalPricing|contact)\.ts$|src\/utils\/(checkoutResult|subscriptionPlan|waffoCheckout)\.ts$|scripts\/public-release\.mjs$|wrangler\.jsonc$)/.test(path));
   const manage = sharedDesign || paths.some(path => /^(src\/views\/manage\/|src\/styles\/management\.css$|src\/api\/management\.ts$|wrangler\.manage\.jsonc$)/.test(path));
   return [...(web ? ['web'] : []), ...(manage || !web ? ['manage'] : [])];
