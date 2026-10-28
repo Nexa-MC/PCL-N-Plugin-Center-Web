@@ -17,7 +17,8 @@ on:
       - src/views/manage/**
       - src/views/admin/telemetry/**
       - src/api/pluginCenter.ts
-      - src/styles/management.css
+      - src/styles/**
+      - src/main.ts
       - src/api/management.ts
       - src/api/platform.ts
       - src/components/LanguageControl.vue

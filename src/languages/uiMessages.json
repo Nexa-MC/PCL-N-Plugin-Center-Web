@@ -1988,5 +1988,9 @@
   "无法读取登录状态，请刷新重试。": "Could not read your sign-in status. Refresh and try again.",
   "已授权，请返回 NexaCL 完成登录。": "Authorized. Return to NexaCL to finish signing in.",
   "已拒绝此次设备登录。": "This device sign-in was denied.",
-  "设备码无效或已过期，请在客户端重新发起登录。": "The device code is invalid or expired. Start sign-in again in the client."
+  "设备码无效或已过期，请在客户端重新发起登录。": "The device code is invalid or expired. Start sign-in again in the client.",
+  "运营与支持": "Operations & support",
+  "账户与资格": "Accounts & eligibility",
+  "内容与交易": "Content & transactions",
+  "诊断与审计": "Diagnostics & audit"
 }

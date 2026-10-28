@@ -5,7 +5,7 @@
       <router-link class="cloud-brand" to="/"><BrandIcon /><strong>NexaCL</strong></router-link>
       <nav :aria-label="en ? 'Site navigation' : $ui('平台入口')"><router-link to="/" :class="{active: route.path === '/'}">{{ en ? 'Home' : $ui("主页") }}</router-link><router-link to="/download" :class="{active: route.path.startsWith('/download')}">{{ en ? 'Download' : $ui("下载") }}</router-link><router-link to="/store" :class="{active: route.path.startsWith('/store')}">{{ en ? 'Store' : $ui("商店") }}</router-link><router-link to="/pricing" :class="{active: ['/plans', '/pricing'].includes(route.path)}">{{ $ui("套餐价格") }}</router-link><router-link to="/docs" :class="{active: route.path.startsWith('/docs')}">{{ en ? 'Docs' : $ui("文档") }}</router-link></nav>
       <div class="account-menu">
-        <button class="account-status" type="button" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span>{{ accountLabel }}</button>
+        <button class="account-status" type="button" :aria-label="accountLabel" :aria-expanded="Boolean(session && menuOpen)" aria-haspopup="menu" @click="openAccount"><span class="status-dot" aria-hidden="true"></span><span class="account-label">{{ accountLabel }}</span><KoiIcon class="account-mobile-icon" name="profile-circle" aria-hidden="true" /></button>
         <div v-if="session && menuOpen" class="account-dropdown" role="menu"><router-link role="menuitem" to="/account" @click="menuOpen = false">{{ en ? 'My account' : $ui("我的账户") }}</router-link><router-link role="menuitem" to="/account?section=developer" @click="menuOpen = false">{{ en ? 'Developer console' : $ui("开发者控制台") }}</router-link><router-link role="menuitem" to="/account?section=website" @click="menuOpen = false">{{ en ? 'Website management' : $ui("网站管理") }}</router-link><div class="account-divider" role="separator"></div><button type="button" role="menuitem" @click="logout">{{ en ? 'Sign out' : $ui("退出登录") }}</button></div>
       </div>
       <LanguageControl />
@@ -16,18 +16,16 @@
     </div>
     <footer class="cloud-footer">
       <div><strong>NexaCL</strong><p>{{ $ui('社区开发的 Minecraft 启动器与配套云服务。') }}</p></div>
-      <nav :aria-label="$ui('页脚导航')">
-        <router-link to="/pricing">{{ $ui("套餐价格") }}</router-link>
-        <router-link to="/legal/terms">{{ $ui('服务条款') }}</router-link>
-        <router-link to="/legal/privacy">{{ $ui('隐私政策') }}</router-link>
-        <router-link to="/legal/refunds">{{ $ui('退款与取消政策') }}</router-link>
-        <router-link to="/contact">{{ $ui('联系我们') }}</router-link>
-        <a v-for="contact in CONTACTS" :key="contact.key" :href="`mailto:${contact.address}`">{{ $ui(contact.label) }}</a>
+      <nav class="footer-sections" :aria-label="$ui('页脚导航')">
+        <div><h2>{{ en ? 'Explore' : '探索产品' }}</h2><router-link to="/download">{{ $ui('下载') }}</router-link><router-link to="/store">{{ $ui('商店') }}</router-link><router-link to="/pricing">{{ $ui('套餐价格') }}</router-link><router-link to="/docs">{{ $ui('文档') }}</router-link></div>
+        <div><h2>{{ en ? 'Help & community' : '帮助与社区' }}</h2><router-link to="/changelog">{{ $ui('更新日志') }}</router-link><router-link to="/contact">{{ $ui('联系我们') }}</router-link><router-link to="/feedback">{{ en ? 'Feedback' : '体验反馈' }}</router-link><a v-for="contact in CONTACTS" :key="contact.key" :href="`mailto:${contact.address}`">{{ $ui(contact.label) }}</a></div>
+        <div><h2>{{ en ? 'Policies' : '条款与政策' }}</h2><router-link to="/legal/terms">{{ $ui('服务条款') }}</router-link><router-link to="/legal/privacy">{{ $ui('隐私政策') }}</router-link><router-link to="/legal/refunds">{{ $ui('退款与取消政策') }}</router-link></div>
       </nav>
     </footer>
   </div>
 </template>
 <script setup lang="ts">
+import KoiIcon from '@/components/KoiIcon.vue';
 import BrandIcon from '@/components/BrandIcon.vue';
 import { CONTACTS } from '@/config/contact';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
@@ -60,4 +58,6 @@ onUnmounted(() => { window.removeEventListener('focus', onFocus); window.removeE
 .cloud-footer{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;max-width:1440px;margin:0 auto;padding:24px 40px 32px;border-top:1px solid var(--market-border);color:var(--market-muted);font-size:12px}
 .cloud-footer strong{color:var(--market-text);font-size:14px}.cloud-footer p{margin:6px 0 0;font-size:12px}.cloud-footer nav{display:flex;gap:12px 20px;flex-wrap:wrap}.cloud-footer a:hover{color:var(--nc-accent)}
 @media(max-width:680px){.cloud-footer{padding:24px 20px;gap:18px}}
+.cloud-footer{align-items:flex-start;max-width:1280px;padding-block:40px;gap:32px;font-size:13px}.cloud-footer>div{max-width:260px}.cloud-footer strong{font-size:20px}.cloud-footer p{font-size:13px;line-height:1.8}.cloud-footer .footer-sections{display:grid;grid-template-columns:repeat(3,minmax(120px,1fr));gap:24px 40px}.footer-sections>div{display:flex;flex-direction:column;align-items:flex-start;gap:6px}.footer-sections h2{font-size:13px;color:var(--market-text);margin-bottom:10px;font-weight:650}.footer-sections a{padding-block:5px;line-height:1.6}.footer-sections a:focus-visible{outline-offset:3px}@media(max-width:700px){.cloud-footer .footer-sections{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.footer-sections a{min-height:44px;display:flex;align-items:center}.cloud-footer{padding:32px 20px}}
+.account-mobile-icon{display:none}@media(max-width:700px){.account-mobile-icon{display:block;width:20px;height:20px}.account-label{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.account-status .status-dot{display:none}}
 </style>

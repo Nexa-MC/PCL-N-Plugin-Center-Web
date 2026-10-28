@@ -3,10 +3,12 @@
     <a class="skip-link" href="#manage-main">{{ $ui("跳至管理内容") }}</a>
     <aside class="manage-sidebar">
       <router-link class="manage-brand" to="/manage"><BrandIcon /><span>NexaCL <small>{{ $ui("网站管理") }}</small></span></router-link>
-      <p class="manage-nav-label">{{ $ui("工作空间") }}</p>
-      <nav :aria-label='$ui("后台导航")'>
-        <router-link v-for="item in navigation" :key="item.path" :to="item.path" :class="{ selected: route.path === item.path }" :aria-current="route.path === item.path ? 'page' : undefined"><KoiIcon :name="item.icon" /><span>{{ $ui(item.label) }}</span></router-link>
+      <nav class="manage-grouped-nav" :aria-label="$ui('后台导航')">
+        <section v-for="group in navigationGroups" :key="group.label"><p class="manage-nav-label">{{ $ui(group.label) }}</p>
+          <router-link v-for="item in group.items" :key="item.path" :to="item.path" :class="{ selected: route.path === item.path }" :aria-current="route.path === item.path ? 'page' : undefined"><KoiIcon :name="item.icon" /><span>{{ $ui(item.label) }}</span></router-link>
+        </section>
       </nav>
+      <label class="manage-mobile-navigation">{{ $ui('后台导航') }}<select :value="route.path" @change="navigate"><optgroup v-for="group in navigationGroups" :key="group.label" :label="$ui(group.label)"><option v-for="item in group.items" :key="item.path" :value="item.path">{{ $ui(item.label) }}</option></optgroup></select></label>
       <div class="manage-sidebar-bottom"><span class="manage-domain"><KoiIcon name="shield-tick" /> manage.pcln.top</span><a href="https://pcln.top/" target="_blank" rel="noopener noreferrer">{{ $ui("返回网站 ↗") }}</a></div>
     </aside>
     <div class="manage-body">
@@ -32,17 +34,31 @@ import LanguageControl from '@/components/LanguageControl.vue';
 import { platform, SESSION_EVENT, type Session } from '@/api/platform';
 const route = useRoute(), router = useRouter();
 const session = ref<Session>(), checking = ref(true), error = ref('');
-const navigation = [
-  { path: '/manage', label: '工作概览', icon: 'dashboard' },
-  { path: '/manage/users', label: '用户管理', icon: 'users' },
-  { path: '/manage/resources', label: '资源目录', icon: 'folder' },
-  { path: '/manage/store', label: '商店审核', icon: 'shield-tick' },
-  { path: '/manage/tickets', label: '支持工单', icon: 'messages-bubbles' },
-  { path: '/manage/applications', label: '资格审批', icon: 'shield-tick' },
-  { path: '/manage/community', label: '公告与问卷', icon: 'chart' },
-  { path: '/manage/telemetry', label: '启动器遥测', icon: 'chart' },
-  { path: '/manage/audit', label: '操作审计', icon: 'document' }
+const navigationGroups = [
+  { label: '运营与支持', items: [
+    { path: '/manage', label: '工作概览', icon: 'dashboard' },
+    { path: '/manage/tickets', label: '支持工单', icon: 'messages-bubbles' },
+    { path: '/manage/community', label: '公告与问卷', icon: 'chart' }
+  ] },
+  { label: '账户与资格', items: [
+    { path: '/manage/users', label: '用户管理', icon: 'users' },
+    { path: '/manage/applications', label: '资格审批', icon: 'shield-tick' }
+  ] },
+  { label: '内容与交易', items: [
+    { path: '/manage/resources', label: '资源目录', icon: 'folder' },
+    { path: '/manage/store', label: '商店审核', icon: 'shield-tick' },
+    { path: '/manage/store/security', label: '制品安全审核', icon: 'shield-tick' },
+    { path: '/manage/store/finance', label: '财务申请审核', icon: 'document' }
+  ] },
+  { label: '诊断与审计', items: [
+    { path: '/manage/telemetry', label: '启动器遥测', icon: 'chart' },
+    { path: '/manage/audit', label: '操作审计', icon: 'document' }
+  ] }
 ];
+function navigate(event: Event) {
+  const target = (event.target as HTMLSelectElement).value;
+  if (navigationGroups.some(group => group.items.some(item => item.path === target))) void router.push(target);
+}
 let active = true, generation = 0;
 async function verify() {
   const current = ++generation;
@@ -60,3 +76,7 @@ onMounted(() => { void verify(); window.addEventListener('focus', revalidate); w
 onUnmounted(() => { active = false; window.removeEventListener('focus', revalidate); window.removeEventListener(SESSION_EVENT, revalidate); });
 </script>
 <style src="../../styles/management.css"></style>
+
+<style scoped>
+.manage-grouped-nav{margin-top:24px;gap:16px}.manage-grouped-nav .manage-nav-label{margin:0 12px 8px;letter-spacing:.04em;font-size:11px}.manage-grouped-nav section{display:grid;gap:4px}.manage-grouped-nav a{min-height:44px}.manage-mobile-navigation{display:none}@media(max-width:700px){.manage-sidebar .manage-grouped-nav{display:none}.manage-mobile-navigation{display:grid;gap:8px;margin-top:18px;color:var(--market-muted);font-size:12px}.manage-mobile-navigation select{width:100%;min-height:44px;padding:10px 12px;background:var(--market-surface);color:var(--market-text);border:1px solid var(--market-border);border-radius:10px}}
+</style>

@@ -13,7 +13,7 @@
         <!-- 第一步:第三方身份验证(注册的必要前置) -->
         <Transition name="ms-step" mode="out-in">
           <div v-if="!setupSession" key="auth" class="step-pane">
-          <h2>{{ $ui("创建账户") }}</h2>
+          <h1>{{ $ui("创建账户") }}</h1>
           <p class="login-sub">{{ $ui("先验证一个第三方身份") }}</p>
           <label class="accept-check"><input type="checkbox" v-model="tosRead" /><span>{{ $ui("我接受《") }}<router-link to="/legal/terms">{{ $ui("服务条款 v") }}{{ POLICY_VERSION }}</router-link>{{ $ui("》，并知悉《") }}<router-link to="/legal/privacy">{{ $ui("隐私政策 v") }}{{ POLICY_VERSION }}</router-link>{{ $ui("》") }}</span></label>
           <div class="login-providers">
@@ -27,7 +27,7 @@
 
           <!-- 第二步:回调后完善资料(用户名 / 用户 ID / 可选密码 + 验证器) -->
           <div v-else key="setup" class="step-pane">
-          <h2>{{ $ui("完善账户资料") }}</h2>
+          <h1>{{ $ui("完善账户资料") }}</h1>
           <p class="login-sub">{{ $ui("身份已验证 ·") }} {{ setupSession.name }}</p>
           <form class="credential-form" @submit.prevent="submitComplete">
             <label>{{ $ui("用户名") }}<input v-model.trim="name" maxlength="60" required :placeholder="$ui('1–60 个字符')" /></label>
@@ -130,7 +130,7 @@ watchEffect(() => { applyPageSeo({ title: '创建账户 · NexaCL', description:
 @keyframes card-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .login-card{animation:card-in .45s cubic-bezier(.2,.8,.25,1) both}
 .card-eyebrow{text-align:center;margin:14px 0 4px}
-.login-card h2{margin:0 0 6px}
+.login-card h1{margin:0 0 6px}
 .login-sub{min-height:18px}
 .credential-form{display:grid;gap:12px;margin-top:18px;text-align:left}.credential-form label{display:grid;gap:8px;font-size:12px;color:var(--market-muted)}.credential-form input{padding:10px 12px;border:1px solid var(--market-border);border-radius:6px;color:var(--market-text);background:var(--market-surface);width:100%}.credential-form .primary-button{width:100%;margin-top:2px}.credential-form .login-fine{margin:2px 0 0;text-align:center}
 .form-switch{font-size:12px;color:var(--market-muted);text-align:center;margin:14px 0 0}.form-switch a{color:var(--nc-accent);font-weight:600}

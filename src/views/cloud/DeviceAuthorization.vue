@@ -30,5 +30,5 @@ async function confirm(decision: 'approve' | 'deny') {
 }
 </script>
 <style scoped>
-.device-authorization{max-width:560px;margin:48px auto;padding:32px}.device-authorization label{display:grid;gap:10px;margin:24px 0}.device-authorization input{font-size:24px;letter-spacing:.18em;text-transform:uppercase;padding:12px}.device-authorization .actions{margin-top:24px}
+.device-authorization{max-width:560px;margin:48px auto;padding:32px}.device-authorization label{display:grid;gap:10px;margin:24px 0}.device-authorization input{width:100%;min-width:0;color:var(--market-text);background:var(--market-surface);border:1px solid var(--market-border);border-radius:10px;font-size:24px;letter-spacing:.18em;text-transform:uppercase;padding:12px}.device-authorization .actions{margin-top:24px}
 </style>

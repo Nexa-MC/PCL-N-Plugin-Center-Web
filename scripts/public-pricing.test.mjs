@@ -31,6 +31,7 @@ test('release selects the affected site while preserving existing management-onl
   assert.deepEqual(deploymentTargets(['src/config/regionalPricing.ts', 'src/utils/subscriptionPlan.ts']), ['web']);
   assert.deepEqual(deploymentTargets(['src/config/contact.ts']), ['web']);
   assert.deepEqual(deploymentTargets(['src/views/manage/Users.vue']), ['manage']);
+  for (const file of ['src/styles/design-system.css', 'src/styles/theme.css', 'src/styles/cloud.css', 'src/main.ts']) assert.deepEqual(deploymentTargets([file]), ['web', 'manage']);
   assert.deepEqual(deploymentTargets(['src/languages/uiMessages.json']), ['manage']);
   assert.deepEqual(deploymentTargets(['src/views/cloud/Home.vue', 'wrangler.manage.jsonc']), ['web', 'manage']);
 });

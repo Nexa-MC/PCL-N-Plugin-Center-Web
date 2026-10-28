@@ -10,6 +10,7 @@ import { ui, uiLocale } from './languages/localize';
 import { testLogin, testLogout } from './api/platform';
 import './styles/cloud.css';
 import './styles/theme.css';
+import './styles/design-system.css';
 
 // 仅前端测试账户入口：控制台输入 test_login() 进入、test_logout() 退出。
 // 默认 staff + developer 全 UI 权限；数据为本地桩，不触达真实 API。

@@ -10,7 +10,7 @@
       <div v-else class="login-card">
         <span class="login-mark" aria-hidden="true">N</span>
         <p class="eyebrow card-eyebrow">NEXACL ID</p>
-        <h2>{{ loginStep === 'creds' ? $ui("登录") : $ui("两步验证") }}</h2>
+        <h1>{{ loginStep === 'creds' ? $ui("登录") : $ui("两步验证") }}</h1>
         <p class="login-sub">{{ loginStep === 'creds' ? $ui("账户 · 订阅 · 下载") : loginUserName }}</p>
 
         <Transition :name="stepName" mode="out-in">
@@ -213,7 +213,7 @@ watchEffect(() => { applyPageSeo({ title: '登录 · NexaCL', description: '使�
 @keyframes card-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .login-card{animation:card-in .45s cubic-bezier(.2,.8,.25,1) both}
 .card-eyebrow{text-align:center;margin:14px 0 4px}
-.login-card h2{margin:0 0 6px}
+.login-card h1{margin:0 0 6px}
 .login-sub{min-height:18px}
 .login-divider{display:flex;align-items:center;gap:12px;margin:22px 0 2px;color:var(--market-muted);font-size:11px}.login-divider:before,.login-divider:after{content:'';flex:1;height:1px;background:var(--market-border)}
 .credential-form{display:grid;gap:12px;margin-top:18px;text-align:left}.credential-form label{display:grid;gap:8px;font-size:12px;color:var(--market-muted)}.credential-form input{padding:10px 12px;border:1px solid var(--market-border);border-radius:6px;color:var(--market-text);background:var(--market-surface);width:100%}.credential-form .primary-button{width:100%;margin-top:2px}.credential-form .login-fine{margin:2px 0 0;text-align:center}
