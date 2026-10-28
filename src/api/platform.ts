@@ -73,7 +73,8 @@ export async function requestBlob(path: string): Promise<{ blob: Blob; filename:
 // 访问令牌仅保存在内存中；页面刷新后用 auth 域 Cookie 会话静默换取新令牌。
 async function mintToken(): Promise<Session | undefined> {
   const response = await authFetch('/auth/v1/tokens', { method: 'POST', body: '{}' });
-  if (!response.ok) return undefined;
+  if (response.status === 401) return undefined;
+  if (!response.ok) throw new ApiError('暂时无法验证登录状态，请稍后重试。', response.status);
   const data = await response.json() as { token: string; user: Omit<Session, 'scope'> };
   if (!data.token || !data.user?.id) return undefined;
   accessToken = data.token;

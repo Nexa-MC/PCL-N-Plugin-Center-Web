@@ -29,6 +29,7 @@ on:
       - worker/index.mjs
       - wrangler.manage.jsonc
       - wrangler.jsonc
+      - scripts/deploy-publisher-consoles.mjs
       - scripts/deployment-targets.mjs
       - scripts/public-release.mjs
       - .github/workflows/deploy-web.yml
@@ -104,6 +105,12 @@ jobs:
               *) echo '::error::Unknown deployment target.'; exit 1 ;;
             esac
           done
+      - name: Refresh existing publisher consoles
+        if: steps.targets.outputs.web == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/deploy-publisher-consoles.mjs
       - name: Verify published public pages and release commit
         if: steps.targets.outputs.web == 'true'
         run: node scripts/public-release.mjs verify

@@ -2017,5 +2017,6 @@
   "Sidecar 制品须为 .nsc 文件": "Sidecar artifacts must be .nsc files",
   "Sidecar 发布须由受信任开发者重新提交有效扫描": "A trusted developer must resubmit a valid scan to publish a Sidecar",
   "Sidecar 项目概览": "Sidecar project overview",
-  "插件项目概览": "Plugin project overview"
+  "插件项目概览": "Plugin project overview",
+  "暂时无法验证登录状态，请稍后重试。": "Unable to verify your sign-in right now. Please try again shortly."
 }
