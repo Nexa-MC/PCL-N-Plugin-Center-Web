@@ -61,3 +61,10 @@ views; plugin and Sidecar projects remain separate, with the existing trusted
 developer application gate. The overview includes all of the publisher’s content
 for its store kind. Existing project URLs remain valid; console host roots open
 the overview. Account-page summary links and permissions remain unchanged.
+
+## Project management pages
+
+Publisher project category routes are lists with local name/summary search over the
+100 most recent projects. `/publisher/{plugins,sidecars,themes}/new` creates a draft
+and opens `/publisher/{category}/{id}`. Project editing follows Modrinth’s
+[settings navigation](https://github.com/modrinth/code/blob/main/apps/frontend/src/pages/%5Btype%5D/%5Bproject%5D/settings.vue): separate general, description and versions sections, plus existing NexaMC product settings. Tabs preserve edits; leaving warns about unsaved input. Owner-only GET/PATCH project APIs use If-Match revisions and audit successful changes without changing publication or security state. No migration or payment enablement is required.

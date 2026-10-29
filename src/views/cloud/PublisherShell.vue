@@ -11,7 +11,7 @@
     </aside>
     <div class="manage-body">
       <header class="manage-topbar"><span>{{ $ui(title) }}<span class="manage-breadcrumb"> / {{ $ui(currentTitle) }}</span></span><div><LanguageControl /><ThemeControl /><span class="manage-current-user">{{ session?.name }}</span><button v-if="session" class="secondary-button" :disabled="busy" @click="logout">{{ $ui('退出') }}</button><router-link v-else class="secondary-button" :to="{path:'/login',query:{return:route.fullPath}}">{{ $ui('登录') }}</router-link></div></header>
-      <main id="publisher-main" class="manage-main"><p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p><router-view :key="route.fullPath" /></main>
+      <main id="publisher-main" class="manage-main"><p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p><router-view :key="route.path" /></main>
       <footer class="manage-footer"><span>NexaMC · {{ $ui(title) }}</span><span>{{ $ui('时间以 Asia/Shanghai 显示') }}</span></footer>
     </div>
   </div>
@@ -34,7 +34,7 @@ const navigation = computed(() => [
   ...(creator.value ? [{path:'/publisher/themes',label:'主题项目',icon:'folder'}] : [{path:'/publisher/plugins',label:'插件项目',icon:'folder'},{path:'/publisher/sidecars',label:'Sidecar 项目',icon:'folder'}]),
   {path:base.value+'?view=finance',label:'商店订单收入与提现',icon:'document'}
 ]);
-function selected(path: string) { const [pathname, query] = path.split('?'); return route.path === pathname && (route.query.view || '') === (new URLSearchParams(query).get('view') || ''); }
+function selected(path: string) { const [pathname, query] = path.split('?'); return (route.path === pathname || (!query && route.path.startsWith(pathname + '/'))) && (route.query.view || '') === (new URLSearchParams(query).get('view') || ''); }
 const currentTitle = computed(() => navigation.value.find(item => selected(item.path))?.label || title.value);
 const session = ref<Session>(), busy = ref(false), error = ref('');
 let active = true, generation = 0;

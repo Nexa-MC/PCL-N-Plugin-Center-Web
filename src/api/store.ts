@@ -2,7 +2,7 @@ import { ApiError, isTestSession, request, type Page } from './platform';
 import { ntokenWallet } from './wallet';
 export type StoreKind = 'plugin' | 'theme';
 export interface StoreContent {
-  id: string; kind: StoreKind; name: string; summary: string; description: string; publisher_name: string;
+  id: string; kind: StoreKind; project_type?: DeveloperProjectType; name: string; summary: string; description: string; publisher_name: string;
   state: 'draft' | 'pending_review' | 'published' | 'quarantined'; revision: number; version: string | null;
   base_product_id: string; token_price: number; product_revision: number; sha256: string | null;
   owner_count: number; rating_count: number; average_score: number | null; reporter_count: number;
@@ -26,6 +26,8 @@ export const store = {
   report: (id: string, message: string) => { preventTestWrite(); return request<{ message_count: number; item_state: string }>('/store/items/' + id + '/report', { method: 'POST', body: JSON.stringify({ message }) }); },
   summary: (kind: StoreKind, projectType?: DeveloperProjectType) => isTestSession() ? Promise.resolve({ totals: { contents: 0, published: 0, pending: 0, quarantined: 0 }, items: [], activity: [], generatedAt: new Date().toISOString(), paidCheckoutEnabled: false, preview: true } as PublisherSummary) : request<PublisherSummary>('/publisher/summary?kind=' + kind + (projectType ? '&projectType=' + projectType : '')),
   create: (value: { kind: StoreKind; projectType?: DeveloperProjectType; name: string; summary: string; description: string; tokenPrice: number }) => { preventTestWrite(); return request<{ id: string; productId: string; revision: number }>('/publisher/items', { method: 'POST', body: JSON.stringify(value) }); },
+  project: (id: string) => { preventTestWrite(); return request<{item: StoreContent; releases: {id:string;version:string;review_state:string;created_at:string}[]}>('/publisher/items/' + encodeURIComponent(id)); },
+  update: (item: StoreContent, value: {name:string;summary:string;description:string}) => { preventTestWrite(); return request<{item:StoreContent}>('/publisher/items/' + encodeURIComponent(item.id), {method:'PATCH',headers:{'If-Match': `"${item.revision}"`},body:JSON.stringify(value)}); },
   upload: (kind: StoreKind, file: File, projectType?: DeveloperProjectType) => { preventTestWrite(); return request<{ id: string; sha256: string }>('/publisher/artifacts?kind=' + kind + (projectType ? '&projectType=' + projectType : ''), { method: 'POST', body: file, headers: { 'Content-Type': 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) }, signal: AbortSignal.timeout(60000) }); },
   release: (item: StoreContent, artifactId: string, version: string, analysisId?: string) => { preventTestWrite(); return request('/publisher/items/' + item.id + '/releases', { method: 'POST', headers: { 'If-Match': `"${item.revision}"` }, body: JSON.stringify({ artifactId, version, ...(analysisId ? { analysisId } : {}) }), signal: AbortSignal.timeout(35000) }); },
   createProduct: (id: string, sku: string, name: string, tokenPrice: number) => { preventTestWrite(); return request<{ id: string }>('/publisher/items/' + id + '/products', { method: 'POST', body: JSON.stringify({ sku, name, tokenPrice }) }); },
@@ -35,7 +37,7 @@ export const store = {
 };
 export const storePath = (kind: StoreKind, id?: string) => '/store/' + (kind === 'plugin' ? 'plugins' : 'themes') + (id ? '/' + encodeURIComponent(id) : '');
 export const consoleOrigin = (kind: StoreKind) => kind === 'plugin' ? 'https://dev.consol.pcln.top' : 'https://creator.consol.pcln.top';
-export const storeState = (state: string) => ({ draft: '草稿', pending_review: '待审核', published: '已上架', quarantined: '已下架待复核' }[state] || state);
+export const storeState = (state: string) => ({ draft: '草稿', pending_review: '待审核', approved: '已通过', published: '已上架', quarantined: '已下架待复核' }[state] || state);
 
 export function themeInstallLink(id: string): string {
   if (!/^[A-Za-z0-9_-]{1,128}$/.test(id)) return '';

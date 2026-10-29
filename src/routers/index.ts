@@ -22,6 +22,12 @@ const router = createRouter({
       { path: 'telemetry', component: () => import('@/views/admin/telemetry/index.vue'), meta: { title: '启动器遥测' } }
     ] },
     { path: '/publisher', component: () => import('@/views/cloud/PublisherShell.vue'), children: [
+      { path: 'plugins/new', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin', projectCreate: true } },
+      { path: 'plugins/:projectId', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin' } },
+      { path: 'sidecars/new', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin', projectType: 'sidecar', projectCreate: true } },
+      { path: 'sidecars/:projectId', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin', projectType: 'sidecar' } },
+      { path: 'themes/new', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme', projectCreate: true } },
+      { path: 'themes/:projectId', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme' } },
       { path: 'plugins', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin' } },
       { path: 'sidecars', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin', projectType: 'sidecar' } },
       { path: 'themes', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme' } },
