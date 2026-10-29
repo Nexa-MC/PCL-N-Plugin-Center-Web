@@ -21,6 +21,11 @@ const router = createRouter({
       { path: 'community', component: () => import('@/views/manage/Community.vue'), meta: { title: '公告与问卷' } },
       { path: 'telemetry', component: () => import('@/views/admin/telemetry/index.vue'), meta: { title: '启动器遥测' } }
     ] },
+    { path: '/publisher', component: () => import('@/views/cloud/PublisherShell.vue'), children: [
+      { path: 'plugins', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin' } },
+      { path: 'sidecars', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin', projectType: 'sidecar' } },
+      { path: 'themes', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme' } },
+    ] },
     { path: '/', component: CloudShell, children: [
       { path: '', component: () => import('@/views/cloud/Home.vue') },
       { path: 'device', component: () => import('@/views/cloud/DeviceAuthorization.vue') },
@@ -30,9 +35,6 @@ const router = createRouter({
       { path: 'store/themes', component: storeView, meta: { storeKind: 'theme' } },
       { path: 'store/themes/:id', component: storeView, meta: { storeKind: 'theme' } },
       { path: 'store/:id', redirect: to => '/store/plugins/' + encodeURIComponent(String(to.params.id)) },
-      { path: 'publisher/plugins', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin' } },
-      { path: 'publisher/sidecars', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'plugin', projectType: 'sidecar' } },
-      { path: 'publisher/themes', component: () => import('@/views/cloud/PublisherConsole.vue'), meta: { storeKind: 'theme' } },
       { path: 'download', component: () => import('@/views/site/download.vue') },
       { path: 'changelog', component: () => import('@/views/site/changelog.vue') },
       { path: 'account', component: () => import('@/views/cloud/Account.vue') },
@@ -82,8 +84,8 @@ function titleFor(path: string): string {
 router.beforeEach(to => {
   startProgress();
   if (window.location.hostname === 'manage.pcln.top' && to.path === '/') return '/manage';
-  if (window.location.hostname === 'dev.consol.pcln.top' && to.path === '/') return '/publisher/plugins';
-  if (window.location.hostname === 'creator.consol.pcln.top' && to.path === '/') return '/publisher/themes';
+  if (window.location.hostname === 'dev.consol.pcln.top' && to.path === '/') return '/publisher/plugins?view=overview';
+  if (window.location.hostname === 'creator.consol.pcln.top' && to.path === '/') return '/publisher/themes?view=overview';
 });
 router.afterEach(() => { doneProgress(); });
 router.onError(() => { doneProgress(); });

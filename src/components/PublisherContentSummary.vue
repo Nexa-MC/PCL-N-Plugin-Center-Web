@@ -1,6 +1,6 @@
 <template>
   <section class="work-panel">
-    <div class="section-heading store-summary-heading"><h2>{{ $ui(projectType ? projectType === 'sidecar' ? 'Sidecar 项目概览' : '插件项目概览' : kind === 'plugin' ? '开发者控制台' : '创作者控制台') }}</h2><div class="actions"><a v-if="!projectType" class="primary-button" :href="consoleOrigin(kind)" target="_blank" rel="noopener noreferrer">{{ $ui('进入内容控制台 ↗') }}</a><button class="secondary-button" :disabled="loading" @click="load">{{ $ui('刷新摘要') }}</button></div></div>
+    <div class="section-heading store-summary-heading"><h2>{{ $ui(projectType ? projectType === 'sidecar' ? 'Sidecar 项目概览' : '插件项目概览' : kind === 'plugin' ? '开发者控制台' : '创作者控制台') }}</h2><div class="actions"><a v-if="!projectType && showConsoleLink !== false" class="primary-button" :href="consoleOrigin(kind)" target="_blank" rel="noopener noreferrer">{{ $ui('进入内容控制台 ↗') }}</a><button class="secondary-button" :disabled="loading" @click="load">{{ $ui('刷新摘要') }}</button></div></div>
     <p class="store-muted">{{ consoleOrigin(kind).replace('https://', '') }}</p>
     <p v-if="loading" role="status" class="store-muted">{{ $ui('正在读取内容概览…') }}</p><p v-else-if="error" role="alert" class="form-error">{{ $ui(error) }}</p>
     <template v-if="data">
@@ -16,7 +16,7 @@
 import { computed, ref, watch } from 'vue';
 import { store, consoleOrigin, storePath, storeState, type PublisherSummary, type StoreKind, type DeveloperProjectType } from '@/api/store';
 import '@/styles/store.css';
-const props = defineProps<{ kind: StoreKind; projectType?: DeveloperProjectType }>(), data = ref<PublisherSummary>(), loading = ref(false), error = ref('');
+const props = defineProps<{ kind: StoreKind; projectType?: DeveloperProjectType; showConsoleLink?: boolean }>(), data = ref<PublisherSummary>(), loading = ref(false), error = ref('');
 const metrics = [{ key: 'contents', label: '内容总数' }, { key: 'published', label: '已上架' }, { key: 'pending', label: '待审核' }, { key: 'quarantined', label: '已下架待复核' }] as const;
 const maximum = computed(() => Math.max(1, ...(data.value?.activity.map(day => day.downloads) || [])));
 let generation = 0;

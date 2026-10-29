@@ -51,3 +51,13 @@ remain beside store review. `App.vue` scopes this exception with
 `console-dashboard`; navigating back to public pages restores the public design.
 The shared NexaMC logo and cyan tokens remain current. Publisher project categories,
 trusted Sidecar permissions, and session restoration are not rolled back.
+
+## Publisher dashboard shell
+
+Developer and creator routes now use `PublisherShell.vue`, reusing the management
+sidebar, top bar, main content and footer styles. They no longer render inside
+the public CloudShell. Overview, projects and income are separate navigation
+views; plugin and Sidecar projects remain separate, with the existing trusted
+developer application gate. The overview includes all of the publisher’s content
+for its store kind. Existing project URLs remain valid; console host roots open
+the overview. Account-page summary links and permissions remain unchanged.

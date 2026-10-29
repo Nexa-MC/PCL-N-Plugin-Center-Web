@@ -1,11 +1,11 @@
 <template>
   <section class="store-page">
-    <div class="section-heading"><div><p class="eyebrow">{{ consoleOrigin(kind).replace('https://', '') }}</p><h1>{{ $ui(kind === 'plugin' ? '开发者控制台' : '创作者内容控制台') }}</h1></div><router-link class="secondary-button" :to="`/account?section=${kind === 'plugin' ? 'developer' : 'creator'}`">{{ $ui('返回账户概览') }}</router-link></div>
-    <nav v-if="kind === 'plugin'" class="actions project-navigation" :aria-label="$ui('项目分类')"><router-link class="secondary-button" to="/publisher/plugins" :aria-current="!sidecar ? 'page' : undefined">{{ $ui('插件项目') }}</router-link><router-link class="secondary-button" to="/publisher/sidecars" :aria-current="sidecar ? 'page' : undefined">{{ $ui('Sidecar 项目') }}</router-link></nav>
+    <div class="manage-page-heading"><div><span class="manage-eyebrow">{{ $ui(kind === 'plugin' ? '开发者控制台' : '创作者控制台') }}</span><h1>{{ $ui(view === 'overview' ? '工作概览' : view === 'finance' ? '商店订单收入与提现' : sidecar ? 'Sidecar 项目' : kind === 'plugin' ? '插件项目' : '主题项目') }}</h1></div></div>
     <p v-if="checking" role="status">{{ $ui('正在检查会话…') }}</p><section v-else-if="error && !session" class="work-panel"><p class="form-error" role="alert">{{ $ui('暂时无法验证登录状态，请稍后重试。') }}</p><button class="secondary-button" @click="initialize">{{ $ui('重新连接') }}</button></section><section v-else-if="sidecar && session && !allowed" class="work-panel"><h2>{{ $ui('Sidecar 项目需要受信任开发者资格') }}</h2><DeveloperApplication kind="trusted_developer" embedded @granted="initialize" /></section><section v-else-if="!allowed" class="work-panel"><p>{{ $ui('当前账户没有此类内容的发布资格') }}</p><router-link to="/account">{{ $ui('我的账户') }}</router-link></section>
     <template v-else>
-      <PublisherContentSummary :kind="kind" :project-type="projectType" :key="summaryKey" />
-      <PublisherFinance />
+      <PublisherContentSummary v-if="view === 'overview'" :show-console-link="false" :kind="kind" :key="summaryKey" />
+      <PublisherFinance v-else-if="view === 'finance'" />
+      <template v-else>
       <p class="store-muted">{{ $ui('真实付费与打款尚未开放；免费内容也需要账户购买取得拥有权。') }}</p>
       <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p><p v-if="message" class="form-success" role="status">{{ $ui(message) }}</p>
       <section class="work-panel"><h2>{{ $ui('创建内容草稿') }}</h2><form class="store-form" @submit.prevent="create"><label>{{ $ui('名称') }}<input v-model.trim="form.name" required maxlength="120" /></label><label>{{ $ui('简介') }}<input v-model.trim="form.summary" required maxlength="400" /></label><label>{{ $ui('详细介绍') }}<textarea v-model.trim="form.description" required maxlength="12000" rows="4" /></label><label>{{ $ui('价格（整数N代币，0表示免费）') }}<input v-model.number="form.tokenPrice" type="number" min="0" max="1000000000" step="1" required /></label><button class="primary-button" :disabled="busy || testMode">{{ $ui('创建草稿') }}</button></form></section>
@@ -15,6 +15,7 @@
       </section>
       <section v-if="kind === 'plugin' && selected" class="work-panel"><h2>{{ $ui('新增插件内独立商品') }}</h2><form class="store-form" @submit.prevent="createProduct"><label>{{ $ui('商品标识') }}<input v-model.trim="sku" required pattern="[a-z][a-z0-9_-]{1,63}" maxlength="64" /></label><label>{{ $ui('商品名称') }}<input v-model.trim="skuName" required maxlength="120" /></label><label>{{ $ui('价格（整数N代币，0表示免费）') }}<input v-model.number="skuPrice" type="number" min="0" max="1000000000" step="1" required /></label><p class="store-muted">{{ $ui('插件内商品为独立、不可重复消费的权益，须先拥有基础插件。权益以服务端校验结果为准。') }}</p><button class="secondary-button" :disabled="busy || testMode">{{ $ui('创建独立商品') }}</button></form><code v-if="createdProduct">{{ createdProduct }}</code></section>
       <StoreDiscountEditor v-if="selected" :item-id="selected.id" />
+      </template>
     </template>
   </section>
 </template>
@@ -22,7 +23,7 @@
 import { computed, onMounted, onBeforeUnmount, watch, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { platform, isTestSession, SESSION_EVENT, type Session } from '@/api/platform';
-import { store, consoleOrigin, storeState, type StoreContent, type StoreKind } from '@/api/store';
+import { store, storeState, type StoreContent, type StoreKind } from '@/api/store';
 import PublisherContentSummary from '@/components/PublisherContentSummary.vue';
 import PublisherFinance from '@/components/PublisherFinance.vue';
 import DeveloperApplication from '@/components/DeveloperApplication.vue';
@@ -30,6 +31,7 @@ import StoreDiscountEditor from '@/components/StoreDiscountEditor.vue';
 import '@/styles/store.css';
 const route = useRoute(), router = useRouter(), kind = computed<StoreKind>(() => route.meta.storeKind === 'theme' ? 'theme' : 'plugin');
 const sidecar = computed(() => route.meta.projectType === 'sidecar'), projectType = computed(() => kind.value === 'plugin' ? sidecar.value ? 'sidecar' as const : 'plugin' as const : undefined);
+const view = computed(() => ['overview', 'finance'].includes(String(route.query.view)) ? String(route.query.view) : 'projects');
 const session = ref<Session>(), checking = ref(true), busy = ref(false), error = ref(''), message = ref(''), items = ref<StoreContent[]>([]), selectedId = ref(''), summaryKey = ref(0);
 const testMode = computed(() => isTestSession()), allowed = computed(() => sidecar.value ? session.value?.trustedDeveloper === 1 : kind.value === 'plugin' ? session.value?.developer === 1 || session.value?.trustedDeveloper === 1 : session.value?.creator === 1);
 const form = reactive({ name: '', summary: '', description: '', tokenPrice: 0 }), selected = computed(() => items.value.find(item => item.id === selectedId.value));
@@ -46,6 +48,3 @@ watch(() => [kind.value, projectType.value], initialize);
 onMounted(() => { window.addEventListener(SESSION_EVENT, initialize); void initialize(); });
 onBeforeUnmount(() => { generation++; window.removeEventListener(SESSION_EVENT, initialize); });
 </script>
-<style scoped>
-.project-navigation{margin-bottom:24px;flex-wrap:wrap}.project-navigation [aria-current="page"]{background:var(--market-accent-soft);border-color:var(--nc-accent);color:var(--nc-accent)}
-</style>
