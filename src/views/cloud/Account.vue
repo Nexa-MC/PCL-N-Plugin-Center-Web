@@ -27,6 +27,7 @@
 
       <template v-if="section === 'overview'">
         <section class="work-panel"><div class="overview-hero"><span class="overview-avatar" aria-hidden="true">{{ (session.name || 'N')[0].toUpperCase() }}</span><div><p class="eyebrow">{{ $ui('账户概览') }}</p><h1>{{ session.name }}</h1><p class="overview-mail">{{ session.email || $ui("第三方身份账户") }}</p></div></div><div class="account-shortcuts"><router-link v-for="item in shortcuts" :key="item.key" :to="sectionLink(item.key)"><span class="account-nav-icon" aria-hidden="true"><KoiIcon :name="item.icon" /></span><span><strong>{{ $ui(item.label) }}</strong><small>{{ $ui(item.description) }}</small></span></router-link></div></section>
+        <section v-if="session.developer || session.trustedDeveloper || session.creator || session.staff" class="work-panel"><h2>{{ $ui('工作空间') }}</h2><div class="actions"><a v-if="session.developer || session.trustedDeveloper" class="primary-button" href="https://dev.consol.pcln.top/">{{ $ui('开发者控制台') }} ↗</a><a v-if="session.creator" class="primary-button" href="https://creator.consol.pcln.top/">{{ $ui('创作者控制台') }} ↗</a><a v-if="session.staff" class="secondary-button" href="https://manage.pcln.top/">{{ $ui('网站管理') }} ↗</a></div></section>
         <AccountProgress :progression="progression" :busy="levelBusy" :error="levelError" @refresh="loadProgression" @select="selectDisplay" />
       </template>
 

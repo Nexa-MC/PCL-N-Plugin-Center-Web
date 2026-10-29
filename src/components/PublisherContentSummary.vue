@@ -16,7 +16,7 @@
 import { computed, ref, watch } from 'vue';
 import { store, consoleOrigin, storePath, storeState, type PublisherSummary, type StoreKind, type DeveloperProjectType } from '@/api/store';
 import '@/styles/store.css';
-const props = defineProps<{ kind: StoreKind; projectType?: DeveloperProjectType; showConsoleLink?: boolean }>(), data = ref<PublisherSummary>(), loading = ref(false), error = ref('');
+const props = withDefaults(defineProps<{ kind: StoreKind; projectType?: DeveloperProjectType; showConsoleLink?: boolean }>(), { showConsoleLink: true }), data = ref<PublisherSummary>(), loading = ref(false), error = ref('');
 const metrics = [{ key: 'contents', label: '内容总数' }, { key: 'published', label: '已上架' }, { key: 'pending', label: '待审核' }, { key: 'quarantined', label: '已下架待复核' }] as const;
 const maximum = computed(() => Math.max(1, ...(data.value?.activity.map(day => day.downloads) || [])));
 let generation = 0;
