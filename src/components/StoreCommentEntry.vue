@@ -1,0 +1,14 @@
+<template>
+  <article class="comment-entry"><span class="comment-avatar" aria-hidden="true">{{ (comment.author_name || 'N')[0].toUpperCase() }}</span><div class="comment-content"><div class="comment-byline"><strong>{{ comment.author_name || $ui('已注销账户') }}</strong><time :datetime="comment.created_at">{{ new Date(comment.created_at).toLocaleString($locale) }}</time><small v-if="comment.updated_at !== comment.created_at && !comment.deleted">{{ $ui('已编辑') }}</small></div><p v-if="comment.deleted" class="comment-deleted">{{ $ui('此评论已删除。') }}</p><form v-else-if="editing" class="store-form" @submit.prevent="save"><label>{{ $ui('编辑评论') }}<textarea v-model="draft" maxlength="2000" required rows="3" /></label><div class="actions"><button class="primary-button" :disabled="busy || !draft.trim()">{{ $ui('保存更改') }}</button><button type="button" class="secondary-button" @click="editing=false">{{ $ui('取消') }}</button></div></form><p v-else class="comment-body"><span v-if="comment.reply_to_name" class="reply-mention">@{{ comment.reply_to_name }} </span>{{ expanded ? comment.body : preview }}</p><button v-if="!editing && !comment.deleted && long" class="replies-toggle" :aria-expanded="expanded" @click="expanded=!expanded">{{ $ui(expanded ? '收起全文' : '展开全文') }}</button><p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p><div v-if="!comment.deleted && !editing" class="comment-actions"><button v-if="session && canReply" @click="$emit('reply',comment)">{{ $ui('回复') }}</button><button v-if="comment.mine" @click="draft=comment.body;editing=true">{{ $ui('编辑') }}</button><button v-if="comment.mine || session?.staff" :disabled="busy" @click="remove">{{ $ui('删除') }}</button></div><slot /></div></article>
+</template>
+<script setup lang="ts">
+import {ref,computed} from 'vue';
+import {store,type StoreComment} from '@/api/store';
+import type {Session} from '@/api/platform';
+import {ui} from '@/languages/localize';
+const props=defineProps<{itemId:string;comment:StoreComment;session?:Session;canReply:boolean}>(),emit=defineEmits<{reply:[StoreComment];changed:[]}>();
+const expanded=ref(false),characters=computed(()=>Array.from(props.comment.body)),long=computed(()=>characters.value.length>200),preview=computed(()=>characters.value.slice(0,200).join('')+(long.value?'…':''));
+const editing=ref(false),draft=ref(''),busy=ref(false),error=ref('');
+async function save(){if(busy.value)return;busy.value=true;error.value='';try{await store.editComment(props.itemId,props.comment,draft.value);editing.value=false;emit('changed');}catch(e){error.value=e instanceof Error?e.message:'评论操作失败，请重试。';}finally{busy.value=false;}}
+async function remove(){if(busy.value||!window.confirm(ui('确定删除这条评论吗？回复串会保留。')))return;busy.value=true;error.value='';try{await store.deleteComment(props.itemId,props.comment);emit('changed');}catch(e){error.value=e instanceof Error?e.message:'评论操作失败，请重试。';}finally{busy.value=false;}}
+</script>

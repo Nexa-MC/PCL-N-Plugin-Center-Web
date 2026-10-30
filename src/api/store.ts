@@ -9,6 +9,7 @@ export interface StoreContent {
   regular_token_price?: number; security_status?: 'unflagged' | 'suspected' | 'confirmed_malicious'; security_revision?: number;
 }
 export interface StoreProduct { id: string; kind: 'content' | 'in_app'; sku: string; name: string; token_price: number; regular_token_price?: number; active: number; revision: number; owned: number }
+export interface StoreComment { id:string; author_name:string; root_id:string|null; reply_to_id:string|null; reply_to_name:string; body:string; deleted:number; revision:number; created_at:string; updated_at:string; mine:number; reply_count:number }
 export interface StoreReview { author_name: string; score: number; body: string; created_at: string; updated_at: string }
 export interface StoreDetail { item: StoreContent; products: StoreProduct[]; owned: boolean; myReview: { score: number; body: string } | null; scan: { verdict: string; code: string; engine_count: number; checked_at: string } | null; paidCheckoutEnabled: false }
 export interface PublisherSummary { totals: { contents: number; published: number | null; pending: number | null; quarantined: number | null }; items: StoreContent[]; activity: { day: string; downloads: number }[]; generatedAt: string; paidCheckoutEnabled: false; preview?: boolean }
@@ -19,6 +20,10 @@ export type DeveloperProjectType = 'plugin' | 'sidecar';
 export const store = {
   catalog: (kind: StoreKind, search = '', offset = 0) => isTestSession() ? Promise.resolve({ data: [], pagination: { limit: 50, offset: 0, total: 0 } } as Page<StoreContent>) : request<Page<StoreContent>>('/store/items?' + new URLSearchParams({ kind, search, offset: String(offset), limit: '50' })),
   detail: (id: string) => { preventTestWrite(); return request<StoreDetail>('/store/items/' + encodeURIComponent(id)); },
+  comments: (id:string, offset=0, rootId?:string, limit=20) => request<Page<StoreComment>>('/store/items/'+encodeURIComponent(id)+'/comments'+(rootId?'/'+encodeURIComponent(rootId)+'/replies':'')+'?limit='+limit+'&offset='+offset),
+  comment: (id:string, value:{body:string;rootId?:string;replyToId?:string}, key:string) => { preventTestWrite(); return request('/store/items/'+encodeURIComponent(id)+'/comments',{method:'POST',headers:{'Idempotency-Key':key},body:JSON.stringify(value)}); },
+  editComment: (id:string, comment:StoreComment, body:string) => {preventTestWrite();return request('/store/items/'+encodeURIComponent(id)+'/comments/'+comment.id,{method:'PATCH',headers:{'If-Match':`"${comment.revision}"`},body:JSON.stringify({body})});},
+  deleteComment: (id:string, comment:StoreComment) => {preventTestWrite();return request('/store/items/'+encodeURIComponent(id)+'/comments/'+comment.id,{method:'DELETE',headers:{'If-Match':`"${comment.revision}"`}});},
   reviews: (id: string) => { preventTestWrite(); return request<Page<StoreReview>>('/store/items/' + encodeURIComponent(id) + '/reviews?limit=20'); },
   wallet: ntokenWallet.read,
   purchase: (product: StoreProduct, key: string) => { preventTestWrite(); return request('/store/products/' + product.id + '/purchase', { method: 'POST', headers: { 'Idempotency-Key': key }, body: JSON.stringify({ productRevision: product.revision }) }); },
