@@ -2060,5 +2060,15 @@
   "收起全文": "Show less",
   "再加载最多50条回复": "Load up to 50 more replies",
   "展开回复（共{0}条）": "Show replies ({0} total)",
-  "回复已发布。": "Reply posted."
+  "回复已发布。": "Reply posted.",
+  "作者回复": "Publisher response",
+  "评价第{0}版": "Review version {0}",
+  "回复评价": "Respond to review",
+  "提交回复": "Submit response",
+  "已回复当前版本，等待用户修改评价。": "This version has a response. You can respond again after the review changes.",
+  "每个评价版本仅可回复一次。用户修改评价后，可再次回复；相同内容重复提交不会增加回复机会。": "One response per review version. You can respond again after the reviewer changes it; identical submissions do not create another opportunity.",
+  "作者默认拥有自己的作品，不能给自己的作品评分。": "Publishers own their own projects automatically and cannot rate them.",
+  "此回复已删除。": "This response was removed.",
+  "暂时无法读取评价": "Unable to load reviews",
+  "评价回复失败，请刷新后重试": "Response failed. Refresh and try again."
 }

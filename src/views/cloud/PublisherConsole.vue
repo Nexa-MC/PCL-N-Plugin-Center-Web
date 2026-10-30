@@ -20,6 +20,7 @@
               <section class="work-panel"><h2>{{ $ui('版本记录') }}</h2><p v-if="!releases.length" class="store-muted">{{ $ui('暂无版本。') }}</p><article v-for="release in releases" :key="release.id" class="store-content-row"><div><strong>{{ release.version }}</strong><small>{{ new Date(release.created_at).toLocaleString($locale) }}</small></div><span class="status-pill">{{ $ui(storeState(release.review_state)) }}</span></article></section>
               <section class="work-panel"><h2>{{ $ui('提交制品与发布版本') }}</h2><p v-if="kind === 'plugin' && !sidecar" class="store-muted">{{ $ui('插件包上传和下载暂未开放') }}</p><form v-else class="store-form" @submit.prevent="release"><label>{{ $ui('版本') }}<input v-model.trim="version" required maxlength="60" /></label><label>{{ $ui('制品文件（最多25MiB）') }}<input type="file" :accept="sidecar ? '.nsc' : undefined" required @change="selectFile" /></label><p class="store-muted">{{ $ui(sidecar ? 'Sidecar 发布需要与制品哈希一致的完整安全扫描；缺少扫描不会自动发布。' : '主题制品提交后等待人工审核。') }}</p><label v-if="sidecar">{{ $ui('VirusTotal 分析编号') }}<input v-model.trim="analysisId" maxlength="256" /></label><button class="primary-button" :disabled="busy || testMode || !file">{{ $ui('提交版本审核') }}</button></form></section>
             </template>
+            <PublisherReviews v-else-if="tab === 'reviews'" :item-id="selected.id" />
             <template v-else><p class="store-muted">{{ $ui('真实付费与打款尚未开放；免费内容也需要账户购买取得拥有权。') }}</p><StoreDiscountEditor :item-id="selected.id" /><section v-if="kind === 'plugin'" class="work-panel"><h2>{{ $ui('新增插件内独立商品') }}</h2><form class="store-form" @submit.prevent="createProduct"><label>{{ $ui('商品标识') }}<input v-model.trim="sku" required pattern="[a-z][a-z0-9_-]{1,63}" maxlength="64" /></label><label>{{ $ui('商品名称') }}<input v-model.trim="skuName" required maxlength="120" /></label><label>{{ $ui('价格（整数N代币，0表示免费）') }}<input v-model.number="skuPrice" type="number" min="0" max="1000000000" step="1" required /></label><button class="secondary-button" :disabled="busy || testMode">{{ $ui('创建独立商品') }}</button></form><code v-if="createdProduct">{{ createdProduct }}</code></section></template>
           </div>
         </div>
@@ -34,6 +35,7 @@ import { useRoute, useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from 'vu
 import { ApiError, platform, isTestSession, SESSION_EVENT, type Session } from '@/api/platform';
 import { store, storeState, type StoreContent, type StoreKind } from '@/api/store';
 import PublisherContentSummary from '@/components/PublisherContentSummary.vue';
+import PublisherReviews from '@/components/PublisherReviews.vue';
 import PublisherFinance from '@/components/PublisherFinance.vue';
 import DeveloperApplication from '@/components/DeveloperApplication.vue';
 import StoreDiscountEditor from '@/components/StoreDiscountEditor.vue';
@@ -44,7 +46,7 @@ const sidecar = computed(() => route.meta.projectType === 'sidecar'), projectTyp
 const projectId = computed(() => String(route.params.projectId || '')), creating = computed(() => route.meta.projectCreate === true);
 const basePath = computed(() => '/publisher/' + (kind.value === 'theme' ? 'themes' : sidecar.value ? 'sidecars' : 'plugins'));
 const categoryTitle = computed(() => kind.value === 'theme' ? '主题项目' : sidecar.value ? 'Sidecar 项目' : '插件项目');
-const tabs = [{key:'general',label:'基本信息'},{key:'description',label:'项目介绍'},{key:'versions',label:'版本记录'},{key:'monetization',label:'商品设置'}];
+const tabs = [{key:'general',label:'基本信息'},{key:'description',label:'项目介绍'},{key:'versions',label:'版本记录'},{key:'monetization',label:'商品设置'},{key:'reviews',label:'评分与评价'}];
 const tab = computed(() => tabs.some(t => t.key === route.query.tab) ? String(route.query.tab) : 'general');
 const search = ref(''), conflict = ref(false), releases = ref<{id:string;version:string;review_state:string;created_at:string}[]>([]);
 const filteredItems = computed(() => items.value.filter(item => (item.name+' '+item.summary).toLowerCase().includes(search.value.toLowerCase())));

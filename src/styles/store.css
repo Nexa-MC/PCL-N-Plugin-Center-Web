@@ -3,3 +3,4 @@
 .store-summary-heading{flex-wrap:wrap;gap:16px}.store-summary-heading>.actions{flex-wrap:wrap}.store-page .resource-card h2{font-size:18px;overflow-wrap:anywhere}.store-page h1{overflow-wrap:anywhere}
 
 .store-page .actions > .status-pill{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.publisher-review-response{margin:12px 0;padding:14px;border-left:3px solid var(--nc-accent);background:var(--market-surface-soft);border-radius:0 8px 8px 0}.publisher-review-response small{margin:6px 0}.publisher-review-response p{white-space:pre-wrap;overflow-wrap:anywhere}
