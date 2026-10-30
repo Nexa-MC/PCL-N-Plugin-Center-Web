@@ -6,7 +6,7 @@
       <p v-if="loading" class="empty-state" role="status">{{ $ui('正在读取商店…') }}</p>
       <p v-else-if="error" class="form-error" role="alert">{{ $ui(error) }} <button class="secondary-button" @click="load">{{ $ui('重试') }}</button></p>
       <div v-else-if="!items.length" class="empty-state">{{ $ui('此商店暂时没有已上架内容。') }}</div>
-      <div v-else class="resource-grid"><router-link v-for="item in items" :key="item.id" :to="storePath(kind, item.id)" class="resource-card"><div class="resource-art"><KoiIcon :name="kind === 'plugin' ? 'code-square' : 'gallery-edit'" /></div><div class="resource-meta"><span>{{ item.publisher_name }}</span><strong>{{ price(item.token_price) }}</strong></div><h2>{{ item.name }}</h2><p>{{ item.summary }}</p><footer><span>{{ $ui('{0} 人拥有', [item.owner_count]) }}</span><span v-if="item.average_score !== null">★ {{ item.average_score.toFixed(1) }}</span><span v-else>{{ $ui('评分暂未公开') }}</span></footer></router-link></div>
+      <div v-else class="resource-grid"><router-link v-for="item in items" :key="item.id" :to="storePath(kind, item.id)" class="resource-card"><div class="resource-art"><img v-if="item.cover_id" :src="store.mediaUrl(item.cover_id)" :alt="item.name" style="width:100%;height:100%;object-fit:cover" /><KoiIcon v-else :name="kind === 'plugin' ? 'code-square' : 'gallery-edit'" /></div><div class="resource-meta"><span>{{ item.publisher_name }}</span><strong>{{ price(item.token_price) }}</strong></div><h2>{{ item.name }}</h2><p>{{ item.summary }}</p><footer><span>{{ $ui('{0} 人拥有', [item.owner_count]) }}</span><span v-if="item.average_score !== null">★ {{ item.average_score.toFixed(1) }}</span><span v-else>{{ $ui('评分暂未公开') }}</span></footer></router-link></div>
       <div v-if="total > 50" class="pagination"><button class="secondary-button" :disabled="offset === 0 || loading" @click="offset -= 50; load()">{{ $ui('上一页') }}</button><span>{{ offset + 1 }}–{{ Math.min(offset + 50, total) }} / {{ total }}</span><button class="secondary-button" :disabled="offset + 50 >= total || loading" @click="offset += 50; load()">{{ $ui('下一页') }}</button></div>
     </template>
     <template v-else>
@@ -14,7 +14,7 @@
       <p v-if="loading" class="empty-state" role="status">{{ $ui('正在读取商店…') }}</p>
       <p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
       <template v-if="detail">
-        <section class="work-panel"><div class="section-heading"><div><p class="eyebrow">{{ detail.item.publisher_name }} · {{ detail.item.version }}</p><h1>{{ detail.item.name }}</h1></div><span class="status-pill">{{ $ui(storeState(detail.item.state)) }}</span></div><p class="hero-description">{{ detail.item.summary }}</p><p class="store-description">{{ detail.item.description }}</p>
+        <section class="work-panel"><div class="section-heading"><div><p class="eyebrow">{{ detail.item.publisher_name }} · {{ detail.item.version }}</p><h1>{{ detail.item.name }}</h1></div><span class="status-pill">{{ $ui(storeState(detail.item.state)) }}</span></div><p class="hero-description">{{ detail.item.summary }}</p><p class="store-description">{{ detail.item.description }}</p><ProjectMedia v-if="detail.media?.length" :media="detail.media" />
           <div class="store-stats"><span>{{ $ui('{0} 人拥有', [detail.item.owner_count]) }}</span><span>{{ $ui('{0} 人评分', [detail.item.rating_count]) }}</span><strong v-if="detail.item.average_score !== null">★ {{ detail.item.average_score.toFixed(1) }} / 5</strong><span v-else>{{ $ui('有效评分人数超过100后公开总评分。') }}</span></div>
           <p v-if="detail.scan" class="store-muted">{{ detail.scan.verdict === 'clean' ? $ui('已核验绑定此制品哈希的 VirusTotal 完整扫描。') : $ui('制品扫描仍需人工处理。') }} {{ $ui('未检出不代表绝对安全。') }}</p>
           <p v-if="detail.item.sha256" class="store-hash">SHA-256 {{ detail.item.sha256 }}</p>
@@ -39,6 +39,7 @@ import { useRoute } from 'vue-router';
 import { platform, type Session } from '@/api/platform';
 import { store, themeInstallLink, storePath, storeState, type StoreContent, type StoreDetail, type StoreKind, type StoreProduct, type StoreReview } from '@/api/store';
 import { ui } from '@/languages/localize';
+import ProjectMedia from '@/components/ProjectMedia.vue';
 import StoreComments from '@/components/StoreComments.vue';
 import KoiIcon from '@/components/KoiIcon.vue';
 import '@/styles/store.css';

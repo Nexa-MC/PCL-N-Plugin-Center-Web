@@ -1,0 +1,4 @@
+// Only the explicitly requested profile hostname may be attached to this Worker.
+const {CLOUDFLARE_ACCOUNT_ID:account,CLOUDFLARE_API_TOKEN:token}=process.env;
+if(!token||!/^[a-f0-9]{32}$/.test(account||''))throw new Error('cloudflare_credentials_missing');
+const response=await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/workers/domains`,{headers:{authorization:`Bearer ${token}`},signal:AbortSignal.timeout(20000)});if(!response.ok)throw new Error('profile_host_inspection_'+response.status);const result=await response.json();if(!result.success)throw new Error('profile_host_inspection_failed');const host=result.result.find(d=>d.hostname==='accounts.pcln.top');if(host&&host.service!=='nexa-web')throw new Error('profile_host_already_assigned_to_another_worker');console.log(JSON.stringify({hostname:'accounts.pcln.top',worker:'nexa-web',binding:host?'existing':'requested_new_alias'}));

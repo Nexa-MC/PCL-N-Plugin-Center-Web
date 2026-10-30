@@ -36,6 +36,7 @@ const navigation = [
   { path: '/manage', label: '工作概览', icon: 'dashboard' },
   { path: '/manage/users', label: '用户管理', icon: 'users' },
   { path: '/manage/resources', label: '资源目录', icon: 'folder' },
+  { path: '/manage/project-info', label: '项目信息审核', icon: 'document' },
   { path: '/manage/store', label: '商店审核', icon: 'shield-tick' },
   { path: '/manage/store/security', label: '制品安全审核', icon: 'shield-tick' },
   { path: '/manage/store/finance', label: '财务申请审核', icon: 'document' },

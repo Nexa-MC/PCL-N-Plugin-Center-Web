@@ -1,7 +1,7 @@
 <template>
  <StoreCommentEntry :item-id="itemId" :comment="comment" :session="session" :can-reply="!comment.deleted && !locked" @reply="replying=!replying" @changed="$emit('refresh')">
   <p v-if="notice" class="form-success" role="status">{{ $ui(notice) }}</p><p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p>
-  <CommentReplyComposer v-if="replying && session" v-model="draft" :author="comment.author_name" :body="comment.body" :busy="busy" @submit="post" @cancel="replying=false" />
+  <CommentReplyComposer :item-id="itemId" v-if="replying && session" v-model="draft" :author="comment.author_name" :body="comment.body" :busy="busy" @submit="post" @cancel="replying=false" />
   <div v-if="visible" class="comment-replies" :class="{'deep-thread':depth>=3}" :aria-label="$ui('回复串')">
    <CommentThread v-for="child in children" :key="child.id" :item-id="itemId" :comment="child" :session="session" :depth="depth+1" :locked="locked || (depth===0 && Boolean(comment.deleted))" @refresh="reload" />
    <p v-if="loading" role="status">{{ $ui('正在读取评论…') }}</p>

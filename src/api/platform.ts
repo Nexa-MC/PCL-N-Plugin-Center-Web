@@ -189,6 +189,8 @@ export async function managementAuthRequest<T>(path: string, init: RequestInit =
 }
 
 export const platform = {
+  requestEmailBinding:(email:string,password:string)=>authJson<{challenge:string;expiresIn:number;retryAfter:number;requiresOldCode:boolean}>(authFetch('/auth/v1/account/email/request',{method:'POST',body:JSON.stringify({email,password})}),'邮箱绑定暂不可用'),
+  verifyEmailBinding:(challenge:string,code:string,oldCode:string)=>authJson<{email:string}>(authFetch('/auth/v1/account/email/verify',{method:'POST',body:JSON.stringify({challenge,code,oldCode})}),'邮箱验证码无效或已过期'),
   confirmDevice: (user_code: string, decision: 'approve' | 'deny') => authJson(authFetch('/auth/v1/device/confirm', { method: 'POST', body: JSON.stringify({ user_code, decision }) }), '设备码无效或已过期，请在客户端重新发起登录。'),
   // 后台不接受前端演示账户；每次进入或重新聚焦都向 Auth 验证真实身份。
   managementSession: async () => {

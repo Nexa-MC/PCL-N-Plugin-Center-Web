@@ -30,6 +30,7 @@ on:
       - wrangler.manage.jsonc
       - wrangler.jsonc
       - scripts/deploy-publisher-consoles.mjs
+      - scripts/check-profile-host.mjs
       - scripts/deployment-targets.mjs
       - scripts/public-release.mjs
       - .github/workflows/deploy-web.yml
@@ -100,7 +101,7 @@ jobs:
           IFS=',' read -ra targets <<< "$DEPLOY_TARGETS"
           for target in "${targets[@]}"; do
             case "$target" in
-              web) pnpm exec wrangler deploy ;;
+              web) node scripts/check-profile-host.mjs && pnpm exec wrangler deploy ;;
               manage) pnpm exec wrangler deploy --config wrangler.manage.jsonc ;;
               *) echo '::error::Unknown deployment target.'; exit 1 ;;
             esac

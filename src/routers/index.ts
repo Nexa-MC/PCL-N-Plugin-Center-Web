@@ -8,10 +8,13 @@ const storeView = () => import('@/views/cloud/Store.vue');
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), scrollBehavior: () => ({ top: 0 }),
   routes: [
+    { path: '/@:uid', component: () => import('@/views/cloud/PublicProfile.vue') },
+    { path: '/people', component: () => import('@/views/cloud/PublicProfile.vue') },
     { path: '/manage', component: () => import('@/views/manage/ManagementShell.vue'), children: [
       { path: '', component: () => import('@/views/manage/Overview.vue'), meta: { title: '工作概览' } },
       { path: 'users', component: () => import('@/views/manage/Users.vue'), meta: { title: '用户管理' } },
       { path: 'resources', component: () => import('@/views/manage/Resources.vue'), meta: { title: '资源目录' } },
+      { path: 'project-info', component: () => import('@/views/manage/ProjectInfoReview.vue'), meta: { title: '项目信息审核' } },
       { path: 'store', component: () => import('@/views/manage/StoreModeration.vue'), meta: { title: '商店审核' } },
       { path: 'store/finance', component: () => import('@/views/manage/StoreFinance.vue'), meta: { title: '财务申请审核' } },
       { path: 'store/security', component: () => import('@/views/manage/StoreSecurity.vue'), meta: { title: '制品安全审核' } },
@@ -89,6 +92,7 @@ function titleFor(path: string): string {
 }
 router.beforeEach(to => {
   startProgress();
+  if (window.location.hostname === 'accounts.pcln.top' && to.path === '/') return '/people';
   if (window.location.hostname === 'manage.pcln.top' && to.path === '/') return '/manage';
   if (window.location.hostname === 'dev.consol.pcln.top' && to.path === '/') return '/publisher/plugins?view=overview';
   if (window.location.hostname === 'creator.consol.pcln.top' && to.path === '/') return '/publisher/themes?view=overview';

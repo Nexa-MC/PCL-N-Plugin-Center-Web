@@ -108,7 +108,7 @@
           <div class="profile-row"><span>{{ $ui("用户 ID") }}</span><strong>{{ session.handle ? '@' + session.handle : $ui("未设置") }}</strong><button v-if="!testMode" class="secondary-button row-action" :disabled="handleDialog.busy" @click="openHandleDialog">{{ session.handle ? $ui("修改") : $ui("设置") }}</button></div>
           <div class="profile-row"><span>{{ $ui("邮箱") }}</span><strong>{{ session.email || $ui("未提供") }}</strong></div>
           <div class="profile-row"><span>{{ $ui("账户 ID") }}</span><strong>{{ session.id }}</strong></div>
-          <p>{{ $ui("邮箱只读，来自第三方身份提供商。") }}</p>
+          <EmailBinding :disabled="testMode" @bound="refreshRoles" />
           <p v-if="profileMsg" class="form-success" role="status">{{ $ui(profileMsg) }}</p>
         </section>
         <p v-if="testMode" class="test-mode-note">{{ $ui("前端测试账户不连接真实认证服务。") }}</p>
@@ -237,6 +237,7 @@ import FormDialog from '@/components/FormDialog.vue';
 import PasswordConfirmDialog from '@/components/PasswordConfirmDialog.vue';
 import BilibiliBinding from '@/components/BilibiliBinding.vue';
 import DeveloperApplication from '@/components/DeveloperApplication.vue';
+import EmailBinding from '@/components/EmailBinding.vue';
 import PublisherContentSummary from '@/components/PublisherContentSummary.vue';
 import { waffoReadiness, type WaffoReadiness } from '@/utils/waffoCheckout';
 const route = useRoute();
