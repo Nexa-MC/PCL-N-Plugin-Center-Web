@@ -2070,5 +2070,8 @@
   "作者默认拥有自己的作品，不能给自己的作品评分。": "Publishers own their own projects automatically and cannot rate them.",
   "此回复已删除。": "This response was removed.",
   "暂时无法读取评价": "Unable to load reviews",
-  "评价回复失败，请刷新后重试": "Response failed. Refresh and try again."
+  "评价回复失败，请刷新后重试": "Response failed. Refresh and try again.",
+  "回复内容": "Reply text",
+  "回复串": "Reply thread",
+  "查看前2条回复（共{0}条）": "Show first 2 replies ({0} total)"
 }
