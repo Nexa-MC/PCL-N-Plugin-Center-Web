@@ -2123,5 +2123,13 @@
   "通过并公开项目信息": "Approve project information",
   "退回修改": "Return for changes",
   "暂时无法读取审核列表": "Unable to load review queue",
-  "审核失败，请刷新后重试": "Review failed. Refresh and retry."
+  "审核失败，请刷新后重试": "Review failed. Refresh and retry.",
+  "暂无铭牌。": "No badges yet.",
+  "开发者作品": "Developer projects",
+  "创作者作品": "Creator projects",
+  "站长": "Site owner",
+  "订阅等级": "Subscription tier",
+  "试用": "Trial",
+  "等级": "Level",
+  "点击评论中的用户名可查看公开主页。": "Select a username in comments to view their public profile."
 }

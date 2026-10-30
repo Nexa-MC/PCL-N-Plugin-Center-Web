@@ -13,6 +13,13 @@ export interface StoreContent { info_approved?:number;cover_id?:string|null;
 }
 export interface StoreProduct { id: string; kind: 'content' | 'in_app'; sku: string; name: string; token_price: number; regular_token_price?: number; active: number; revision: number; owned: number }
 export interface PublicProfileSummary {id:string;uid:string;name:string}
+export interface PublicAccountProfile extends PublicProfileSummary {
+  accountId?:string;level?:number;
+  display?:{kind:'level'|'badge';label:string;badgeId:string|null};
+  badges?:{id:string;name:string;replacesLevel:boolean}[];
+  roles?:{admin:boolean;developer:boolean;trustedDeveloper:boolean;creator:boolean;siteOwner:boolean};
+  membership?:{id:string;name:string;trial:boolean}|null;
+}
 export interface CommentMention {start:number;end:number;profileId:string;uid:string}
 export const profileUrl=(uid:string,identity?:string)=>'https://accounts.pcln.top/@'+encodeURIComponent(uid)+(identity&&uid!=='ghost'?'?identity='+encodeURIComponent(identity):'');
 export interface StoreComment { reply_to_uid?:string|null; reply_to_profile_id?:string|null; author_profile_id?:string;author_uid?:string;mentions?:CommentMention[]; id:string; author_name:string; root_id:string|null; reply_to_id:string|null; reply_to_name:string; body:string; deleted:number; revision:number; created_at:string; updated_at:string; mine:number; reply_count:number }
@@ -28,7 +35,7 @@ export const store = {
   catalog: (kind: StoreKind, search = '', offset = 0) => isTestSession() ? Promise.resolve({ data: [], pagination: { limit: 50, offset: 0, total: 0 } } as Page<StoreContent>) : request<Page<StoreContent>>('/store/items?' + new URLSearchParams({ kind, search, offset: String(offset), limit: '50' })),
   detail: (id: string) => { preventTestWrite(); return request<StoreDetail>('/store/items/' + encodeURIComponent(id)); },
   mentionTargets:(id:string,q:string)=>request<{data:PublicProfileSummary[]}>('/store/items/'+encodeURIComponent(id)+'/mention-targets?q='+encodeURIComponent(q)),
-  publicProfile:(uid:string)=>request<{profile:PublicProfileSummary;projects:{id:string;kind:StoreKind;name:string;summary:string}[];comments:{id:string;item_id:string;kind:StoreKind;body:string;created_at:string;project_name:string}[]}>('/store/profiles/'+encodeURIComponent(uid)),
+  publicProfile:(uid:string)=>request<{profile:PublicAccountProfile;projects:{id:string;kind:StoreKind;name:string;summary:string}[];comments:{id:string;item_id:string;kind:StoreKind;body:string;created_at:string;project_name:string}[]}>('/store/profiles/'+encodeURIComponent(uid)),
   comments: (id:string, offset=0, rootId?:string, limit=20) => request<Page<StoreComment>>('/store/items/'+encodeURIComponent(id)+'/comments'+(rootId?'/'+encodeURIComponent(rootId)+'/replies':'')+'?limit='+limit+'&offset='+offset),
   comment: (id:string, value:{body:string;rootId?:string;replyToId?:string}, key:string) => { preventTestWrite(); return request('/store/items/'+encodeURIComponent(id)+'/comments',{method:'POST',headers:{'Idempotency-Key':key},body:JSON.stringify(value)}); },
   editComment: (id:string, comment:StoreComment, body:string) => {preventTestWrite();return request('/store/items/'+encodeURIComponent(id)+'/comments/'+comment.id,{method:'PATCH',headers:{'If-Match':`"${comment.revision}"`},body:JSON.stringify({body})});},
