@@ -15,7 +15,7 @@ export interface StoreProduct { id: string; kind: 'content' | 'in_app'; sku: str
 export interface PublicProfileSummary {id:string;uid:string;name:string}
 export interface CommentMention {start:number;end:number;profileId:string;uid:string}
 export const profileUrl=(uid:string)=>'https://accounts.pcln.top/@'+encodeURIComponent(uid);
-export interface StoreComment { reply_to_profile_id?:string|null; author_profile_id?:string;author_uid?:string;mentions?:CommentMention[]; id:string; author_name:string; root_id:string|null; reply_to_id:string|null; reply_to_name:string; body:string; deleted:number; revision:number; created_at:string; updated_at:string; mine:number; reply_count:number }
+export interface StoreComment { reply_to_uid?:string|null; reply_to_profile_id?:string|null; author_profile_id?:string;author_uid?:string;mentions?:CommentMention[]; id:string; author_name:string; root_id:string|null; reply_to_id:string|null; reply_to_name:string; body:string; deleted:number; revision:number; created_at:string; updated_at:string; mine:number; reply_count:number }
 export interface PublisherReviewReply { review_revision:number;author_name:string;body:string;created_at:string }
 export interface StoreReview { id:string;revision:number;can_reply?:number;replies?:PublisherReviewReply[]; author_name: string; score: number; body: string; created_at: string; updated_at: string }
 export interface StoreDetail { media?:ProjectMedia[]; item: StoreContent; products: StoreProduct[]; owned: boolean; isPublisher?:boolean; myReview: { score: number; body: string } | null; scan: { verdict: string; code: string; engine_count: number; checked_at: string } | null; paidCheckoutEnabled: false }
