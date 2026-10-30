@@ -14,7 +14,7 @@ export interface StoreContent { info_approved?:number;cover_id?:string|null;
 export interface StoreProduct { id: string; kind: 'content' | 'in_app'; sku: string; name: string; token_price: number; regular_token_price?: number; active: number; revision: number; owned: number }
 export interface PublicProfileSummary {id:string;uid:string;name:string}
 export interface CommentMention {start:number;end:number;profileId:string;uid:string}
-export const profileUrl=(uid:string)=>'https://accounts.pcln.top/@'+encodeURIComponent(uid);
+export const profileUrl=(uid:string,identity?:string)=>'https://accounts.pcln.top/@'+encodeURIComponent(uid)+(identity&&uid!=='ghost'?'?identity='+encodeURIComponent(identity):'');
 export interface StoreComment { reply_to_uid?:string|null; reply_to_profile_id?:string|null; author_profile_id?:string;author_uid?:string;mentions?:CommentMention[]; id:string; author_name:string; root_id:string|null; reply_to_id:string|null; reply_to_name:string; body:string; deleted:number; revision:number; created_at:string; updated_at:string; mine:number; reply_count:number }
 export interface PublisherReviewReply { review_revision:number;author_name:string;body:string;created_at:string }
 export interface StoreReview { id:string;revision:number;can_reply?:number;replies?:PublisherReviewReply[]; author_name: string; score: number; body: string; created_at: string; updated_at: string }

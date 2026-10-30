@@ -8,7 +8,7 @@ const storeView = () => import('@/views/cloud/Store.vue');
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), scrollBehavior: () => ({ top: 0 }),
   routes: [
-    { path: '/@:uid', component: () => import('@/views/cloud/PublicProfile.vue') },
+    { path: '/@:uid([a-z][a-z0-9_-]{5,19}|ghost)', alias: '/%40:uid([a-z][a-z0-9_-]{5,19}|ghost)', component: () => import('@/views/cloud/PublicProfile.vue') },
     { path: '/people', component: () => import('@/views/cloud/PublicProfile.vue') },
     { path: '/manage', component: () => import('@/views/manage/ManagementShell.vue'), children: [
       { path: '', component: () => import('@/views/manage/Overview.vue'), meta: { title: '工作概览' } },
