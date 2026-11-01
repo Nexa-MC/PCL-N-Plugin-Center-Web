@@ -1,4 +1,7 @@
 {
+  "正在加载协议…": "Loading policies…",
+  "暂时无法读取协议版本，请重试。": "Unable to load the policy versions. Please try again.",
+  "请先阅读并确认当前服务条款。": "Please read and accept the current terms of service first.",
   "跳至内容": "Skip to content",
   "由社区开发的 Minecraft 启动器。": "Minecraft launcher. Built by the community.",
   "下载": "Download",

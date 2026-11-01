@@ -204,7 +204,9 @@ export const platform = {
     if (!response.ok && response.status !== 401) await authJson(response, '退出失败，请重试。');
     accessToken = ''; currentUser = undefined;
   },
-  oauthStart: (provider: 'github' | 'microsoft' | 'google', returnTo = '/account', mode: 'login' | 'link' = 'login') => {
+  currentPolicies: () => authJson<{ terms: { version: string }; privacy: { version: string } }>(authFetch('/auth/v1/policies/current'), '暂时无法读取协议版本，请重试。'),
+  oauthStart: (provider: 'github' | 'microsoft' | 'google', returnTo = '/account', mode: 'login' | 'link' = 'login', acceptedTermsVersion?: string) => {
+    if (mode === 'login' && !acceptedTermsVersion) throw new Error('请先阅读并确认当前服务条款。');
     if (isTest() && window.location.hostname !== 'manage.pcln.top' && !/^\/manage(?:\/|$)/.test(returnTo)) {
       if (mode === 'link' && !testState.identities.some(i => i.provider === provider)) testState.identities.push({ provider, email: testSession?.email ?? null, created_at: testNow() });
       console.info(`[test] 已模拟 ${provider} ${mode === 'link' ? '关联' : '登录'}，未离开页面。`);
@@ -214,7 +216,7 @@ export const platform = {
     target.searchParams.set('return_to', window.location.hostname === 'manage.pcln.top' ? new URL(returnTo, window.location.origin).href : returnTo);
     target.searchParams.set('mode', mode);
     target.searchParams.set('scope', 'console');
-    if (mode === 'login') target.searchParams.set('tos', POLICY_VERSION);
+    if (mode === 'login') target.searchParams.set('tos', acceptedTermsVersion!);
     window.location.assign(target.toString());
   },
   session: () => {

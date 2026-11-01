@@ -1,7 +1,7 @@
 <template>
   <div v-if="checking" class="empty-state" role="status">{{ $ui("正在检查会话…") }}</div>
   <template v-else-if="!session">
-    <div class="login-layout"><div class="login-panel"><h2>{{ scope==='operations' ? $ui("工作人员登录") : $ui("登录控制台") }}</h2><p>{{ $ui("使用受支持的 OAuth 账户登录，不提供密码注册。") }}</p><p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p><button class="primary-button" :disabled="busy" @click="oauth('github')">{{ $ui("使用 GitHub 登录") }}</button><button class="secondary-button" :disabled="busy" @click="oauth('google')">{{ $ui("使用 Google 登录") }}</button><button class="secondary-button" :disabled="busy" @click="oauth('microsoft')">{{ $ui("使用 Microsoft 登录") }}</button></div></div>
+    <div class="login-layout"><div class="login-panel"><h2>{{ scope==='operations' ? $ui("工作人员登录") : $ui("登录控制台") }}</h2><p>{{ $ui("使用受支持的 OAuth 账户登录，不提供密码注册。") }}</p><p v-if="error" class="form-error" role="alert">{{ $ui(error) }}</p><OAuthPolicyConsent v-model="tosRead" :disabled="busy" /><button class="primary-button" :disabled="busy || !tosRead" @click="oauth('github')">{{ $ui("使用 GitHub 登录") }}</button><button class="secondary-button" :disabled="busy || !tosRead" @click="oauth('google')">{{ $ui("使用 Google 登录") }}</button><button class="secondary-button" :disabled="busy || !tosRead" @click="oauth('microsoft')">{{ $ui("使用 Microsoft 登录") }}</button></div></div>
   </template>
   <template v-else>
     <div class="workspace-heading"><div><h1>{{ scope==='operations' ? $ui("待办") : $ui("控制台") }}</h1></div><button class="secondary-button" :disabled="busy" @click="logout">{{ $ui("退出登录") }}</button></div>
@@ -17,16 +17,18 @@
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { platform, type Session, type Ticket } from '@/api/platform';
+import OAuthPolicyConsent from '@/components/OAuthPolicyConsent.vue';
 import Telemetry from '@/views/admin/telemetry/index.vue';
 const route=useRoute();
 const scope=route.path.startsWith('/operations') ? 'operations' : 'console';
 const session=ref<Session>(), checking=ref(true), busy=ref(false), error=ref('');
+const tosRead=ref('');
 const offset=ref(0), total=ref(0);
 const tickets=ref<Ticket[]>([]), ticketsLoaded=ref(false), showResolved=ref(false), subject=ref(''), body=ref(''), message=ref('');
 const visibleTickets=computed(()=>tickets.value.filter(t=>showResolved.value ? t.status==='resolved' : t.status==='open'));
 const failure=(e:unknown)=>{error.value=e instanceof Error?e.message:'操作失败，请重试。';};
 async function loadTickets(){busy.value=true;error.value='';try{const result=await platform.tickets(scope,offset.value);tickets.value=result.data;total.value=result.pagination.total;ticketsLoaded.value=true;}catch(e){failure(e);}finally{busy.value=false;}}
-function oauth(provider:'github'|'microsoft'|'google'){platform.oauthStart(provider, route.fullPath);}
+function oauth(provider:'github'|'microsoft'|'google'){if(!tosRead.value)return;platform.oauthStart(provider, route.fullPath, 'login', tosRead.value);}
 async function logout(){busy.value=true;error.value='';await platform.logout();session.value=undefined;tickets.value=[];ticketsLoaded.value=false;busy.value=false;}
 async function submit(){busy.value=true;error.value='';message.value='';try{await platform.createTicket(subject.value,body.value);subject.value='';body.value='';message.value='请求已提交。';showResolved.value=false;await loadTickets();}catch(e){failure(e);}finally{busy.value=false;}}
 async function resolve(ticket:Ticket){busy.value=true;error.value='';try{await platform.resolve(ticket);await loadTickets();}catch(e){failure(e);}finally{busy.value=false;}}
