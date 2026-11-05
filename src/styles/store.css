@@ -4,3 +4,10 @@
 
 .store-page .actions > .status-pill{max-width:100%;white-space:normal;overflow-wrap:anywhere}
 .publisher-review-response{margin:12px 0;padding:14px;border-left:3px solid var(--nc-accent);background:var(--market-surface-soft);border-radius:0 8px 8px 0}.publisher-review-response small{margin:6px 0}.publisher-review-response p{white-space:pre-wrap;overflow-wrap:anywhere}
+
+.store-page .resource-card h2,.store-page .resource-card > p{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.store-page .resource-card h2{-webkit-line-clamp:2}
+.store-page .resource-card > p{-webkit-line-clamp:3}
+.store-page .resource-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:800px){.store-page .resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.store-page .resource-grid{grid-template-columns:minmax(0,1fr)}}

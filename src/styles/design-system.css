@@ -175,8 +175,18 @@ html:root:not(.console-dashboard) .cloud-shell .section-head h2 { font-size: cla
 html:root:not(.console-dashboard) .cloud-shell .product-window { box-shadow: 0 20px 56px #132d2420; border-color: var(--market-border); }
 html:root:not(.console-dashboard) .cloud-shell .window-caption { background: var(--nc-accent); color: var(--nc-on-accent); }
 html:root:not(.console-dashboard) .resource-grid { gap: 20px; }
-html:root:not(.console-dashboard) .resource-card { padding: 24px; }
-html:root:not(.console-dashboard) .resource-art { height: 112px; border-radius: 12px; background: var(--market-accent-soft); }
+html:root:not(.console-dashboard) .resource-card { display: flex; flex-direction: column; min-width: 0; padding: 24px; }
+html:root:not(.console-dashboard) .resource-art { position: relative; flex: none; height: auto; aspect-ratio: 16 / 10; min-width: 0; overflow: hidden; border-radius: 12px; background: var(--market-accent-soft); }
+html:root:not(.console-dashboard) .resource-art > img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+@supports not (aspect-ratio: 16 / 10) {
+  html:root:not(.console-dashboard) .resource-art { height: 0; padding-top: 62.5%; }
+  html:root:not(.console-dashboard) .resource-art > .koi-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+}
+html:root:not(.console-dashboard) .resource-meta { align-items: baseline; gap: 12px; min-width: 0; }
+html:root:not(.console-dashboard) .resource-meta > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html:root:not(.console-dashboard) .resource-meta > strong { flex-shrink: 0; white-space: nowrap; }
+html:root:not(.console-dashboard) .resource-card :is(h2,h3) { font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
+html:root:not(.console-dashboard) .resource-card footer { flex-wrap: wrap; gap: 8px 16px; margin: auto 0 0; padding-top: 20px; }
 html:root:not(.console-dashboard) .resource-card p { color: var(--market-muted); font-size: 14px; }
 html:root:not(.console-dashboard) .catalog-toolbar { padding-bottom: 20px; margin-top: 28px; }
 html:root:not(.console-dashboard) .search-field { border-radius: 10px; min-height: 44px; border-color: var(--market-border); }

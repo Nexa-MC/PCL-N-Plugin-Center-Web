@@ -6,7 +6,15 @@
       <p v-if="loading" class="empty-state" role="status">{{ $ui('正在读取商店…') }}</p>
       <p v-else-if="error" class="form-error" role="alert">{{ $ui(error) }} <button class="secondary-button" @click="load">{{ $ui('重试') }}</button></p>
       <div v-else-if="!items.length" class="empty-state">{{ $ui('此商店暂时没有已上架内容。') }}</div>
-      <div v-else class="resource-grid"><router-link v-for="item in items" :key="item.id" :to="storePath(kind, item.id)" class="resource-card"><div class="resource-art"><img v-if="item.cover_id" :src="store.mediaUrl(item.cover_id)" :alt="item.name" style="width:100%;height:100%;object-fit:cover" /><KoiIcon v-else :name="kind === 'plugin' ? 'code-square' : 'gallery-edit'" /></div><div class="resource-meta"><span>{{ item.publisher_name }}</span><strong>{{ price(item.token_price) }}</strong></div><h2>{{ item.name }}</h2><p>{{ item.summary }}</p><footer><span>{{ $ui('{0} 人拥有', [item.owner_count]) }}</span><span v-if="item.average_score !== null">★ {{ item.average_score.toFixed(1) }}</span><span v-else>{{ $ui('评分暂未公开') }}</span></footer></router-link></div>
+      <div v-else class="resource-grid">
+        <router-link v-for="item in items" :key="item.id" :to="storePath(kind, item.id)" class="resource-card">
+          <div class="resource-art"><img v-if="item.cover_id" :src="store.mediaUrl(item.cover_id)" :alt="item.name" loading="lazy" /><KoiIcon v-else :name="kind === 'plugin' ? 'code-square' : 'gallery-edit'" /></div>
+          <div class="resource-meta"><span :title="item.publisher_name">{{ item.publisher_name }}</span><strong>{{ price(item.token_price) }}</strong></div>
+          <h2>{{ item.name }}</h2>
+          <p>{{ item.summary }}</p>
+          <footer><span>{{ $ui('{0} 人拥有', [item.owner_count]) }}</span><span v-if="item.average_score !== null">★ {{ item.average_score.toFixed(1) }}</span><span v-else>{{ $ui('评分暂未公开') }}</span></footer>
+        </router-link>
+      </div>
       <div v-if="total > 50" class="pagination"><button class="secondary-button" :disabled="offset === 0 || loading" @click="offset -= 50; load()">{{ $ui('上一页') }}</button><span>{{ offset + 1 }}–{{ Math.min(offset + 50, total) }} / {{ total }}</span><button class="secondary-button" :disabled="offset + 50 >= total || loading" @click="offset += 50; load()">{{ $ui('下一页') }}</button></div>
     </template>
     <template v-else>
