@@ -18,7 +18,7 @@ pnpm deploy
 
 主题支持跟随系统及手选浅色/暗色，在当前浏览器保存偏好。账户概览展示等级、Exp 和铭牌，钱包与订阅页展示当前会员；爱发电绑定使用 Auth 的独立社区绑定 API，不能用于登录。B站绑定保持暂未开放。
 
-`/docs` 提供中英文开发文档入口，连接 `docs.pcln.top` 的 NTP/1 主题包与 Sidecar 编写教程，并单独标注旧版插件 SDK。文档和可运行示例维护于 [Nexa-MC/PCLN-Docs](https://github.com/Nexa-MC/PCLN-Docs)，当前教程以 Firefly Alpha 12 的实际 Host/协议库为准。
+`/docs` 提供中英文开发文档入口，链接 `docs.pcln.top` 的 Bootstrap V1／ABI 100 插件教程、公开 SDK 和可运行模板。主题、原生 Sidecar 与 NXML 示例明确标注 Alpha 14 基线；PXML 为历史参考。网站文档维护于 [Nexa-MC/PCLN-Docs](https://github.com/Nexa-MC/PCLN-Docs)，SDK 源文档维护于 [Nexa-MC/NexaCL-Plugin-SDK](https://github.com/Nexa-MC/NexaCL-Plugin-SDK)。
 
 [政策 v1.1 修订说明](docs/policy-revision-1.1.md) 与 [Cloudflare mTLS 启动器接口配置](docs/launcher-mtls.md)。mTLS 证书验证交给 Cloudflare，当前只预留启动器 REST 接口；不能用请求头伪造客户端证书。
 

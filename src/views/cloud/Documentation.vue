@@ -4,7 +4,7 @@
       <p class="eyebrow">NEXACL / DOCUMENTATION</p>
       <h1>{{ c.title }}</h1>
       <p class="docs-description">{{ c.description }}</p>
-      <span class="status-pill">Firefly Alpha 14</span>
+      <span class="status-pill">SDK 0.2.0-alpha.10 · ABI 100</span>
     </header>
 
     <section class="guide-grid" :aria-label="c.guidesLabel">
@@ -13,18 +13,18 @@
         <h2>{{ guide.title }}</h2>
         <p>{{ guide.description }}</p>
         <ul><li v-for="topic in guide.topics" :key="topic">{{ topic }}</li></ul>
-        <a class="guide-start" :href="docsRoot + guide.path + '/quick-start'">{{ c.start }} <span aria-hidden="true">↗</span></a>
+        <a class="guide-start" :href="docsRoot + guide.path + '/' + guide.start">{{ c.start }} <span aria-hidden="true">↗</span></a>
       </article>
     </section>
 
     <section class="work-panel docs-reference">
       <div><h2>{{ c.examples }}</h2><p>{{ c.exampleDescription }}</p></div>
-      <a class="secondary-button" href="https://github.com/Nexa-MC/PCLN-Docs/tree/main/examples">{{ c.viewExamples }} ↗</a>
+      <a class="secondary-button" href="https://github.com/Nexa-MC/NexaCL-Plugin-Template">{{ c.viewExamples }} ↗</a>
     </section>
     <section class="legacy-docs">
       <h2>{{ c.other }}</h2><p>{{ c.legacyDescription }}</p>
       <div class="reference-links">
-        <a :href="docsRoot + 'plugin-sdk/'">{{ c.legacySdk }} ↗</a>
+        <a :href="docsRoot + 'plugin-sdk/api/'">{{ c.api }} ↗</a>
         <a :href="docsRoot + 'pxml-compiler/'">PXML ↗</a>
         <a href="https://github.com/Nexa-MC/NexaCL">{{ c.source }} ↗</a>
       </div>
@@ -42,25 +42,27 @@ const { locale } = useI18n();
 const en = computed(() => locale.value !== 'zh');
 const docsRoot = computed(() => 'https://docs.pcln.top/' + (en.value ? 'en/' : ''));
 const c = computed(() => en.value ? {
-  title: 'Make it yours. Build something new.',
-  description: 'Create a theme for NexaCL, or write an independent extension. Start with working examples and follow the guide through testing and distribution.',
+  title: 'Build your first NexaCL plugin.',
+  description: 'Start with a runnable plugin, then learn pages, actions, storage and background work. Tutorials, task guides and versioned API reference live at docs.pcln.top.',
   guidesLabel: 'NexaCL development guides', start: 'Start the tutorial',
   guides: [
-    { path: 'theme-packs', icon: 'picture', format: 'NTP/1', title: 'Theme packs', description: 'Shape the launcher’s appearance, with controls that let players make it their own.', topics: ['Manifest, NSS styles and light/dark modes', 'Switches, sliders and live option changes', 'Resources, packaging and publishing'] },
-    { path: 'sidecar', icon: 'code-square', format: 'SIDECAR', title: 'Independent extensions', description: 'Build a separate process that communicates with NexaCL through its current Host contracts.', topics: ['A runnable local IPC example', 'Shared NXML pages, lifecycle and binary APIs', 'Cancellation, signatures and distribution'] },
+    { path: 'plugin-sdk', start: 'quickstart', icon: 'code-square', format: 'BOOTSTRAP V1 · ABI 100', title: 'Plugin development', description: 'Build an isolated Wasm plugin using the public SDK and a complete template.', topics: ['A page, confirmed action and persistent data', 'Permissions, cancellation and offline behavior', '346 operations, 245 models and explicit Host support'] },
+    { path: 'theme-packs', start: 'quick-start', icon: 'picture', format: 'NTP/1 · ALPHA 14', title: 'Theme packs', description: 'Shape the launcher’s appearance, with controls that let players make it their own.', topics: ['Manifest, NSS styles and light/dark modes', 'Switches, sliders and live option changes', 'Resources, packaging and publishing'] },
+    { path: 'sidecar', start: 'quick-start', icon: 'code-square', format: 'NATIVE SIDECAR · ALPHA 14', title: 'Independent extensions', description: 'Build a separate process that communicates with NexaCL through its current Host contracts.', topics: ['A runnable local IPC example', 'Shared NXML pages, lifecycle and binary APIs', 'Cancellation, signatures and distribution'] },
   ],
-  examples: 'Start from working source', exampleDescription: 'A complete theme and a compilable Sidecar example with a real two-process IPC self-test.', viewExamples: 'Browse examples',
-  other: 'More references', legacyDescription: 'The legacy Plugin SDK and PXML guides remain available. Legacy .pnp plugins and NexaCL .nsc Sidecars use separate contracts.', legacySdk: 'Legacy Plugin SDK', source: 'NexaCL source',
+  examples: 'Start from working source', exampleDescription: 'The public template includes a compiled Wasm guest, NXML page, pinned SDK, deterministic packaging and CI.', viewExamples: 'Use the plugin template',
+  other: 'More references', legacyDescription: 'Current SDK references distinguish declared contracts from implemented Host behavior. Theme and native Sidecar examples pin Alpha 14; PXML remains historical reference.', api: 'Plugin API reference', source: 'NexaCL source',
 } : {
-  title: '从一个主题开始，写出自己的扩展。',
-  description: '为 NexaCL 制作外观主题，或编写独立运行的扩展。从可运行示例出发，一步步完成测试与分发。',
+  title: '从第一个 NexaCL 插件开始。',
+  description: '从可运行插件出发，逐步加入页面、动作、存储和后台任务。连续教程、任务指南与版本化 API 参考统一发布于 docs.pcln.top。',
   guidesLabel: 'NexaCL 开发文档', start: '开始教程',
   guides: [
-    { path: 'theme-packs', icon: 'picture', format: 'NTP/1', title: '主题包开发', description: '设计启动器的外观，也让玩家通过设置控件调整属于自己的样式。', topics: ['清单、NSS 样式与亮暗模式', '滑动开关、滑块与参数实时应用', '资源授权、打包与发布'] },
-    { path: 'sidecar', icon: 'code-square', format: 'SIDECAR', title: 'Sidecar 编写', description: '编写独立进程，通过当前 Host 契约与 NexaCL 交互。', topics: ['可运行的本地 IPC 示例', '共享 NXML 页面、生命周期与二进制 API', '取消、签名准入与分发'] },
+    { path: 'plugin-sdk', start: 'quickstart', icon: 'code-square', format: 'BOOTSTRAP V1 · ABI 100', title: '插件开发', description: '使用公开 SDK 和完整模板，构建隔离运行的 Wasm 插件。', topics: ['页面、确认动作与持久数据', '权限、取消和离线行为', '346 项操作、245 个模型及明确支持范围'] },
+    { path: 'theme-packs', start: 'quick-start', icon: 'picture', format: 'NTP/1 · ALPHA 14', title: '主题包开发', description: '设计启动器的外观，也让玩家通过设置控件调整属于自己的样式。', topics: ['清单、NSS 样式与亮暗模式', '滑动开关、滑块与参数实时应用', '资源授权、打包与发布'] },
+    { path: 'sidecar', start: 'quick-start', icon: 'code-square', format: 'NATIVE SIDECAR · ALPHA 14', title: 'Sidecar 编写', description: '编写独立进程，通过当前 Host 契约与 NexaCL 交互。', topics: ['可运行的本地 IPC 示例', '共享 NXML 页面、生命周期与二进制 API', '取消、签名准入与分发'] },
   ],
-  examples: '从完整源码开始', exampleDescription: '包含一个完整主题，以及可编译、可运行双进程 IPC 自测的 Sidecar 示例。', viewExamples: '浏览示例源码',
-  other: '其他参考', legacyDescription: '旧版插件 SDK 与 PXML 文档继续保留。旧版 .pnp 插件与 NexaCL 的 .nsc Sidecar 使用不同契约。', legacySdk: '旧版插件 SDK', source: 'NexaCL 源码',
+  examples: '从完整源码开始', exampleDescription: '公开模板包含可编译 Wasm 程序、NXML 页面、固定版本 SDK、确定性打包和 CI。', viewExamples: '使用插件模板',
+  other: '其他参考', legacyDescription: '当前 SDK 参考明确区分契约声明与宿主实现。主题和原生 Sidecar 示例固定于 Alpha 14，PXML 保留为历史参考。', api: '插件 API 参考', source: 'NexaCL 源码',
 });
 watchEffect(() => applyPageSeo({ title: en.value ? 'NexaCL developer documentation' : 'NexaCL 开发文档', description: c.value.description, path: '/docs' }));
 </script>
@@ -70,7 +72,7 @@ watchEffect(() => applyPageSeo({ title: en.value ? 'NexaCL developer documentati
 .docs-intro { max-width: 760px; padding: 20px 0 32px; }
 .docs-intro h1 { font-size: clamp(28px, 3.5vw, 42px); line-height: 1.3; margin: 14px 0 18px; letter-spacing: -.7px; }
 .docs-description { color: var(--market-muted); margin-bottom: 20px; }
-.guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .guide-card { margin: 0; padding: 32px; display: flex; flex-direction: column; }
 .guide-heading { display: flex; align-items: center; gap: 12px; color: var(--nc-accent); font-size: 12px; letter-spacing: 1px; }
 .guide-heading :deep(svg) { width: 26px; height: 26px; }
