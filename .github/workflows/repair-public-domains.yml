@@ -1,0 +1,39 @@
+name: Repair public website domains
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact reviewed master commit
+        required: true
+        type: string
+      apply:
+        description: Bind the two public names to the existing nexa-web Worker
+        default: false
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: nexa-web-workers-production
+  cancel-in-progress: false
+jobs:
+  repair:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    environment: cloudflare-pages
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify reviewed commit
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: node --test scripts/public-domains.test.mjs
+      - run: node scripts/repair-public-domains.mjs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          APPLY: ${{ inputs.apply }}
