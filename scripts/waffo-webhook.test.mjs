@@ -41,7 +41,7 @@ test('missing/unreleased handlers, HTML fallback and redirects return retryable 
 });
 test('asset routing runs the Worker before SPA handling for the exact Waffo namespace and retains Paddle proxy', async () => {
   const config = JSON.parse(await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
-  assert.ok(config.assets.run_worker_first.includes('/webhooks/wp_wh/*'));
+  assert.ok(config.assets.run_worker_first === true || Array.isArray(config.assets.run_worker_first) && config.assets.run_worker_first.includes('/webhooks/wp_wh/*'));
   const input = new Request('https://pcln.top/api/webhooks/paddle', { method: 'POST', body: raw, headers: { 'paddle-signature': 'unchanged' } });
   const response = await worker.fetch(input, { API: { fetch: async forwarded => {
     assert.equal(forwarded.url, input.url); assert.equal(forwarded.headers.get('paddle-signature'), 'unchanged'); assert.equal(await forwarded.text(), raw);
