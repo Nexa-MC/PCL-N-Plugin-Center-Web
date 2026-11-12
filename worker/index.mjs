@@ -31,6 +31,12 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url), path = url.pathname;
     try {
+      if (url.hostname === 'www.pcln.top') {
+        url.hostname = 'pcln.top';
+        url.protocol = 'https:';
+        url.port = '';
+        return new Response(null, { status: 308, headers: { location: url.href, 'cache-control': 'public, max-age=300' } });
+      }
       const publisherLanding = { 'dev.consol.pcln.top': '/publisher/plugins', 'creator.consol.pcln.top': '/publisher/themes' }[url.hostname];
       if (publisherLanding && path === '/') return new Response(null, { status: 302, headers: { location: new URL(publisherLanding, url).href, 'cache-control': 'no-store', 'x-robots-tag': 'noindex, nofollow' } });
       if (path.startsWith('/webhooks/wp_wh/')) {

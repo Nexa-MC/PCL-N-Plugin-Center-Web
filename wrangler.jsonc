@@ -5,8 +5,8 @@
   "compatibility_date": "2026-09-26",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
-  "routes": [{ "pattern": "pcln.top/*", "zone_name": "pcln.top" }, { "pattern": "accounts.pcln.top", "custom_domain": true }],
-  "assets": { "directory": "dist", "binding": "ASSETS", "not_found_handling": "single-page-application", "run_worker_first": ["/api/*", "/auth/*", "/geo.json", "/webhooks/wp_wh/*"] },
+  "routes": [{ "pattern": "pcln.top", "custom_domain": true }, { "pattern": "www.pcln.top", "custom_domain": true }, { "pattern": "accounts.pcln.top", "custom_domain": true }],
+  "assets": { "directory": "dist", "binding": "ASSETS", "not_found_handling": "single-page-application", "run_worker_first": true },
   "services": [{ "binding": "API", "service": "nexa-api" }, { "binding": "AUTH", "service": "nexa-auth" }],
   "observability": { "enabled": true, "head_sampling_rate": 0.1 }
 }

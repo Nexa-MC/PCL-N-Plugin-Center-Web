@@ -11,3 +11,13 @@ test('public domain repair refuses conflicting DNS, Workers or routes', () => {
   assert.throws(() => validatePublicDomains([{ hostname: 'www.pcln.top', service: 'other', environment: 'production' }], [], []), /domain_conflict/);
   assert.throws(() => validatePublicDomains([], [], [{ pattern: 'pcln.top/*', script: 'other' }]), /route_conflict/);
 });
+
+
+test('www redirects to HTTPS apex while preserving path and query', async () => {
+  const { default: worker } = await import('../worker/index.mjs');
+  for (const method of ['GET', 'POST']) {
+    const reply = await worker.fetch(new Request('https://www.pcln.top/plugins?tag=java', { method }), {});
+    assert.equal(reply.status, 308);
+    assert.equal(reply.headers.get('location'), 'https://pcln.top/plugins?tag=java');
+  }
+});
